@@ -96,6 +96,18 @@ The following documents make up the full modernisation plan:
 | [`04-testing-strategy.md`](./04-testing-strategy.md) | Test approach for refactoring confidence, container validation, database compatibility, and release safety |
 | [`05-migration-phases.md`](./05-migration-phases.md) | End-to-end sequencing, dependencies, milestones, and rollout phases across language, container, and infrastructure work |
 
+## Diagramming
+
+Architecture and infrastructure diagrams are maintained in **Lucidchart** as the single source of truth for visual documentation. Text-based summaries are kept in the markdown files for quick reference, but the authoritative diagrams live in Lucidchart.
+
+| Diagram | Lucidchart Link | Plan Reference |
+|---|---|---|
+| Dev Environment Architecture | _TBD — created in Phase 0_ | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
+| Production Environment Architecture | _TBD — created in Phase 0_ | [03-azure-infrastructure.md § Production Environment](./03-azure-infrastructure.md) |
+| Production Network Topology (VNET, Subnets, NSGs) | _TBD — created in Phase 0_ | [03-azure-infrastructure.md § Networking](./03-azure-infrastructure.md) |
+| CI/CD Pipeline Flow | _TBD — created in Phase 0_ | [02-containerisation.md § CI/CD Pipeline](./02-containerisation.md) |
+| Phase Dependency Graph | _TBD — created in Phase 0_ | [05-migration-phases.md § Phase Overview](./05-migration-phases.md) |
+
 ## Delivery and tracking approach
 
 Implementation should be tracked through GitHub Issues created from the companion documents. Each issue should:

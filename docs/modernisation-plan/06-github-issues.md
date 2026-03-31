@@ -115,6 +115,10 @@ Every issue description must include a plan reference linking to the source sect
 | P0-06 | Evaluate OpenRewrite for automated Java 21 migration | Task | `modernisation`, `java-21`, `phase-0`, `priority-2` | — | [01-java-language-modernisation.md § Tooling Support](./01-java-language-modernisation.md) |
 | P0-07 | Update Spotless and Checkstyle configuration for Java 21 syntax | Task | `modernisation`, `java-21`, `phase-0`, `priority-1` | P0-02 | [01-java-language-modernisation.md § Tooling Support](./01-java-language-modernisation.md) |
 | P0-08 | Establish test coverage baseline with JaCoCo | Task | `modernisation`, `testing`, `phase-0`, `priority-1` | P0-01 | [04-testing-strategy.md § Quality Gates](./04-testing-strategy.md) |
+| P0-09 | Create Lucidchart architecture diagrams for Azure dev and production environments | Task | `modernisation`, `azure`, `documentation`, `phase-0`, `priority-1` | P0-05 | [03-azure-infrastructure.md](./03-azure-infrastructure.md) |
+| P0-10 | Create Lucidchart phase dependency and CI/CD pipeline diagrams | Task | `modernisation`, `documentation`, `phase-0`, `priority-2` | — | [05-migration-phases.md](./05-migration-phases.md) |
+| P0-09 | Create Lucidchart architecture diagrams for Azure dev and production environments | Task | `modernisation`, `azure`, `documentation`, `phase-0`, `priority-1` | P0-05 | [03-azure-infrastructure.md](./03-azure-infrastructure.md) |
+| P0-10 | Create Lucidchart phase dependency and CI/CD pipeline diagrams | Task | `modernisation`, `documentation`, `phase-0`, `priority-2` | - | [05-migration-phases.md](./05-migration-phases.md) |
 
 ---
 
@@ -297,14 +301,14 @@ Depends on **Epics E4 and E5** (Phases 4 and 5 complete).
 
 | Phase | Issues | Critical Path |
 |---|---|---|
-| Phase 0 | 8 | Yes — blocks all other phases |
+| Phase 0 | 10 | Yes — blocks all other phases |
 | Phase 1 | 20 | Track A critical path |
 | Phase 2 | 18 | Track B critical path |
 | Phase 3 | 13 | Track A critical path |
 | Phase 4 | 16 | Track B critical path |
 | Phase 5 | 7 | Track A critical path |
 | Phase 6 | 9 | Final convergence |
-| **Total** | **91** | |
+| **Total** | **93** | |
 
 ### Decision Points
 

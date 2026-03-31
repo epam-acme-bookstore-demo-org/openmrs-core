@@ -44,6 +44,9 @@ Foundation
                                                               └──────────────► Phase 6: Production migration and go-live
 ```
 
+> 📐 **Lucidchart**: _Phase Dependency Graph — link TBD, created in Phase 0._
+> The text diagram above is a simplified summary. The Lucidchart diagram includes swimlanes and milestone markers.
+
 ## 2. Detailed Phase Breakdown
 
 ### Phase 0: Foundation
@@ -86,6 +89,8 @@ Foundation
 - PR template and reviewer checklist for modernisation PRs
 - Baseline quality and performance metrics recorded
 - Azure subscription, resource groups, and access model ready
+- Lucidchart architecture diagrams for dev and production Azure environments
+- Lucidchart phase dependency and CI/CD pipeline diagrams
 
 **Exit criteria**
 
@@ -103,6 +108,8 @@ Foundation
 - `Update PR template and review checklist for modernisation work`
 - `Capture baseline test coverage, SpotBugs, startup, and latency metrics`
 - `Provision Azure subscription access and resource groups for dev and prod`
+- `Create Lucidchart architecture diagrams for dev and production Azure environments`
+- `Create Lucidchart phase dependency and CI/CD pipeline diagrams`
 
 ---
 
@@ -430,6 +437,9 @@ Phase 0 ──┬──► Phase 1 ──► Phase 3 ──► Phase 5 ──┐
            │                                        ├──► Phase 6
            └──► Phase 2 ──► Phase 4 ───────────────┘
 ```
+
+> 📐 **Lucidchart Diagram**: [Phase Dependency Graph — _link TBD, created in Phase 0_]
+> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative view with swimlanes and milestone markers.
 
 ### Dependency notes
 

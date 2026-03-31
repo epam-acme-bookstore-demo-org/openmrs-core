@@ -45,6 +45,9 @@ Optional:
   Azure-hosted Elasticsearch
 ```
 
+> 📐 **Lucidchart Diagram**: [Dev Environment Architecture — _link TBD, created in Phase 0_]
+> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative, detailed view.
+
 **Design intent**
 
 - Minimise provisioning time and monthly cost
@@ -91,6 +94,9 @@ Azure Container Apps Environment (workload profiles, internal ingress only)
   v
 Azure Database for MySQL Flexible Server (private endpoint, HA, backups)
 ```
+
+> 📐 **Lucidchart Diagram**: [Production Environment Architecture — _link TBD, created in Phase 0_]
+> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative, detailed view including subnet CIDRs, NSG rules, and private endpoint connections.
 
 **Design intent**
 
@@ -247,6 +253,9 @@ If a separate subnet is preferred for strict segregation, split `snet-private-en
 
 - `snet-db-pe` – `10.40.3.0/25`
 - `snet-sec-pe` – `10.40.3.128/25`
+
+> 📐 **Lucidchart Diagram**: [Production Network Topology (VNET, Subnets, NSGs) — _link TBD, created in Phase 0_]
+> The subnet table and NSG rules below are a text summary. See the Lucidchart diagram for the authoritative network topology view with CIDR ranges, traffic flows, and NSG rule visualisation.
 
 ### 3.3 NSG design
 
