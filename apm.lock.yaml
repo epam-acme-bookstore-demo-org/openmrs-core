@@ -62,6 +62,17 @@ dependencies:
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
   resolved_commit: 9590f525054902844e9310be403da87467b46448
+  virtual_path: architecture/lucidchart
+  is_virtual: true
+  package_type: apm_package
+  deployed_files:
+  - .github/instructions/lucidchart.diagram-ops.instructions.md
+  - .github/instructions/lucidchart.mcp-setup.instructions.md
+  - .github/skills/lucidchartdiagram-ops
+  content_hash: sha256:1d0580f7299cce8821688a4db329863fdee7806aff72cf9d01f8e4ae70652c50
+- repo_url: epam-acme-bookstore-demo-org/agent-forge
+  host: github.com
+  resolved_commit: 9590f525054902844e9310be403da87467b46448
   virtual_path: backend/java/standards
   is_virtual: true
   depth: 2
@@ -217,6 +228,7 @@ dependencies:
 mcp_servers:
 - com.microsoft/azure
 - github
+- lucid
 - microsoft-learn
 mcp_configs:
   com.microsoft/azure:
@@ -226,6 +238,11 @@ mcp_configs:
     transport: http
     registry: false
     url: https://api.githubcopilot.com/mcp/x/all
+  lucid:
+    name: lucid
+    transport: http
+    registry: false
+    url: https://mcp.lucid.app/mcp
   microsoft-learn:
     name: microsoft-learn
     transport: http

@@ -1,0 +1,35 @@
+{
+  "servers": {
+    "com.microsoft/azure": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure/mcp",
+        "server",
+        "start"
+      ]
+    },
+    "microsoft-learn": {
+      "type": "http",
+      "url": "https://learn.microsoft.com/api/mcp",
+      "headers": {}
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/x/all",
+      "headers": {}
+    },
+    "atlassian": {
+      "type": "http",
+      "url": "https://mcp.atlassian.com/v1/mcp",
+      "headers": {}
+    },
+    "lucid": {
+      "type": "http",
+      "url": "https://mcp.lucid.app/mcp",
+      "headers": {}
+    }
+  },
+  "inputs": []
+}
