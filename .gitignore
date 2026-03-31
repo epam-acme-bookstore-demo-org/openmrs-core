@@ -92,3 +92,7 @@ api/Drug/
 api/PatientIdentifier/
 api/PersonAttribute/
 api/PersonName/
+
+
+# APM dependencies
+apm_modules/

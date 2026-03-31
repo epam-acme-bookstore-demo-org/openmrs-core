@@ -1,0 +1,14 @@
+name: openmrs-core
+version: 1.0.0
+description: APM project for openmrs-core
+author: Developer
+dependencies:
+  apm:
+  - epam-acme-bookstore-demo-org/agent-forge/squads/java
+  - epam-acme-bookstore-demo-org/agent-forge/loops/modernisation
+  - epam-acme-bookstore-demo-org/agent-forge/infrastructure/azure
+  - epam-acme-bookstore-demo-org/agent-forge/devops/docker
+  - epam-acme-bookstore-demo-org/agent-forge/testing/testcontainers
+  - epam-acme-bookstore-demo-org/agent-forge/devops/github
+  mcp: []
+scripts: {}
