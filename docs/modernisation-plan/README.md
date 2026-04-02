@@ -110,7 +110,7 @@ The following implementation-facing documents now back the Phase 0 foundation wo
 
 ## Phase 0 deliverables
 
-Phase 0 repository-backed deliverables are now in place. Overall status is **Delivered** for all artifacts below, including the Lucidchart diagrams (P0-09 and P0-10).
+Phase 0 repository-backed deliverables are now in place. Overall status is **Delivered** for all artifacts below, including the draw.io diagrams (P0-09 and P0-10).
 
 | Deliverable | Status | Artifact paths |
 | --- | --- | --- |
@@ -125,15 +125,15 @@ Phase 0 repository-backed deliverables are now in place. Overall status is **Del
 
 ## Diagramming
 
-Architecture and infrastructure diagrams are maintained in **Lucidchart** as the single source of truth for visual documentation. Text-based summaries are kept in the markdown files for quick reference, but the authoritative diagrams live in Lucidchart.
+Architecture and infrastructure diagrams are maintained as **draw.io** files in this repository as the single source of truth for visual documentation. Text-based summaries are kept in the markdown files for quick reference, but the authoritative diagrams live in draw.io files under `docs/diagrams/`.
 
-| Diagram | Lucidchart Link | Plan Reference |
+| Diagram | Draw.io File | Plan Reference |
 |---|---|---|
-| Dev Environment Architecture | [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit) | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
-| Production Environment Architecture | [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit) | [03-azure-infrastructure.md § Production Environment](./03-azure-infrastructure.md) |
-| Production Network Topology (VNET, Subnets, NSGs) | [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit) | [03-azure-infrastructure.md § Networking](./03-azure-infrastructure.md) |
-| CI/CD Pipeline Flow | [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit) | [02-containerisation.md § CI/CD Pipeline](./02-containerisation.md) |
-| Phase Dependency Graph | [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit) | [05-migration-phases.md § Phase Overview](./05-migration-phases.md) |
+| Dev Environment Architecture | [azure-architecture.drawio](../diagrams/azure-architecture.drawio) | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
+| Production Environment Architecture | [azure-architecture.drawio](../diagrams/azure-architecture.drawio) | [03-azure-infrastructure.md § Production Environment](./03-azure-infrastructure.md) |
+| Production Network Topology (VNET, Subnets, NSGs) | [azure-architecture.drawio](../diagrams/azure-architecture.drawio) | [03-azure-infrastructure.md § Networking](./03-azure-infrastructure.md) |
+| CI/CD Pipeline Flow | [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio) | [02-containerisation.md § CI/CD Pipeline](./02-containerisation.md) |
+| Phase Dependency Graph | [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio) | [05-migration-phases.md § Phase Overview](./05-migration-phases.md) |
 
 ## Delivery and tracking approach
 

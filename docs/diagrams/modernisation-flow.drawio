@@ -1,0 +1,268 @@
+<mxfile host="app.diagrams.net" modified="2026-04-02T18:00:00.000Z" agent="draw.io" version="24.0.0" type="device">
+  <diagram id="phase-deps" name="Phase Dependencies">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="m_title" value="Modernisation — Phase Dependency Graph" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#333333;align=center;" vertex="1" parent="1">
+          <mxGeometry x="350" y="15" width="500" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Track labels -->
+        <mxCell id="m_track_java" value="Java Track" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#6c8ebf;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="15" y="170" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_track_infra" value="Infra Track" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#82b366;align=left;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="15" y="430" width="80" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Phase boxes ===== -->
+
+        <!-- P0: Foundation (blue — Java phase) -->
+        <mxCell id="P0" value="&lt;b&gt;Phase 0&lt;/b&gt;&lt;br&gt;Foundation&lt;br&gt;&lt;i&gt;(10 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="300" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P1: Low-Risk Java (blue) -->
+        <mxCell id="P1" value="&lt;b&gt;Phase 1&lt;/b&gt;&lt;br&gt;Low-Risk Java&lt;br&gt;&lt;i&gt;(17 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="180" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P1.5: Code Quality (blue) -->
+        <mxCell id="P1_5" value="&lt;b&gt;Phase 1.5&lt;/b&gt;&lt;br&gt;Code Quality&lt;br&gt;&lt;i&gt;(15 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="80" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P2: Containerisation (green — Infra phase) -->
+        <mxCell id="P2" value="&lt;b&gt;Phase 2&lt;/b&gt;&lt;br&gt;Containerisation&lt;br&gt;&lt;i&gt;(12 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="420" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P3: Medium-Risk Java (blue) -->
+        <mxCell id="P3" value="&lt;b&gt;Phase 3&lt;/b&gt;&lt;br&gt;Medium-Risk Java&lt;br&gt;&lt;i&gt;(22 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="260" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P4: Prod Infrastructure (green — Infra phase) -->
+        <mxCell id="P4" value="&lt;b&gt;Phase 4&lt;/b&gt;&lt;br&gt;Prod Infrastructure&lt;br&gt;&lt;i&gt;(25 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="420" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P5: High-Risk Cleanup (blue) -->
+        <mxCell id="P5" value="&lt;b&gt;Phase 5&lt;/b&gt;&lt;br&gt;High-Risk Cleanup&lt;br&gt;&lt;i&gt;(9 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="860" y="260" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- P6: Go-Live (red) -->
+        <mxCell id="P6" value="&lt;b&gt;Phase 6&lt;/b&gt;&lt;br&gt;Go-Live&lt;br&gt;&lt;i&gt;(8 issues)&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontColor=#333333;fontSize=12;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="300" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Dependency arrows ===== -->
+
+        <!-- P0 → P1 (critical path — thick/dark) -->
+        <mxCell id="e_p0_p1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=3;endArrow=blockThin;endFill=1;" edge="1" source="P0" target="P1" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P0 → P2 (normal) -->
+        <mxCell id="e_p0_p2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" source="P0" target="P2" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P1 → P1.5 (normal) -->
+        <mxCell id="e_p1_p15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" source="P1" target="P1_5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P1 → P3 (critical path) -->
+        <mxCell id="e_p1_p3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=3;endArrow=blockThin;endFill=1;" edge="1" source="P1" target="P3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P2 → P4 (normal) -->
+        <mxCell id="e_p2_p4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" source="P2" target="P4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P3 → P5 (critical path) -->
+        <mxCell id="e_p3_p5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=3;endArrow=blockThin;endFill=1;" edge="1" source="P3" target="P5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P4 → P6 (normal) -->
+        <mxCell id="e_p4_p6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" source="P4" target="P6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P5 → P6 (critical path) -->
+        <mxCell id="e_p5_p6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#b85450;strokeWidth=3;endArrow=blockThin;endFill=1;" edge="1" source="P5" target="P6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- P1.5 → P6 (normal) -->
+        <mxCell id="e_p15_p6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;endArrow=blockThin;endFill=1;" edge="1" source="P1_5" target="P6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Annotations ===== -->
+
+        <!-- Critical path label -->
+        <mxCell id="m_crit_lbl" value="━ Critical path" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#b85450;align=left;" vertex="1" parent="1">
+          <mxGeometry x="30" y="590" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_norm_lbl" value="── Normal dependency" style="text;html=1;fontSize=11;fontColor=#666666;align=left;" vertex="1" parent="1">
+          <mxGeometry x="30" y="615" width="160" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Color legend -->
+        <mxCell id="m_leg_java" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="230" y="593" width="18" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="m_leg_java_t" value="Java phases" style="text;html=1;fontSize=11;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="253" y="588" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_leg_infra" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="360" y="593" width="18" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="m_leg_infra_t" value="Infra phases" style="text;html=1;fontSize=11;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="383" y="588" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m_leg_live" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="490" y="593" width="18" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="m_leg_live_t" value="Go-Live" style="text;html=1;fontSize=11;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="513" y="588" width="60" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="cicd-pipeline" name="CI/CD Pipeline">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="c_title" value="CI/CD Pipeline" style="text;html=1;fontSize=20;fontStyle=1;fontColor=#333333;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" y="15" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Trigger annotation -->
+        <mxCell id="c_trigger" value="Trigger: PR opened / push to main" style="text;html=1;fontSize=10;fontStyle=2;fontColor=#999999;align=center;" vertex="1" parent="1">
+          <mxGeometry x="50" y="115" width="200" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Pipeline stages ===== -->
+
+        <!-- Source Code -->
+        <mxCell id="c_src" value="&lt;b&gt;Source Code&lt;/b&gt;&lt;br&gt;GitHub repo" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="70" y="160" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Build -->
+        <mxCell id="c_build" value="&lt;b&gt;Build&lt;/b&gt;&lt;br&gt;mvn compile&lt;br&gt;+ unit tests" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="330" y="160" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Checkstyle (parallel) -->
+        <mxCell id="c_cs" value="&lt;b&gt;Checkstyle&lt;/b&gt;&lt;br&gt;Code style" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="70" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- SpotBugs (parallel) -->
+        <mxCell id="c_sb" value="&lt;b&gt;SpotBugs&lt;/b&gt;&lt;br&gt;Bug detection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="180" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Coverage (parallel) -->
+        <mxCell id="c_cov" value="&lt;b&gt;Coverage&lt;/b&gt;&lt;br&gt;JaCoCo report" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="290" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Docker Image Build -->
+        <mxCell id="c_docker" value="&lt;b&gt;Docker Image&lt;/b&gt;&lt;br&gt;Build &amp;amp; Push&#xa;to ACR" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="870" y="160" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Deploy -->
+        <mxCell id="c_deploy" value="&lt;b&gt;Deploy&lt;/b&gt;&lt;br&gt;Container App&#xa;revision" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontColor=#333333;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="870" y="300" width="160" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Trigger annotation for deploy -->
+        <mxCell id="c_trigger2" value="Only on main branch" style="text;html=1;fontSize=10;fontStyle=2;fontColor=#999999;align=center;" vertex="1" parent="1">
+          <mxGeometry x="870" y="280" width="160" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- ===== Arrows ===== -->
+
+        <!-- Source → Build -->
+        <mxCell id="c_e1" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_src" target="c_build" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Build → Checkstyle (fan-out) -->
+        <mxCell id="c_e2" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_build" target="c_cs" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Build → SpotBugs (fan-out) -->
+        <mxCell id="c_e3" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_build" target="c_sb" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Build → Coverage (fan-out) -->
+        <mxCell id="c_e4" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_build" target="c_cov" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Checkstyle → Docker Image -->
+        <mxCell id="c_e5" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_cs" target="c_docker" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- SpotBugs → Docker Image -->
+        <mxCell id="c_e6" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_sb" target="c_docker" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Coverage → Docker Image -->
+        <mxCell id="c_e7" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#333333;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_cov" target="c_docker" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Docker Image → Deploy -->
+        <mxCell id="c_e8" value="" style="rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=blockThin;endFill=1;edgeStyle=orthogonalEdgeStyle;" edge="1" source="c_docker" target="c_deploy" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="c_leg_title" value="Legend" style="text;html=1;fontSize=12;fontStyle=1;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="30" y="440" width="80" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="c_leg1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="30" y="468" width="18" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="c_leg1t" value="Source" style="text;html=1;fontSize=10;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="55" y="464" width="60" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c_leg2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="130" y="468" width="18" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="c_leg2t" value="Build / Deploy" style="text;html=1;fontSize=10;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="155" y="464" width="90" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="c_leg3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="260" y="468" width="18" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="c_leg3t" value="Quality checks (parallel)" style="text;html=1;fontSize=10;fontColor=#333333;align=left;" vertex="1" parent="1">
+          <mxGeometry x="285" y="464" width="150" height="18" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

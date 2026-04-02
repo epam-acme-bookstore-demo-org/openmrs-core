@@ -1,7 +1,6 @@
 # Modernisation Flow Diagrams
 
-> **📊 Lucidchart**: [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)
-> The authoritative diagrams are maintained in Lucidchart. The Mermaid diagrams below are text-based baselines for version control.
+> **📐 Draw.io**: [modernisation-flow.drawio](./modernisation-flow.drawio) — open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension
 
 > **Parent**: [Migration Phases](../modernisation-plan/05-migration-phases.md) | **Work Item**: #88
 
@@ -240,41 +239,20 @@ graph LR
 
 ---
 
-## Lucidchart Diagrams
+## Authoritative Diagrams
 
-The authoritative modernisation flow diagrams are now maintained in Lucidchart:
+The authoritative modernisation flow diagrams are maintained as draw.io files in this repository:
 
-> **📊 [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)**
+> **📐 [modernisation-flow.drawio](./modernisation-flow.drawio)** — open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension
 
-The Lucidchart document contains three pages matching the Mermaid baselines above:
+The draw.io document contains two pages:
 
-| Page | Title | Description |
-| --- | --- | --- |
-| 1 | Phase Dependency Graph | All 8 phases as colour-coded boxes with issue counts, dependency arrows, and critical path highlighted (thick red: Phase 0 → 1 → 3 → 5 → 6). Parallel tracks (1.5 ∥ 2) are visually distinct. |
-| 2 | Phase Timeline | Swimlane layout with Foundation, Java Modernisation, Code Quality, Infrastructure, and Go-Live lanes. Phase bars positioned on a monthly timeline with milestone diamonds at boundaries. |
-| 3 | CI/CD Pipeline Flow | Current `ci-modernisation.yml` flow (Source → Build → SpotBugs/Coverage, with Checkstyle in parallel). Future container deployment chain shown with dashed/faded styling. |
+1. **Phase Dependencies** — All 8 phases with dependency arrows, issue counts, and colour-coded tracks
+2. **CI/CD Pipeline** — Build, test, and analysis job flow with trigger conditions
 
-The Mermaid diagrams in this file remain as text-based baselines for version control
-and inline rendering. The Lucidchart versions provide higher fidelity with swimlanes,
-milestone markers, and real-time collaboration for programme reviews.
-
-### Access permissions
-
-To view or edit the Lucidchart diagrams:
-
-1. You must be a member of the Lucidchart workspace with at least **view** access.
-2. Diagram links grant access to workspace members automatically.
-3. Share links can be created with view-only access for stakeholders without Lucid accounts.
+The Mermaid diagrams above provide inline text-based views for quick reference and version control diffs.
 
 ---
-
-## Baseline Note
-
-The Mermaid diagrams above (Sections 1–4) are baseline versions created during Phase 0 to
-establish a shared visual language. They will remain as inline-renderable fallbacks. Once the
-Lucidchart diagrams are published, the `📐 Lucidchart` placeholders in
-[05-migration-phases.md](../modernisation-plan/05-migration-phases.md) should be updated with
-direct links to the authoritative diagrams.
 
 > See also: [06-github-issues.md](../modernisation-plan/06-github-issues.md) for the full issue
 > breakdown per phase.

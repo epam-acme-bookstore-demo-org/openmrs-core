@@ -47,8 +47,7 @@ Foundation
                                                               └──────────────► Phase 6: Production migration and go-live
 ```
 
-> 📐 **Lucidchart**: [Phase Dependency Graph](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)
-> The text diagram above is a simplified summary. The Lucidchart diagram includes swimlanes and milestone markers.
+> 📐 **Diagram**: See [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio) for the detailed phase dependency graph.
 
 ## 2. Detailed Phase Breakdown
 
@@ -105,8 +104,8 @@ Foundation
 - PR template and reviewer checklist for modernisation PRs
 - Baseline quality and performance metrics recorded
 - Azure subscription, resource groups, and access model ready
-- Lucidchart architecture diagrams for dev and production Azure environments
-- Lucidchart phase dependency and CI/CD pipeline diagrams
+- Architecture diagrams (draw.io) for dev and production Azure environments
+- Phase dependency and CI/CD pipeline diagrams (draw.io)
 
 **Exit criteria**
 
@@ -123,8 +122,8 @@ Foundation
 - **Met:** The pull request checklist is implemented in [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md).
 - **Met:** Baseline metrics guidance and capture automation are available in [`../baseline-metrics.md`](../baseline-metrics.md) and [`../../tools/capture-baseline-metrics.sh`](../../tools/capture-baseline-metrics.sh).
 - **Met for implementation readiness:** Azure environment provisioning assets for dev and prod are now versioned under [`../../infrastructure/`](../../infrastructure/), including deployment guidance and scripts.
-- **Met:** Lucidchart architecture diagrams for dev and production environments — [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit).
-- **Met:** Lucidchart phase dependency and CI/CD pipeline diagrams — [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit).
+- **Met:** Architecture diagrams for dev and production environments — see [azure-architecture.drawio](../diagrams/azure-architecture.drawio)
+- **Met:** Phase dependency and CI/CD pipeline diagrams — see [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio)
 
 **GitHub Issues**
 
@@ -134,8 +133,8 @@ Foundation
 - `Update PR template and review checklist for modernisation work`
 - `Capture baseline test coverage, SpotBugs, startup, and latency metrics`
 - `Provision Azure subscription access and resource groups for dev and prod`
-- `Create Lucidchart architecture diagrams for dev and production Azure environments`
-- `Create Lucidchart phase dependency and CI/CD pipeline diagrams`
+- `Create architecture diagrams (draw.io) for dev and production Azure environments`
+- `Create phase dependency and CI/CD pipeline diagrams (draw.io)`
 
 ---
 
@@ -510,8 +509,7 @@ Phase 0 ──┬──► Phase 1 ──► Phase 3 ──► Phase 5 ──┐
            └──► Phase 2 ──► Phase 4 ───────────────┘
 ```
 
-> 📐 **Lucidchart Diagram**: [Phase Dependency Graph](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)
-> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative view with swimlanes and milestone markers.
+> 📐 **Diagram**: See [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio) for the detailed phase dependency graph.
 
 ### Dependency notes
 
@@ -615,7 +613,7 @@ Examples:
 
 ### Cross-Phase Tracking
 
-- [ ] #88 — Create Lucidchart phase dependency and CI/CD pipeline diagrams
+- [ ] #88 — Create phase dependency and CI/CD pipeline diagrams (draw.io)
 - [ ] #57 — Phase 1 rollout tracking and merge readiness review
 - [ ] #75 — Create and maintain Phase 3 java.time migration tracker
 - [ ] #100 — Remove transitional deprecated APIs introduced during modernisation

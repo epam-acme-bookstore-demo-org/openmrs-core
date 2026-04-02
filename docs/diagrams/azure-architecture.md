@@ -1,7 +1,6 @@
 # OpenMRS Core — Azure Architecture Diagrams
 
-> **📊 Lucidchart**: [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit)
-> The authoritative diagrams are maintained in Lucidchart. The Mermaid diagrams below are text-based baselines for version control.
+> **📐 Draw.io**: [azure-architecture.drawio](./azure-architecture.drawio) — open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension
 
 > These diagrams document the Azure Container Apps architecture for OpenMRS Core
 > across the **dev** and **prod** environments. Resource names, CIDR ranges, and
@@ -240,28 +239,16 @@ graph LR
 
 ---
 
-## Lucidchart Diagrams
+## Authoritative Diagrams
 
-The authoritative architecture diagrams are now maintained in Lucidchart:
+The authoritative architecture diagrams are maintained as draw.io files in this repository:
 
-> **📊 [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit)**
+> **📐 [azure-architecture.drawio](./azure-architecture.drawio)** — open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension
 
-The Lucidchart document contains three pages matching the Mermaid baselines above:
+The draw.io document contains three pages:
 
-| Page | Title |
-|------|-------|
-| 1 | Dev Environment Architecture |
-| 2 | Production Environment Architecture |
-| 3 | Network Topology (VNET, Subnets, NSGs) |
+1. **Dev Environment** — Simple ACA deployment with public ingress and PostgreSQL
+2. **Production Environment** — Fully isolated VNET with Application Gateway, private endpoints, and NSG rules
+3. **Network Topology** — Subnet layout, CIDR ranges, and traffic flow paths
 
-The Mermaid diagrams in this file remain as text-based baselines for version control
-and inline rendering. The Lucidchart versions provide higher fidelity with Azure-native
-icon sets, drag-and-drop layout, and real-time collaboration for architecture reviews.
-
-### Access Permissions
-
-To view or edit the Lucidchart diagrams:
-
-1. You need a Lucid account with access to the team workspace
-2. Request view/edit access from the diagram owner if you get a permissions error
-3. Share links can be created with view-only access for stakeholders without Lucid accounts
+The Mermaid diagrams above provide inline text-based views for quick reference and version control diffs.

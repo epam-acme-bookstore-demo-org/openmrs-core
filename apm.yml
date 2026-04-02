@@ -10,6 +10,6 @@ dependencies:
   - epam-acme-bookstore-demo-org/agent-forge/devops/docker
   - epam-acme-bookstore-demo-org/agent-forge/testing/testcontainers
   - epam-acme-bookstore-demo-org/agent-forge/devops/github
-  - epam-acme-bookstore-demo-org/agent-forge/architecture/lucidchart
+  - epam-acme-bookstore-demo-org/agent-forge/architecture/drawio
   mcp: []
 scripts: {}

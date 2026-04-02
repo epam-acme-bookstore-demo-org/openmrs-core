@@ -45,8 +45,7 @@ Optional:
   Azure-hosted Elasticsearch
 ```
 
-> 📐 **Lucidchart Diagram**: [Dev Environment Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit)
-> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative, detailed view.
+> 📐 **Diagram**: See [azure-architecture.drawio](../diagrams/azure-architecture.drawio) for the detailed view (open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension).
 
 **Design intent**
 
@@ -95,8 +94,7 @@ Azure Container Apps Environment (workload profiles, internal ingress only)
 Azure Database for PostgreSQL Flexible Server (private access, HA, backups)
 ```
 
-> 📐 **Lucidchart Diagram**: [Production Environment Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit)
-> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative, detailed view including subnet CIDRs, NSG rules, and private endpoint connections.
+> 📐 **Diagram**: See [azure-architecture.drawio](../diagrams/azure-architecture.drawio) for the detailed view (open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension).
 
 **Design intent**
 
@@ -254,8 +252,7 @@ If a separate subnet is preferred for strict segregation, split `snet-private-en
 - `snet-db-pe` – `10.40.3.0/25`
 - `snet-sec-pe` – `10.40.3.128/25`
 
-> 📐 **Lucidchart Diagram**: [Production Network Topology (VNET, Subnets, NSGs)](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit)
-> The subnet table and NSG rules below are a text summary. See the Lucidchart diagram for the authoritative network topology view with CIDR ranges, traffic flows, and NSG rule visualisation.
+> 📐 **Diagram**: See [azure-architecture.drawio](../diagrams/azure-architecture.drawio) for the detailed view (open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension).
 
 ### 3.3 NSG design
 
@@ -733,7 +730,7 @@ This plan introduces a new documentation area under `docs/modernisation-plan/`. 
 ### Phase 0 — Foundation (Azure)
 
 - [ ] #50 — Provision Azure subscription access and resource groups for dev and prod
-- [ ] #84 — Create Lucidchart architecture diagrams for Azure dev and production environments
+- [ ] #84 — Create architecture diagrams (draw.io) for Azure dev and production environments
 
 ### Phase 2 — Dev Environment
 
