@@ -166,7 +166,7 @@ Phase 2 runs **in parallel** with Phase 1. Depends on **Epic E0**.
 | P2-07 | Configure container image vulnerability scanning | Task | `modernisation`, `containers`, `phase-2`, `priority-1` | P2-06 | [02-containerisation.md § Security](./02-containerisation.md) |
 | P2-08 | Create GitHub Actions container build workflow (build → test → scan → push) | Task | `modernisation`, `containers`, `testing`, `phase-2`, `priority-1` | P2-06, P2-07 | [02-containerisation.md § CI/CD Pipeline](./02-containerisation.md) |
 | P2-09 | Set up multi-platform builds with Docker Buildx (amd64 + arm64) | Task | `modernisation`, `containers`, `phase-2`, `priority-2` | P2-08 | [02-containerisation.md § Multi-Platform](./02-containerisation.md) |
-| P2-10 | Deploy dev Container Apps Environment (Consumption plan) + MySQL Flexible Server | Task | `modernisation`, `azure`, `phase-2`, `priority-1` | P2-06 | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
+| P2-10 | Deploy dev Container Apps Environment (Consumption plan) + PostgreSQL Flexible Server | Task | `modernisation`, `azure`, `phase-2`, `priority-1` | P2-06 | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
 | P2-11 | Deploy Azure Key Vault (dev) and seed secrets | Task | `modernisation`, `azure`, `phase-2`, `priority-1` | P0-05 | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
 | P2-12 | Deploy OpenMRS Core Container App to dev environment | Task | `modernisation`, `azure`, `containers`, `phase-2`, `priority-1` | P2-08, P2-10, P2-11 | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
 | P2-13 | Create automated smoke test suite for post-deployment validation | Task | `modernisation`, `testing`, `phase-2`, `priority-1` | P2-12 | [04-testing-strategy.md § Smoke Tests](./04-testing-strategy.md) |
@@ -208,7 +208,7 @@ Depends on **Epic E2** (Phase 2 complete — dev environment proven). Runs **in 
 |---|---|---|---|---|---|
 | P4-01 | Provision production VNET (10.0.0.0/16) and subnet layout | Task | `modernisation`, `azure`, `phase-4`, `priority-1` | E2 | [03-azure §3.2](./03-azure-infrastructure.md) |
 | P4-02 | Configure NSGs for all production subnets | Task | `modernisation`, `azure`, `phase-4`, `priority-1` | P4-01 | [03-azure §3.2](./03-azure-infrastructure.md) |
-| P4-03 | Deploy production MySQL Flexible Server with private endpoint and HA | Task | `modernisation`, `azure`, `phase-4`, `priority-1` | P4-01 | [03-azure §3.5](./03-azure-infrastructure.md) |
+| P4-03 | Deploy production PostgreSQL Flexible Server with private access and HA | Task | `modernisation`, `azure`, `phase-4`, `priority-1` | P4-01 | [03-azure §3.5](./03-azure-infrastructure.md) |
 | P4-04 | Deploy production Key Vault with private endpoint | Task | `modernisation`, `azure`, `phase-4`, `priority-1` | P4-01 | [03-azure §3.6](./03-azure-infrastructure.md) |
 | P4-05 | Upgrade ACR to Standard SKU with private endpoint | Task | `modernisation`, `azure`, `containers`, `phase-4`, `priority-1` | P4-01 | [03-azure §3.6](./03-azure-infrastructure.md) |
 | P4-06 | Deploy Container Apps Environment into VNET (Workload profiles) | Task | `modernisation`, `azure`, `phase-4`, `priority-1` | P4-01, P4-02 | [03-azure §3.3](./03-azure-infrastructure.md) |

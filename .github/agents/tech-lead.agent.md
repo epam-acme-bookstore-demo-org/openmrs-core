@@ -5,7 +5,7 @@ description: >
   Tech-Writer) to deliver requirements. Never writes code directly.
 name: tech-lead
 model: Claude Opus 4.6 (copilot)
-tools: [vscode, execute, read, agent, search, web, browser, todo]
+tools: [vscode, execute, read, agent, search, web, browser, todo, lucid/*]
 ---
 
 ## Persona

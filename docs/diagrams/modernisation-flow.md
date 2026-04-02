@@ -1,5 +1,8 @@
 # Modernisation Flow Diagrams
 
+> **📊 Lucidchart**: [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)
+> The authoritative diagrams are maintained in Lucidchart. The Mermaid diagrams below are text-based baselines for version control.
+
 > **Parent**: [Migration Phases](../modernisation-plan/05-migration-phases.md) | **Work Item**: #88
 
 This document contains baseline Mermaid diagrams for the OpenMRS Core modernisation programme.
@@ -239,14 +242,11 @@ graph LR
 
 ## Lucidchart Diagrams
 
-> **Status:** Lucidchart diagram creation is **blocked** — the Lucid MCP server authentication
-> (PKCE) is failing. The Standard Import specification is ready and saved for when the connection
-> is restored.
+The authoritative modernisation flow diagrams are now maintained in Lucidchart:
 
-### Planned Lucidchart pages
+> **📊 [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)**
 
-The Lucidchart document "OpenMRS Core - Modernisation Flow" will contain three pages, matching
-the Mermaid baselines above but with richer visual features:
+The Lucidchart document contains three pages matching the Mermaid baselines above:
 
 | Page | Title | Description |
 | --- | --- | --- |
@@ -254,53 +254,17 @@ the Mermaid baselines above but with richer visual features:
 | 2 | Phase Timeline | Swimlane layout with Foundation, Java Modernisation, Code Quality, Infrastructure, and Go-Live lanes. Phase bars positioned on a monthly timeline with milestone diamonds at boundaries. |
 | 3 | CI/CD Pipeline Flow | Current `ci-modernisation.yml` flow (Source → Build → SpotBugs/Coverage, with Checkstyle in parallel). Future container deployment chain shown with dashed/faded styling. |
 
-### Diagram specification
-
-The Standard Import JSON for all three pages is saved in
-[`modernisation-flow-spec.json`](./modernisation-flow-spec.json). This file can be imported
-directly once the Lucid MCP connection is restored:
-
-```bash
-# Use the lucid_create_diagram_from_specification MCP tool with:
-#   title: "OpenMRS Core - Modernisation Flow"
-#   product: "lucidchart"
-#   use_assisted_layout: false
-#   standard_import_json: <contents of modernisation-flow-spec.json>
-```
-
-### Lucidchart links
-
-| Diagram | Link | Status |
-| --- | --- | --- |
-| Phase Dependency Graph | _TBD_ | Blocked — Lucid MCP auth |
-| Phase Timeline | _TBD_ | Blocked — Lucid MCP auth |
-| CI/CD Pipeline Flow | _TBD_ | Blocked — Lucid MCP auth |
+The Mermaid diagrams in this file remain as text-based baselines for version control
+and inline rendering. The Lucidchart versions provide higher fidelity with swimlanes,
+milestone markers, and real-time collaboration for programme reviews.
 
 ### Access permissions
 
-To view or edit the Lucidchart diagrams once created:
+To view or edit the Lucidchart diagrams:
 
 1. You must be a member of the Lucidchart workspace with at least **view** access.
-2. A workspace administrator must approve the Lucid MCP server integration in the
-   [Lucid Marketplace](https://lucid.app/marketplace).
-3. Once approved, diagram links will grant access to workspace members automatically.
-
-### Lucid MCP troubleshooting
-
-The Lucid MCP server at `https://mcp.lucid.app/mcp` returned these errors during diagram creation:
-
-| Error | Meaning |
-| --- | --- |
-| `PKCE verification failed` | OAuth PKCE authentication flow has not been completed or has expired |
-| `Request timed out` | Connection established but server did not respond in time |
-| `Connection closed` / `Not connected` | Subsequent failures after the initial auth failure |
-
-**Resolution steps:**
-
-1. Verify a **workspace administrator** has approved the Lucid MCP integration in the Lucid Marketplace.
-2. Re-authenticate the MCP connection (the PKCE flow may need to be re-initiated in the browser).
-3. Confirm the Lucid MCP tools are responsive (`lucid-search` should return results without errors).
-4. Re-run diagram creation using the saved specification in `modernisation-flow-spec.json`.
+2. Diagram links grant access to workspace members automatically.
+3. Share links can be created with view-only access for stakeholders without Lucid accounts.
 
 ---
 

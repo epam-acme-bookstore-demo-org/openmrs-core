@@ -47,7 +47,7 @@ Foundation
                                                               └──────────────► Phase 6: Production migration and go-live
 ```
 
-> 📐 **Lucidchart**: _Phase Dependency Graph — link TBD, created in Phase 0._
+> 📐 **Lucidchart**: [Phase Dependency Graph](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)
 > The text diagram above is a simplified summary. The Lucidchart diagram includes swimlanes and milestone markers.
 
 ## 2. Detailed Phase Breakdown
@@ -66,7 +66,7 @@ Foundation
 
 **Key work items**
 
-- Harden `.github/workflows/build.yaml` so it is the required validation path for modernisation PRs
+- Harden the GitHub Actions validation path so it is the required gate for modernisation PRs (now implemented in [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml))
 - Decide whether Bamboo remains as a temporary parallel signal or is fully retired later
 - Create a Java 21 coding standards document that defines when to use:
   - `var`
@@ -85,6 +85,19 @@ Foundation
   - latency for key endpoints
 - Create Azure resource groups and naming conventions for dev and prod
 
+**Implemented repository artifacts**
+
+| Deliverable | Artifact paths |
+| --- | --- |
+| Modernisation CI gate | [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml) |
+| Java 21 coding standards | [`../java21-coding-standards.md`](../java21-coding-standards.md) |
+| PR template and reviewer checklist | [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) |
+| Baseline metrics capture | [`../baseline-metrics.md`](../baseline-metrics.md), [`../../tools/capture-baseline-metrics.sh`](../../tools/capture-baseline-metrics.sh) |
+| Azure dev/prod infrastructure foundation | [`../../infrastructure/`](../../infrastructure/), [`../../infrastructure/README.md`](../../infrastructure/README.md), [`../../infrastructure/deploy.sh`](../../infrastructure/deploy.sh) |
+| OpenRewrite evaluation | [`../openrewrite-evaluation.md`](../openrewrite-evaluation.md), [`../../pom.xml`](../../pom.xml) |
+| Java 21 Checkstyle and Spotless enforcement | [`../../checkstyle.xml`](../../checkstyle.xml), [`../../pom.xml`](../../pom.xml) |
+| JaCoCo coverage instrumentation | [`../../pom.xml`](../../pom.xml) |
+
 **Deliverables**
 
 - GitHub Actions CI pipeline for all required build and test stages
@@ -102,6 +115,16 @@ Foundation
 - PR template/checklist is in use
 - Baseline metrics are recorded and visible to the programme team
 - Azure subscription and resource groups are available for Phase 2
+
+**Current status**
+
+- **Met:** GitHub Actions is now implemented as [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml) for modernisation validation.
+- **Met:** The detailed standards are published in [`../java21-coding-standards.md`](../java21-coding-standards.md) and can be referenced directly from Phase 1 work.
+- **Met:** The pull request checklist is implemented in [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md).
+- **Met:** Baseline metrics guidance and capture automation are available in [`../baseline-metrics.md`](../baseline-metrics.md) and [`../../tools/capture-baseline-metrics.sh`](../../tools/capture-baseline-metrics.sh).
+- **Met for implementation readiness:** Azure environment provisioning assets for dev and prod are now versioned under [`../../infrastructure/`](../../infrastructure/), including deployment guidance and scripts.
+- **Met:** Lucidchart architecture diagrams for dev and production environments — [OpenMRS Core - Azure Architecture](https://lucid.app/lucidchart/6ed471ce-7617-4b94-bc65-d20c711c0545/edit).
+- **Met:** Lucidchart phase dependency and CI/CD pipeline diagrams — [OpenMRS Core - Modernisation Flow](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit).
 
 **GitHub Issues**
 
@@ -487,7 +510,7 @@ Phase 0 ──┬──► Phase 1 ──► Phase 3 ──► Phase 5 ──┐
            └──► Phase 2 ──► Phase 4 ───────────────┘
 ```
 
-> 📐 **Lucidchart Diagram**: [Phase Dependency Graph — _link TBD, created in Phase 0_]
+> 📐 **Lucidchart Diagram**: [Phase Dependency Graph](https://lucid.app/lucidchart/a5e19c2d-5bea-4a40-9d73-d7b12e7c59ea/edit)
 > The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative view with swimlanes and milestone markers.
 
 ### Dependency notes

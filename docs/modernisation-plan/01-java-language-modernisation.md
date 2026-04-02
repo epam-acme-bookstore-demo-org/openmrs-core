@@ -4,6 +4,8 @@ This document defines how OpenMRS Core should move from “Java 21 for compilati
 
 - Back to the main project guide: [`README.md`](../../README.md)
 - Next planning document: [`05-migration-phases.md`](./05-migration-phases.md)
+- Detailed coding rules: [`../java21-coding-standards.md`](../java21-coding-standards.md)
+- Tooling evaluation: [`../openrewrite-evaluation.md`](../openrewrite-evaluation.md)
 
 ## Scope
 
@@ -38,6 +40,8 @@ Verified from the current repository:
 - `org/openmrs/util/OpenmrsSecurityManager.java` still extends `SecurityManager`.
 - `org/openmrs/util/HttpClient.java` still wraps `HttpURLConnection`.
 - Spotless, Checkstyle, and SpotBugs are already part of the build and should remain the guardrails for all migration work.
+- The detailed Phase 0 coding standards are now maintained in [`../java21-coding-standards.md`](../java21-coding-standards.md).
+- Java 21 syntax support is now wired into repository enforcement through [`../../checkstyle.xml`](../../checkstyle.xml) and the Spotless configuration in the root [`../../pom.xml`](../../pom.xml).
 
 ### Gap between “compiles on Java 21” and “uses Java 21 well”
 
@@ -753,6 +757,14 @@ All modernization changes must continue to satisfy the existing repository stand
 - **SpotBugs** (`spotbugs-maven-plugin`)
 
 Formatting is already driven by the repository’s Spotless + Eclipse formatter setup. Do not hand-format code against those tools.
+
+Use [`../java21-coding-standards.md`](../java21-coding-standards.md) as the detailed policy document for when and how to introduce `var`, pattern matching, switch expressions, records, sealed classes, text blocks, and `java.time`.
+
+Repository enforcement has already been updated for Java 21-era syntax:
+
+- [`../../checkstyle.xml`](../../checkstyle.xml) now carries the Checkstyle updates needed for newer language constructs.
+- The Spotless profile in the root [`../../pom.xml`](../../pom.xml) is part of the required formatting gate for modernisation PRs.
+- [`../openrewrite-evaluation.md`](../openrewrite-evaluation.md) documents the current evaluation of OpenRewrite recipes so automation can be used selectively and with reviewer oversight.
 
 ---
 
