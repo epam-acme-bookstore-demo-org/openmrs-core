@@ -4,7 +4,7 @@ description: >
   with security-first defaults and deterministic behavior.
 name: infrastructure
 model: GPT-5.3-Codex (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona

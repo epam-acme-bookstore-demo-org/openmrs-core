@@ -4,7 +4,7 @@ description: >
   task-oriented documentation synchronized with code changes.
 name: tech-writer
 model: GPT-5.4 (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona

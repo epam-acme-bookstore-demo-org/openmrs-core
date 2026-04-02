@@ -4,7 +4,7 @@ description: >
   actionable work items with clear acceptance criteria.
 name: business-analyst
 model: GPT-5.4 (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona

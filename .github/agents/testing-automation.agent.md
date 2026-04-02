@@ -4,7 +4,7 @@ description: >
   from requirements, scenarios, and existing manual tests.
 name: testing-automation
 model: Claude Sonnet 4.6 (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona

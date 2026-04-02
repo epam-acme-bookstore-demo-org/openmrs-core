@@ -4,7 +4,7 @@ description: >
   checking for correctness, conventions, security, and business adherence.
 name: pr-reviewer
 model: Grok Code Fast 1 (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona

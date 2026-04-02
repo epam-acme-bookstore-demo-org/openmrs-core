@@ -95,6 +95,8 @@ The following documents make up the full modernisation plan:
 | [`03-azure-infrastructure.md`](./03-azure-infrastructure.md) | Azure environment design for development and production, including Azure Container Apps, networking, ingress, and isolation |
 | [`04-testing-strategy.md`](./04-testing-strategy.md) | Test approach for refactoring confidence, container validation, database compatibility, and release safety |
 | [`05-migration-phases.md`](./05-migration-phases.md) | End-to-end sequencing, dependencies, milestones, and rollout phases across language, container, and infrastructure work |
+| [`06-github-issues.md`](./06-github-issues.md) | GitHub Issues structure, epics, labels, and issue templates for tracking all modernisation work |
+| [`07-code-quality-enhancement.md`](./07-code-quality-enhancement.md) | Structural code quality improvements: god class decomposition, error handling hardening, boolean flag elimination, and complexity reduction (Phase 1.5) |
 
 ## Diagramming
 

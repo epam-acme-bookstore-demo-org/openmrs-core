@@ -35,6 +35,7 @@ Epic (1 per phase)
 | `phase-5` | `#B0BEC5` | High-risk changes & cleanup |
 | `phase-6` | `#B0BEC5` | Go-live |
 | `priority-1` | `#D93F0B` | High priority |
+| `phase-1.5` | `#B0BEC5` | Code quality enhancement |
 | `priority-2` | `#E99695` | Medium priority |
 | `priority-3` | `#FEF2C0` | Low priority |
 | `breaking-change` | `#B60205` | Changes public API |
@@ -93,6 +94,7 @@ Every issue description must include a plan reference linking to the source sect
 |---|---|---|---|
 | E0 | Foundation for OpenMRS Core Modernisation | 0 | `modernisation`, `phase-0` |
 | E1 | Low-Risk Java 21 Modernisation | 1 | `modernisation`, `java-21`, `phase-1` |
+| E1.5 | Code Quality Enhancement | 1.5 | `modernisation`, `java-21`, `phase-1.5` |
 | E2 | Containerisation and Dev Azure Environment | 2 | `modernisation`, `containers`, `azure`, `phase-2` |
 | E3 | Medium-Risk Java 21 Modernisation | 3 | `modernisation`, `java-21`, `phase-3` |
 | E4 | Production Azure Infrastructure | 4 | `modernisation`, `azure`, `phase-4` |
@@ -117,8 +119,6 @@ Every issue description must include a plan reference linking to the source sect
 | P0-08 | Establish test coverage baseline with JaCoCo | Task | `modernisation`, `testing`, `phase-0`, `priority-1` | P0-01 | [04-testing-strategy.md § Quality Gates](./04-testing-strategy.md) |
 | P0-09 | Create Lucidchart architecture diagrams for Azure dev and production environments | Task | `modernisation`, `azure`, `documentation`, `phase-0`, `priority-1` | P0-05 | [03-azure-infrastructure.md](./03-azure-infrastructure.md) |
 | P0-10 | Create Lucidchart phase dependency and CI/CD pipeline diagrams | Task | `modernisation`, `documentation`, `phase-0`, `priority-2` | — | [05-migration-phases.md](./05-migration-phases.md) |
-| P0-09 | Create Lucidchart architecture diagrams for Azure dev and production environments | Task | `modernisation`, `azure`, `documentation`, `phase-0`, `priority-1` | P0-05 | [03-azure-infrastructure.md](./03-azure-infrastructure.md) |
-| P0-10 | Create Lucidchart phase dependency and CI/CD pipeline diagrams | Task | `modernisation`, `documentation`, `phase-0`, `priority-2` | - | [05-migration-phases.md](./05-migration-phases.md) |
 
 ---
 
@@ -259,12 +259,39 @@ Depends on **Epics E4 and E5** (Phases 4 and 5 complete).
 
 ---
 
+
+### Phase 1.5 — Code Quality Enhancement
+
+**Epic E1.5**: Code quality enhancements guided by `performance-code-quality` skill
+
+📋 **Plan Reference**: [07-code-quality-enhancement.md](./07-code-quality-enhancement.md)
+
+| ID | Title | Type | Labels | Depends On | Plan Section |
+|---|---|---|---|---|---|
+| P1.5-01 | Error handling hardening — `api` module (256 broad catches) | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-1` | E1 | [07 § Priority 1](./07-code-quality-enhancement.md) |
+| P1.5-02 | Error handling hardening — `web` module | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-1` | E1 | [07 § Priority 1](./07-code-quality-enhancement.md) |
+| P1.5-03 | Remove silent exception swallowing (71 catch blocks) | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-1` | P1.5-01 | [07 § Priority 1](./07-code-quality-enhancement.md) |
+| P1.5-04 | Decompose `OpenmrsUtil.java` (2,160 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | E1 | [07 § Priority 2](./07-code-quality-enhancement.md) |
+| P1.5-05 | Decompose `HibernateConceptDAO.java` (2,405 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | E1 | [07 § Priority 2](./07-code-quality-enhancement.md) |
+| P1.5-06 | Decompose `ConceptServiceImpl.java` (2,343 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | E1 | [07 § Priority 2](./07-code-quality-enhancement.md) |
+| P1.5-07 | Decompose `InitializationFilter.java` (1,985 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | E1 | [07 § Priority 2](./07-code-quality-enhancement.md) |
+| P1.5-08 | Decompose `ModuleFactory.java` (1,597 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | E1 | [07 § Priority 2](./07-code-quality-enhancement.md) |
+| P1.5-09 | Decompose remaining god classes (Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil) | Epic | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | E1 | [07 § Priority 2](./07-code-quality-enhancement.md) |
+| P1.5-10 | Audit and eliminate boolean flag parameters in public API | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | E1 | [07 § Priority 3](./07-code-quality-enhancement.md) |
+| P1.5-11 | Convert string switch dispatch to enum-based dispatch | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | E1 | [07 § Priority 3](./07-code-quality-enhancement.md) |
+| P1.5-12 | Audit and resolve `@SuppressWarnings` annotations | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | E1 | [07 § Priority 3](./07-code-quality-enhancement.md) |
+| P1.5-13 | Audit and remove dead `@Deprecated` code | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | E1 | [07 § Priority 3](./07-code-quality-enhancement.md) |
+| P1.5-14 | Flatten deeply nested methods (>3 levels) in top 10 files | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | E1 | [07 § Priority 3](./07-code-quality-enhancement.md) |
+| P1.5-15 | Refactor methods with 5+ parameters into config objects | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | E1 | [07 § Priority 3](./07-code-quality-enhancement.md) |
+
+---
+
 ## 4. Dependency Graph
 
 ```
                     ┌──────────────────────────────────────────────┐
                     │              PHASE 0: FOUNDATION             │
-                    │  P0-01..P0-08                                │
+                    │  P0-01..P0-10                                │
                     └─────────────────┬────────────────────────────┘
                                       │
                     ┌─────────────────┼────────────────────┐
@@ -303,12 +330,13 @@ Depends on **Epics E4 and E5** (Phases 4 and 5 complete).
 |---|---|---|
 | Phase 0 | 10 | Yes — blocks all other phases |
 | Phase 1 | 20 | Track A critical path |
+| Phase 1.5 | 15 | Parallel with Track B |
 | Phase 2 | 18 | Track B critical path |
 | Phase 3 | 13 | Track A critical path |
 | Phase 4 | 16 | Track B critical path |
 | Phase 5 | 7 | Track A critical path |
 | Phase 6 | 9 | Final convergence |
-| **Total** | **93** | |
+| **Total** | **108** | |
 
 ### Decision Points
 

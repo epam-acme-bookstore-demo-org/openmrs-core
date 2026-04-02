@@ -36,6 +36,9 @@ Foundation
        ├────────────── Java modernisation track ──────────────┐
        │                                                      │
        └──► Phase 1: Low-risk Java changes ─► Phase 3: Medium-risk Java changes ─► Phase 5: High-risk cleanup
+        │
+        └──► Phase 1.5: Code quality enhancement (parallel with Phase 2)
+
        │
        └──────────── Infrastructure track ────────────────────┐
                                                               │
@@ -176,6 +179,52 @@ Apply changes in this order to contain risk and simplify review:
 - `Adopt collection factory methods in api, web, and webapp modules`
 - `Simplify resource handling with modern try-with-resources patterns`
 - `Track Phase 1 module rollout order and merge readiness`
+
+---
+
+### Phase 1.5: Code Quality Enhancement
+
+**Purpose:** address structural code quality issues identified through systematic audit using the `performance-code-quality` skill.
+
+**Depends on:** Phase 1  
+**Can run in parallel with:** Phase 2
+
+**Scope**
+
+- Error handling hardening: replace 256 broad `catch (Exception)` blocks with specific types; eliminate 71 silently swallowed exceptions
+- God class decomposition: split the top 10 files exceeding 1,000 lines (HibernateConceptDAO, ConceptServiceImpl, OpenmrsUtil, InitializationFilter, ModuleFactory, Context, ORUR01Handler, ModuleUtil, OrderServiceImpl, PatientServiceImpl)
+- Boolean flag elimination: audit and refactor 324 boolean parameter occurrences in public API methods
+- Complexity reduction: flatten deeply nested methods, group long parameter lists into config objects, convert string dispatch to enum-based patterns
+- Deprecated code cleanup: audit 123 `@Deprecated` annotations and 116 `@SuppressWarnings` suppressions
+
+**Key work items**
+
+- `Harden error handling in api module` (256 broad catches, 71 silent swallows)
+- `Harden error handling in web module`
+- `Decompose OpenmrsUtil.java` (2,160 lines → domain-specific utility classes)
+- `Decompose HibernateConceptDAO.java` (2,405 lines → operation-based classes)
+- `Decompose ConceptServiceImpl.java` (2,343 lines → delegate sub-services)
+- `Decompose InitializationFilter.java` (1,985 lines → step handler classes)
+- `Decompose remaining god classes` (ModuleFactory, Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil)
+- `Audit and eliminate boolean flag parameters in public API`
+- `Convert string switch dispatch to enum-based dispatch`
+- `Audit and resolve @SuppressWarnings and @Deprecated annotations`
+
+**Deliverables**
+
+- Refactored exception handling with consistent layer-specific error strategy
+- Decomposed god classes with preserved public API compatibility
+- Reduced boolean parameter proliferation in public APIs
+- Cleaned deprecated code and resolved suppressed warnings
+
+**Exit criteria**
+
+- All existing tests pass after each refactoring PR
+- SpotBugs and Checkstyle findings do not increase
+- JaCoCo coverage does not decrease
+- No new `@SuppressWarnings` added without justification
+
+**GitHub issues for Phase 1.5:** P1.5-01 through P1.5-15 — see [07-code-quality-enhancement.md](./07-code-quality-enhancement.md) and [06-github-issues.md](./06-github-issues.md)
 
 ---
 
