@@ -725,3 +725,44 @@ Suggested labels:
 ## README drift note
 
 This plan introduces a new documentation area under `docs/modernisation-plan/`. If this Azure deployment approach becomes the primary recommended deployment path, the top-level [README.md](../../README.md) should be updated separately with links to this plan after human review.
+
+---
+
+## Tracked Issues
+
+### Phase 0 — Foundation (Azure)
+
+- [ ] #50 — Provision Azure subscription access and resource groups for dev and prod
+- [ ] #84 — Create Lucidchart architecture diagrams for Azure dev and production environments
+
+### Phase 2 — Dev Environment
+
+- [ ] #52 — Deploy Azure Container Registry (Basic SKU)
+- [ ] #80 — Deploy dev Container Apps Environment (Consumption plan) + MySQL Flexible Server
+- [ ] #83 — Deploy Azure Key Vault (dev) and seed secrets
+- [ ] #85 — Deploy OpenMRS Core Container App to dev environment
+
+### Phase 4 — Production Infrastructure
+
+- [ ] #51 — Provision production VNET (10.0.0.0/16) and subnet layout
+- [ ] #105 — Configure NSGs for all production subnets
+- [ ] #106 — Deploy production MySQL Flexible Server with private endpoint and HA
+- [ ] #107 — Deploy production Key Vault with private endpoint
+- [ ] #108 — Upgrade ACR to Standard SKU with private endpoint
+- [ ] #109 — Deploy Container Apps Environment into VNET (Workload profiles)
+- [ ] #110 — Deploy OpenMRS Container App with internal-only ingress
+- [ ] #111 — Deploy Application Gateway WAF_v2
+- [ ] #112 — Configure TLS termination and custom domain on Application Gateway
+- [ ] #113 — Configure managed identities and RBAC for Container App → Key Vault / ACR
+- [ ] #114 — Set up monitoring, alerting, and dashboards (App Insights + Log Analytics)
+- [ ] #115 — Enable Microsoft Defender for Containers and Database
+- [ ] #116 — Run production security hardening review and remediation
+- [ ] #117 — Create Bicep IaC modules for all production resources
+- [ ] #118 — Create infrastructure deployment GitHub Actions workflow (OIDC auth)
+- [ ] #119 — Create application deployment GitHub Actions workflow
+
+### Phase 6 — Go-Live (Azure)
+
+- [ ] #23 — Create DNS cutover and rollback plan for Azure go-live
+- [ ] #49 — Execute DNS cutover and go-live
+- [ ] #64 — Post-go-live monitoring — 48-hour intensive monitoring period

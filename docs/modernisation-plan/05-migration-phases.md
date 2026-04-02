@@ -585,3 +585,21 @@ Examples:
 - [02-containerisation.md](./02-containerisation.md)
 - [03-azure-infrastructure.md](./03-azure-infrastructure.md)
 - [04-testing-strategy.md](./04-testing-strategy.md)
+
+---
+
+## Tracked Issues
+
+### Cross-Phase Tracking
+
+- [ ] #88 — Create Lucidchart phase dependency and CI/CD pipeline diagrams
+- [ ] #57 — Phase 1 rollout tracking and merge readiness review
+- [ ] #75 — Create and maintain Phase 3 java.time migration tracker
+- [ ] #100 — Remove transitional deprecated APIs introduced during modernisation
+
+### Phase 6 — Go-Live
+
+- [ ] #31 — Assess and execute application data migration requirements
+- [ ] #46 — Validate blue-green deployment process for production cutover
+- [ ] #68 — Write and review deployment, rollback, and incident runbooks
+- [ ] #72 — Retrospective and lessons learned
