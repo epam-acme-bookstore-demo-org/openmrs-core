@@ -4,7 +4,7 @@ description: >
   and quality gate evidence for code changes.
 name: testing-engineer
 model: Claude Sonnet 4.6 (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona

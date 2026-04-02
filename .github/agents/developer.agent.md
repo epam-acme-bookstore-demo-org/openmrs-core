@@ -4,7 +4,7 @@ description: >
   deterministic behavior, tests, and backward compatibility.
 name: developer
 model: Claude Opus 4.6 (copilot)
-tools: [vscode, execute, read, edit, search, web, browser, todo]
+tools: [vscode, execute, read, create, edit, search, web, browser, todo]
 ---
 
 ## Persona
