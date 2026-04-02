@@ -1,55 +1,42 @@
 lockfile_version: '1'
-generated_at: '2026-03-31T18:42:14.252589+00:00'
-apm_version: 0.8.6
+generated_at: '2026-04-02T14:40:51.374396+00:00'
+apm_version: 0.8.9
 dependencies:
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: architecture/lucidchart
   is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .github/instructions/lucidchart.diagram-ops.instructions.md
-  - .github/instructions/lucidchart.mcp-setup.instructions.md
   - .github/skills/lucidchartdiagram-ops
   content_hash: sha256:1d0580f7299cce8821688a4db329863fdee7806aff72cf9d01f8e4ae70652c50
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: devops/docker
   is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .github/instructions/docker.instructions.md
   - .github/skills/docker-build
   content_hash: sha256:39b751c8eca76d2240f28b0ef9431fa6490ee8cd332aa8d588d430855beadc39
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: devops/github
   is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .github/instructions/agentic-workflows.instructions.md
-  - .github/instructions/ci-investigation.instructions.md
-  - .github/instructions/github-mcp.instructions.md
-  - .github/instructions/tag-based-release.instructions.md
-  - .github/prompts/github.agentic-workflows.create.prompt.md
-  - .github/prompts/github.setup-tag-release.prompt.md
-  - .github/prompts/investigate-ci-failure.prompt.md
   - .github/skills/agentic-workflows
   - .github/skills/ci-investigation
   content_hash: sha256:667c62a559d8ade10083ac976a9db2beac6caacdc946f5f8f25128dea8dd3091
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: infrastructure/azure
   is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .github/instructions/azure.instructions.md
-  - .github/instructions/baseline.instructions.md
-  - .github/prompts/azure.pim-elevate-role.prompt.md
   - .github/skills/azure-approve-splr
   - .github/skills/azure-containers
   - .github/skills/azure-naming
@@ -58,7 +45,7 @@ dependencies:
   content_hash: sha256:1c36a9196055d51342726ded0669e650f7094ada6ccd61b0f58c14b6ade99459
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: loops/modernisation
   is_virtual: true
   package_type: apm_package
@@ -67,218 +54,185 @@ dependencies:
   content_hash: sha256:7502e0d621a086581816adef7b4069b2214546b35adcc5238bb839430624f225
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: squads/java
   is_virtual: true
   package_type: apm_package
-  deployed_files:
-  - .github/instructions/orchestration.instructions.md
-  content_hash: sha256:55f53830d25cef850d297cc006d6e27beeb7079e0fe5d924104852f32a68b1f2
+  content_hash: sha256:d183bd7225dc9df6cab868423db15b7dc0557bc582679c67f653d7ab4e2ddad2
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: testing/testcontainers
   is_virtual: true
   package_type: apm_package
   deployed_files:
-  - .github/instructions/testcontainers.instructions.md
   - .github/skills/testcontainers-standards
   content_hash: sha256:59e89cb083e230006b6e8e126124951e6b5e20e6b1fe306805f8a19874701999
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/ci-investigator
   is_virtual: true
   depth: 2
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/ci-investigator.agent.md
-  content_hash: sha256:d0550fba0cc8013c8d0960c0ee80a3a30fb0d06c986e4473477abc11c43ac5e0
+  content_hash: sha256:9dd59c4685739377f19c5daa23eda3cc55214141fcde7f7a6da522ae5f92f85f
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: backend/java/standards
   is_virtual: true
   depth: 2
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
   deployed_files:
-  - .github/instructions/java.instructions.md
   - .github/skills/java-standards
   content_hash: sha256:a14d93086b27d52743d886e86ac99538849ad95c39b6c06cd68615d5fa347a8d
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: general/implementation
   is_virtual: true
   depth: 2
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/instructions/implementation.instructions.md
-  - .github/prompts/implementation-plan.prompt.md
-  content_hash: sha256:f01e489fdc0c719e38648f1b6b9ab75acf2e8f69dad0fd05a1c69fd93ad86367
+  content_hash: sha256:cf604d7c46e254ef173c32d41149a9e6770bacbde0b8553fb31d4b1318ec46dc
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: general/quality
   is_virtual: true
   depth: 2
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
   deployed_files:
-  - .github/instructions/quality.instructions.md
-  - .github/prompts/code-review.prompt.md
   - .github/skills/quality-assurance
   content_hash: sha256:fbdd43deebeeaaee5a9b0a3b3955186e60483ea36570a39d534008727f960efe
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: loops/delivery
   is_virtual: true
   depth: 2
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/instructions/delivery.orchestration.instructions.md
-  - .github/prompts/delivery.plan.prompt.md
-  - .github/prompts/delivery.start.prompt.md
   content_hash: sha256:aea5c7bccfa22a7f5fbaef41cf214c45f1dbf2bc6679071a841a4d07f3e612e9
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
+  virtual_path: product/work-tracking
+  is_virtual: true
+  depth: 2
+  resolved_by: epam-acme-bookstore-demo-org/agent-forge
+  package_type: apm_package
+  deployed_files:
+  - .github/instructions/work-tracking.instructions.md
+  - .github/skills/work-tracking
+  content_hash: sha256:2843da8f9db25c5fbae3f9d0df0ea74c1bab7cf7712d3b616dc4e1b60ab53860
+- repo_url: epam-acme-bookstore-demo-org/agent-forge
+  host: github.com
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/business-analyst
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/business-analyst.agent.md
-  content_hash: sha256:8c90c4e0f3749eed161d06acc9d10b33ed01773fb8fcbc05f6dd6e0bb4ec2a15
+  content_hash: sha256:0ee823394eac2d8adb24a3e371674959f9cb135762a7d22bbff2c538a9285a7e
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/developer
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/developer.agent.md
-  content_hash: sha256:b8e54f3fe39a42ebbd61c2d6eedb7d1a29935776231f9c971c0141a28900973f
+  content_hash: sha256:94f85fe3991979d344d0d7062d2f6253ad1b01d67edc172e215c307795f23fc5
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/infrastructure
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/infrastructure.agent.md
-  content_hash: sha256:2d9de8bd55c60dc3dd1279d3ec12c4410ac64d4c61ed129ed3934da5932dbd55
+  content_hash: sha256:1fdaab846aa551e6b5088b0e75392792b1fa0b42f8b3cf7296dcc0bceaddacd5
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/pr-reviewer
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/pr-reviewer.agent.md
-  content_hash: sha256:f1909c625977a1e47ae2e8959d0d13900c32c6ac4eec91b26a1f5895108a5c8a
+  content_hash: sha256:cca6d99fdc40feac23866bcfc9ce8836e3ae4cfaaa6cfce604806eea15e1da46
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/tech-lead
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/tech-lead.agent.md
-  content_hash: sha256:7f831f5df8dab969ef3cf5e555d25dadc64e1e5382c2f386c978ea9f5cdcaa1c
+  content_hash: sha256:7350219a48a58e343f7d8466b3d2ebeae3c494cf25e7518e393d850a0e067d59
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/tech-writer
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/tech-writer.agent.md
-  content_hash: sha256:8e4085dc6baf2cf9f3a8870e2388094f3e8927fd42ba70f4fa3cf8a1d0242bf2
+  content_hash: sha256:644b234c3756360aa524163ac3be6292a34cbbc85f31121113d295aa5a59e5fc
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/testing
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/testing-engineer.agent.md
-  content_hash: sha256:a10d0d97158dc85f630152d8d8215835aed3b0a5edcc63f225d6da5159402a7e
+  content_hash: sha256:f800394b088f1abd5df1590569deb18f3f648072531d66c1e020c5b345f379fe
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: agents/testing-automation
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
-  deployed_files:
-  - .github/agents/testing-automation.agent.md
-  content_hash: sha256:bf486e80851d9815016e7b18a720b0597ab6c5c50f41bb4766004c2507d0bc78
+  content_hash: sha256:25fc087df052c38a4f39a237a043dcc28d31f6313c7be05610a420e4769b845c
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: backend/standards
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
   deployed_files:
-  - .github/instructions/performance.instructions.md
-  - .github/prompts/code.complexity-audit.prompt.md
-  - .github/prompts/code.harden-errors.prompt.md
-  - .github/prompts/code.refactor.prompt.md
-  - .github/prompts/code.review-quality.prompt.md
-  - .github/prompts/code.split-god-file.prompt.md
   - .github/skills/performance-code-quality
   content_hash: sha256:877a5d7943d49e60c08971fbbfb4bcfa173dee81238be94fc638d8e81412c79f
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: general/knowledge
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
   deployed_files:
-  - .github/instructions/knowledge.instructions.md
-  - .github/prompts/knowledge-update.prompt.md
   - .github/skills/cli-technical-documentation
   - .github/skills/copilot-management
   content_hash: sha256:5f83b970f3979a4fdd4958188c2f33f899e7d7bacb16865fd2085a7080c3fb6d
 - repo_url: epam-acme-bookstore-demo-org/agent-forge
   host: github.com
-  resolved_commit: c136c8368947e8ca1404eaafddf7a0ea61c7c4a0
+  resolved_commit: eeaf209e00cb47d33769e77ccc7e303eed090a47
   virtual_path: product/requirements
   is_virtual: true
   depth: 3
   resolved_by: epam-acme-bookstore-demo-org/agent-forge
   package_type: apm_package
   deployed_files:
-  - .github/instructions/requirements.instructions.md
-  - .github/prompts/requirements.decompose-tasks.prompt.md
-  - .github/prompts/requirements.plan-phase.prompt.md
-  - .github/prompts/requirements.plan-sprint.prompt.md
-  - .github/prompts/requirements.refine.prompt.md
-  - .github/prompts/requirements.structure.prompt.md
   - .github/skills/sprint-planning
   content_hash: sha256:12269565f47ca903863a73c50c5159648152c525597a46624749478b4195f498
 mcp_servers:

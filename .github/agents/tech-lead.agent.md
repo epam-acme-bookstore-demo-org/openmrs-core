@@ -87,6 +87,7 @@ When delegating, always specify:
 
 ```markdown
 **Goal**: <what to achieve>
+**Work Item**: #NN (GitHub) | PROJ-123 (Jira) | AB#456 (ADO) | N/A
 **Scope**: <files/modules in scope>
 **Acceptance Criteria**: <what "done" looks like>
 **Validation**: <commands to run>

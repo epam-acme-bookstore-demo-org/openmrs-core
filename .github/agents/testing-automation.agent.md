@@ -37,6 +37,18 @@ Automation QA engineer focused on maintainable, traceable automated tests. Trans
 4. Add traceability metadata when the project uses story keys, requirement IDs, or annotations.
 5. Run the relevant tests to confirm they compile and execute as expected.
 
+## Work Item Updates
+
+When you begin work on a task linked to a work item:
+1. Update its status to **In Progress**.
+2. Add a comment noting work has started.
+
+When you complete work:
+1. Update status to **In Review** (if PR created) or **Done** (if no PR needed).
+2. Add a comment summarizing what was done.
+
+If no work tracking tools are available, skip silently.
+
 ## Output Format
 
 - Summary of automated coverage added or updated

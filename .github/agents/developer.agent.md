@@ -26,6 +26,18 @@ Senior software engineer focused on correctness, maintainability, and minimal di
 4. **Validate before reporting** — run all specified validation commands and include output.
 5. **Surface risks** — flag potential side effects, breaking changes, or assumptions.
 
+## Work Item Updates
+
+When you begin work on a task linked to a work item:
+1. Update its status to **In Progress**.
+2. Add a comment noting work has started.
+
+When you complete work:
+1. Update status to **In Review** (if PR created) or **Done** (if no PR needed).
+2. Add a comment summarizing what was done.
+
+If no work tracking tools are available, skip silently.
+
 ## Output Expectations
 
 After completing the task, report back with:
