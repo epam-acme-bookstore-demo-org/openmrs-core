@@ -25,8 +25,8 @@ This overview document is the entry point for the plan. Detailed decisions, sequ
 | Web/runtime | Production Docker image runs on Tomcat 11 | Container and Azure work should optimise for Tomcat-based deployment, not Jetty |
 | Frameworks | Spring Framework 7.0.6, Hibernate 7.2.6.Final, Jakarta namespace already adopted | The codebase is already on a modern platform stack, reducing framework upgrade pressure during this plan |
 | Testing | JUnit 6.0.3, Mockito 5.23.0, Testcontainers 2.0.4 | The test stack is modern enough to support refactoring and container validation work |
-| Database | MariaDB is the primary local/container database; MySQL and PostgreSQL are supported in tests | Database compatibility must remain explicit throughout container and migration work |
-| Build/CI | Bamboo Specs are present under `bamboo-specs/` | CI changes must fit Bamboo-based pipelines unless a separate CI migration is approved |
+| Database | MariaDB is the primary local/container database; PostgreSQL is the Azure deployment target; MySQL is also supported | Database compatibility must remain explicit throughout container and migration work |
+| Build/CI | Bamboo Specs are present under `bamboo-specs/`, and `.github/workflows/ci-modernisation.yml` is now available for the modernisation programme | Modernisation delivery can use GitHub Actions immediately while Bamboo cutover and cleanup remain deliberate follow-up work |
 | Packaging | Multi-stage Dockerfile exists, but current workflow is still local-dev oriented | Container work should focus on producing cloud-ready images and deployment conventions |
 | Repository shape | Root Maven build includes 8 modules: `bom`, `tools`, `test`, `api`, `web`, `webapp`, `liquibase`, `test-suite` | Work should be sequenced by module ownership and blast radius |
 
@@ -98,17 +98,42 @@ The following documents make up the full modernisation plan:
 | [`06-github-issues.md`](./06-github-issues.md) | GitHub Issues structure, epics, labels, and issue templates for tracking all modernisation work |
 | [`07-code-quality-enhancement.md`](./07-code-quality-enhancement.md) | Structural code quality improvements: god class decomposition, error handling hardening, boolean flag elimination, and complexity reduction (Phase 1.5) |
 
+### Supporting reference documents
+
+The following implementation-facing documents now back the Phase 0 foundation work and should be read alongside the planning documents above:
+
+| Document | Purpose |
+| --- | --- |
+| [`../java21-coding-standards.md`](../java21-coding-standards.md) | Detailed Java 21 coding rules, examples, and review expectations for ongoing refactors |
+| [`../openrewrite-evaluation.md`](../openrewrite-evaluation.md) | Evaluation of OpenRewrite as an automation aid for Java 21 migration work |
+| [`../baseline-metrics.md`](../baseline-metrics.md) | Baseline metrics strategy and captured reference points for test, quality, and runtime comparisons |
+
+## Phase 0 deliverables
+
+Phase 0 repository-backed deliverables are now in place. Overall status is **Delivered** for all artifacts below, including the draw.io diagrams (P0-09 and P0-10).
+
+| Deliverable | Status | Artifact paths |
+| --- | --- | --- |
+| GitHub Actions CI pipeline | Delivered | [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml) |
+| Java 21 coding standards | Delivered | [`../java21-coding-standards.md`](../java21-coding-standards.md) |
+| PR template with modernisation checklist | Delivered | [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) |
+| Baseline metrics strategy and capture script | Delivered | [`../baseline-metrics.md`](../baseline-metrics.md), [`../../tools/capture-baseline-metrics.sh`](../../tools/capture-baseline-metrics.sh) |
+| Azure ACA infrastructure foundation | Delivered | [`../../infrastructure/`](../../infrastructure/), [`../../infrastructure/README.md`](../../infrastructure/README.md), [`../../infrastructure/deploy.sh`](../../infrastructure/deploy.sh) |
+| OpenRewrite evaluation and build profile | Delivered | [`../openrewrite-evaluation.md`](../openrewrite-evaluation.md), [`../../pom.xml`](../../pom.xml) |
+| Java 21 style enforcement updates | Delivered | [`../../checkstyle.xml`](../../checkstyle.xml), [`../../pom.xml`](../../pom.xml) |
+| JaCoCo coverage configuration | Delivered | [`../../pom.xml`](../../pom.xml) |
+
 ## Diagramming
 
-Architecture and infrastructure diagrams are maintained in **Lucidchart** as the single source of truth for visual documentation. Text-based summaries are kept in the markdown files for quick reference, but the authoritative diagrams live in Lucidchart.
+Architecture and infrastructure diagrams are maintained as **draw.io** files in this repository as the single source of truth for visual documentation. Text-based summaries are kept in the markdown files for quick reference, but the authoritative diagrams live in draw.io files under `docs/diagrams/`.
 
-| Diagram | Lucidchart Link | Plan Reference |
+| Diagram | Draw.io File | Plan Reference |
 |---|---|---|
-| Dev Environment Architecture | _TBD — created in Phase 0_ | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
-| Production Environment Architecture | _TBD — created in Phase 0_ | [03-azure-infrastructure.md § Production Environment](./03-azure-infrastructure.md) |
-| Production Network Topology (VNET, Subnets, NSGs) | _TBD — created in Phase 0_ | [03-azure-infrastructure.md § Networking](./03-azure-infrastructure.md) |
-| CI/CD Pipeline Flow | _TBD — created in Phase 0_ | [02-containerisation.md § CI/CD Pipeline](./02-containerisation.md) |
-| Phase Dependency Graph | _TBD — created in Phase 0_ | [05-migration-phases.md § Phase Overview](./05-migration-phases.md) |
+| Dev Environment Architecture | [azure-architecture.drawio](../diagrams/azure-architecture.drawio) | [03-azure-infrastructure.md § Dev Environment](./03-azure-infrastructure.md) |
+| Production Environment Architecture | [azure-architecture.drawio](../diagrams/azure-architecture.drawio) | [03-azure-infrastructure.md § Production Environment](./03-azure-infrastructure.md) |
+| Production Network Topology (VNET, Subnets, NSGs) | [azure-architecture.drawio](../diagrams/azure-architecture.drawio) | [03-azure-infrastructure.md § Networking](./03-azure-infrastructure.md) |
+| CI/CD Pipeline Flow | [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio) | [02-containerisation.md § CI/CD Pipeline](./02-containerisation.md) |
+| Phase Dependency Graph | [modernisation-flow.drawio](../diagrams/modernisation-flow.drawio) | [05-migration-phases.md § Phase Overview](./05-migration-phases.md) |
 
 ## Delivery and tracking approach
 
@@ -130,7 +155,7 @@ This keeps the strategy documents stable while allowing delivery work to be brok
 | `SecurityManager` removal work exposes hidden dependencies | The existing helper indicates at least some code still depends on deprecated JVM mechanisms | Identify all call sites early and define a replacement approach before removing the class |
 | Container changes optimise for cloud but slow local development | Developer friction can reduce adoption and feedback quality | Keep a simple dev path as an explicit requirement, not a side effect |
 | Azure production networking becomes overly complex | ACA, private networking, and controlled ingress can add operational overhead quickly | Separate dev and prod designs; keep production isolation requirements explicit and justified |
-| Database portability regresses during modernisation | OpenMRS supports more than one database backend | Validate against MariaDB, MySQL, and PostgreSQL in the testing strategy |
+| Database portability regresses during modernisation | OpenMRS supports more than one database backend, even though Azure standardises on PostgreSQL | Validate against all supported database backends in the testing strategy, with PostgreSQL treated as the Azure deployment standard |
 | CI pipeline drift delays delivery | Bamboo remains the active CI mechanism for this repository | Align changes with Bamboo Specs and update pipeline steps alongside build/container changes |
 | Scope expands into unrelated platform rewrites | Modernisation efforts can become open-ended if not bounded | Keep scope anchored to the documented goals, phases, and issue-level acceptance criteria |
 

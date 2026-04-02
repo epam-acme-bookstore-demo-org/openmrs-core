@@ -1,0 +1,1612 @@
+{
+  "version": 1,
+  "pages": [
+    {
+      "id": "page1",
+      "title": "Phase Dependency Graph",
+      "shapes": [
+        {
+          "id": "title1",
+          "type": "text",
+          "boundingBox": {
+            "x": 250,
+            "y": 5,
+            "w": 900,
+            "h": 40
+          },
+          "text": "OpenMRS Core -- Phase Dependency Graph"
+        },
+        {
+          "id": "trackA",
+          "type": "text",
+          "boundingBox": {
+            "x": 380,
+            "y": 50,
+            "w": 350,
+            "h": 25
+          },
+          "text": "Track A: Java Modernisation"
+        },
+        {
+          "id": "trackQ",
+          "type": "text",
+          "boundingBox": {
+            "x": 630,
+            "y": 240,
+            "w": 350,
+            "h": 25
+          },
+          "text": "Code Quality Track"
+        },
+        {
+          "id": "trackB",
+          "type": "text",
+          "boundingBox": {
+            "x": 380,
+            "y": 430,
+            "w": 350,
+            "h": 25
+          },
+          "text": "Track B: Infrastructure"
+        },
+        {
+          "id": "p0",
+          "type": "process",
+          "boundingBox": {
+            "x": 50,
+            "y": 280,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 0\nFoundation\n(10 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#7B68EE"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p1",
+          "type": "process",
+          "boundingBox": {
+            "x": 380,
+            "y": 80,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 1\nLow-Risk Java\nModernisation\n(17 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p15",
+          "type": "process",
+          "boundingBox": {
+            "x": 700,
+            "y": 270,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 1.5\nCode Quality\nEnhancement\n(15 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#F39C12"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p2",
+          "type": "process",
+          "boundingBox": {
+            "x": 380,
+            "y": 460,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 2\nContainerisation &\nDev Environment\n(12 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#27AE60"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p3",
+          "type": "process",
+          "boundingBox": {
+            "x": 800,
+            "y": 80,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 3\nMedium-Risk Java\nModernisation\n(22 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p5",
+          "type": "process",
+          "boundingBox": {
+            "x": 1180,
+            "y": 80,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 5\nHigh-Risk Changes\n& Cleanup\n(9 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p4",
+          "type": "process",
+          "boundingBox": {
+            "x": 800,
+            "y": 460,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 4\nProduction\nInfrastructure\n(25 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#27AE60"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "p6",
+          "type": "process",
+          "boundingBox": {
+            "x": 1430,
+            "y": 280,
+            "w": 260,
+            "h": 110
+          },
+          "text": "Phase 6\nGo-Live\n(8 issues)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#E74C3C"
+            },
+            "stroke": {
+              "color": "#333333",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "pnote",
+          "type": "text",
+          "boundingBox": {
+            "x": 520,
+            "y": 395,
+            "w": 250,
+            "h": 25
+          },
+          "text": "Phase 1.5 parallel with Phase 2"
+        },
+        {
+          "id": "lt",
+          "type": "text",
+          "boundingBox": {
+            "x": 50,
+            "y": 620,
+            "w": 80,
+            "h": 30
+          },
+          "text": "Legend:"
+        },
+        {
+          "id": "lg0",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 150,
+            "y": 620,
+            "w": 170,
+            "h": 30
+          },
+          "text": "Java Modernisation",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "lg1",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 340,
+            "y": 620,
+            "w": 170,
+            "h": 30
+          },
+          "text": "Infrastructure",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#27AE60"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "lg2",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 530,
+            "y": 620,
+            "w": 170,
+            "h": 30
+          },
+          "text": "Code Quality",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#F39C12"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "lg3",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 720,
+            "y": 620,
+            "w": 170,
+            "h": 30
+          },
+          "text": "Go-Live",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#E74C3C"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "lgc",
+          "type": "text",
+          "boundingBox": {
+            "x": 920,
+            "y": 620,
+            "w": 300,
+            "h": 30
+          },
+          "text": "Thick red arrows = Critical Path"
+        }
+      ],
+      "lines": [
+        {
+          "id": "l_p0_p1",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p0"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p1"
+          },
+          "stroke": {
+            "color": "#C0392B",
+            "width": 4,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p0_p2",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p0"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p2"
+          },
+          "stroke": {
+            "color": "#555555",
+            "width": 2,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p1_p15",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p1"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p15"
+          },
+          "stroke": {
+            "color": "#555555",
+            "width": 2,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p1_p3",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p1"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p3"
+          },
+          "stroke": {
+            "color": "#C0392B",
+            "width": 4,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p2_p4",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p2"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p4"
+          },
+          "stroke": {
+            "color": "#555555",
+            "width": 2,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p3_p5",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p3"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p5"
+          },
+          "stroke": {
+            "color": "#C0392B",
+            "width": 4,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p4_p6",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p4"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p6"
+          },
+          "stroke": {
+            "color": "#555555",
+            "width": 2,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p5_p6",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p5"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p6"
+          },
+          "stroke": {
+            "color": "#C0392B",
+            "width": 4,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "l_p15_p6",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "p15"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "p6"
+          },
+          "stroke": {
+            "color": "#555555",
+            "width": 2,
+            "style": "solid"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page2",
+      "title": "Phase Timeline",
+      "shapes": [
+        {
+          "id": "title2",
+          "type": "text",
+          "boundingBox": {
+            "x": 200,
+            "y": 5,
+            "w": 900,
+            "h": 40
+          },
+          "text": "OpenMRS Core -- Phase Timeline"
+        },
+        {
+          "id": "tl",
+          "type": "swimLanes",
+          "boundingBox": {
+            "x": 50,
+            "y": 100,
+            "w": 1500,
+            "h": 550
+          },
+          "vertical": false,
+          "titleBar": {
+            "height": 50,
+            "verticalText": false
+          },
+          "lanes": [
+            {
+              "title": "Foundation",
+              "width": 100,
+              "headerFill": "#7B68EE",
+              "laneFill": "#F0EEFF"
+            },
+            {
+              "title": "Java Modernisation",
+              "width": 130,
+              "headerFill": "#4A90D9",
+              "laneFill": "#EBF5FB"
+            },
+            {
+              "title": "Code Quality",
+              "width": 100,
+              "headerFill": "#F39C12",
+              "laneFill": "#FEF9E7"
+            },
+            {
+              "title": "Infrastructure",
+              "width": 130,
+              "headerFill": "#27AE60",
+              "laneFill": "#EAFAF1"
+            },
+            {
+              "title": "Go-Live",
+              "width": 90,
+              "headerFill": "#E74C3C",
+              "laneFill": "#FDEDEC"
+            }
+          ]
+        },
+        {
+          "id": "m0",
+          "type": "text",
+          "boundingBox": {
+            "x": 200,
+            "y": 60,
+            "w": 200,
+            "h": 30
+          },
+          "text": "Months 1-3"
+        },
+        {
+          "id": "m1",
+          "type": "text",
+          "boundingBox": {
+            "x": 450,
+            "y": 60,
+            "w": 200,
+            "h": 30
+          },
+          "text": "Months 4-6"
+        },
+        {
+          "id": "m2",
+          "type": "text",
+          "boundingBox": {
+            "x": 750,
+            "y": 60,
+            "w": 200,
+            "h": 30
+          },
+          "text": "Months 7-9"
+        },
+        {
+          "id": "m3",
+          "type": "text",
+          "boundingBox": {
+            "x": 1050,
+            "y": 60,
+            "w": 200,
+            "h": 30
+          },
+          "text": "Months 10-11"
+        },
+        {
+          "id": "m4",
+          "type": "text",
+          "boundingBox": {
+            "x": 1300,
+            "y": 60,
+            "w": 200,
+            "h": 30
+          },
+          "text": "Month 12+"
+        },
+        {
+          "id": "tb0",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 150,
+            "y": 120,
+            "w": 250,
+            "h": 60
+          },
+          "text": "Phase 0: Foundation (10)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#7B68EE"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb1",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 420,
+            "y": 220,
+            "w": 270,
+            "h": 60
+          },
+          "text": "Phase 1: Low-Risk Java (17)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb15",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 720,
+            "y": 345,
+            "w": 280,
+            "h": 60
+          },
+          "text": "Phase 1.5: Code Quality (15)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#F39C12"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb2",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 420,
+            "y": 450,
+            "w": 270,
+            "h": 60
+          },
+          "text": "Phase 2: Containerisation (12)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#27AE60"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb3",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 720,
+            "y": 220,
+            "w": 300,
+            "h": 60
+          },
+          "text": "Phase 3: Med-Risk Java (22)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb4",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 720,
+            "y": 450,
+            "w": 310,
+            "h": 60
+          },
+          "text": "Phase 4: Prod Infra (25)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#27AE60"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb5",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 1050,
+            "y": 220,
+            "w": 220,
+            "h": 60
+          },
+          "text": "Phase 5: High-Risk (9)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#4A90D9"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "tb6",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 1300,
+            "y": 570,
+            "w": 200,
+            "h": 60
+          },
+          "text": "Phase 6: Go-Live (8)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#E74C3C"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 1,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "ms1",
+          "type": "diamond",
+          "boundingBox": {
+            "x": 400,
+            "y": 135,
+            "w": 25,
+            "h": 25
+          },
+          "text": "",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#2C3E50"
+            }
+          }
+        },
+        {
+          "id": "ms1l",
+          "type": "text",
+          "boundingBox": {
+            "x": 360,
+            "y": 163,
+            "w": 120,
+            "h": 20
+          },
+          "text": "CI Ready"
+        },
+        {
+          "id": "ms2",
+          "type": "diamond",
+          "boundingBox": {
+            "x": 690,
+            "y": 235,
+            "w": 25,
+            "h": 25
+          },
+          "text": "",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#2C3E50"
+            }
+          }
+        },
+        {
+          "id": "ms2l",
+          "type": "text",
+          "boundingBox": {
+            "x": 650,
+            "y": 263,
+            "w": 120,
+            "h": 20
+          },
+          "text": "Low-Risk Done"
+        },
+        {
+          "id": "ms3",
+          "type": "diamond",
+          "boundingBox": {
+            "x": 690,
+            "y": 465,
+            "w": 25,
+            "h": 25
+          },
+          "text": "",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#2C3E50"
+            }
+          }
+        },
+        {
+          "id": "ms3l",
+          "type": "text",
+          "boundingBox": {
+            "x": 650,
+            "y": 493,
+            "w": 120,
+            "h": 20
+          },
+          "text": "Dev Deployed"
+        },
+        {
+          "id": "ms4",
+          "type": "diamond",
+          "boundingBox": {
+            "x": 1280,
+            "y": 235,
+            "w": 25,
+            "h": 25
+          },
+          "text": "",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#2C3E50"
+            }
+          }
+        },
+        {
+          "id": "ms4l",
+          "type": "text",
+          "boundingBox": {
+            "x": 1240,
+            "y": 263,
+            "w": 120,
+            "h": 20
+          },
+          "text": "Prod Ready"
+        },
+        {
+          "id": "ms5",
+          "type": "diamond",
+          "boundingBox": {
+            "x": 1500,
+            "y": 585,
+            "w": 25,
+            "h": 25
+          },
+          "text": "",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#2C3E50"
+            }
+          }
+        },
+        {
+          "id": "ms5l",
+          "type": "text",
+          "boundingBox": {
+            "x": 1460,
+            "y": 613,
+            "w": 120,
+            "h": 20
+          },
+          "text": "GO LIVE"
+        }
+      ],
+      "lines": [
+        {
+          "id": "tl_tb0_tb1",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb0"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb1"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb0_tb2",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb0"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb2"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb1_tb15",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb1"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb15"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb1_tb3",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb1"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb3"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb2_tb4",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb2"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb4"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb3_tb5",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb3"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb5"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb4_tb6",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb4"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb6"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb5_tb6",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb5"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb6"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "tl_tb15_tb6",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "tb15"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "tb6"
+          },
+          "stroke": {
+            "color": "#888",
+            "width": 1,
+            "style": "dashed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page3",
+      "title": "CI/CD Pipeline Flow",
+      "shapes": [
+        {
+          "id": "title3",
+          "type": "text",
+          "boundingBox": {
+            "x": 200,
+            "y": 5,
+            "w": 900,
+            "h": 40
+          },
+          "text": "OpenMRS Core -- CI/CD Pipeline Flow"
+        },
+        {
+          "id": "sec1",
+          "type": "text",
+          "boundingBox": {
+            "x": 50,
+            "y": 50,
+            "w": 400,
+            "h": 30
+          },
+          "text": "Current Pipeline (ci-modernisation.yml)"
+        },
+        {
+          "id": "trigger",
+          "type": "process",
+          "boundingBox": {
+            "x": 50,
+            "y": 100,
+            "w": 280,
+            "h": 130
+          },
+          "text": "Source Triggers\n\npush: phase/*, feature/*,\nfix/*, modernisation/*\nPR: master",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#ECF0F1"
+            },
+            "stroke": {
+              "color": "#2C3E50",
+              "width": 2,
+              "style": "solid"
+            }
+          }
+        },
+        {
+          "id": "build",
+          "type": "process",
+          "boundingBox": {
+            "x": 430,
+            "y": 100,
+            "w": 260,
+            "h": 100
+          },
+          "text": "Build & Unit Tests\n\n./mvnw verify -B -ntp\nJava 21 (Temurin)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#3498DB"
+            },
+            "stroke": {
+              "color": "#2980B9",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "checkstyle",
+          "type": "process",
+          "boundingBox": {
+            "x": 430,
+            "y": 280,
+            "w": 260,
+            "h": 80
+          },
+          "text": "Checkstyle\n\n./mvnw checkstyle:check",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#F39C12"
+            },
+            "stroke": {
+              "color": "#E67E22",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "spotbugs",
+          "type": "process",
+          "boundingBox": {
+            "x": 800,
+            "y": 80,
+            "w": 260,
+            "h": 80
+          },
+          "text": "SpotBugs\n\n./mvnw compile spotbugs:check",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#9B59B6"
+            },
+            "stroke": {
+              "color": "#8E44AD",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "coverage",
+          "type": "process",
+          "boundingBox": {
+            "x": 800,
+            "y": 200,
+            "w": 260,
+            "h": 90
+          },
+          "text": "Code Coverage\n\n./mvnw jacoco:prepare-agent\nverify jacoco:report",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#1ABC9C"
+            },
+            "stroke": {
+              "color": "#16A085",
+              "width": 2,
+              "style": "solid"
+            },
+            "textColor": "#FFFFFF"
+          }
+        },
+        {
+          "id": "bnote",
+          "type": "text",
+          "boundingBox": {
+            "x": 700,
+            "y": 150,
+            "w": 100,
+            "h": 30
+          },
+          "text": "needs: build"
+        },
+        {
+          "id": "artifact",
+          "type": "document",
+          "boundingBox": {
+            "x": 1130,
+            "y": 200,
+            "w": 220,
+            "h": 80
+          },
+          "text": "JaCoCo Coverage\nReports\n(14-day retention)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#D5F5E3"
+            },
+            "stroke": {
+              "color": "#27AE60",
+              "width": 1,
+              "style": "solid"
+            }
+          }
+        },
+        {
+          "id": "conc",
+          "type": "rectangle",
+          "boundingBox": {
+            "x": 50,
+            "y": 400,
+            "w": 400,
+            "h": 50
+          },
+          "text": "Concurrency: cancel-in-progress per workflow+ref",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#FADBD8"
+            },
+            "stroke": {
+              "color": "#E74C3C",
+              "width": 1,
+              "style": "dashed"
+            }
+          }
+        },
+        {
+          "id": "sec2",
+          "type": "text",
+          "boundingBox": {
+            "x": 50,
+            "y": 490,
+            "w": 400,
+            "h": 30
+          },
+          "text": "Future Pipeline (Phase 2+ / Phase 4+)"
+        },
+        {
+          "id": "fb",
+          "type": "process",
+          "boundingBox": {
+            "x": 50,
+            "y": 540,
+            "w": 200,
+            "h": 80
+          },
+          "text": "Container Build\n(docker buildx)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#3498DB"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 2,
+              "style": "dashed"
+            },
+            "textColor": "#FFFFFF"
+          },
+          "opacity": 70
+        },
+        {
+          "id": "fa",
+          "type": "process",
+          "boundingBox": {
+            "x": 300,
+            "y": 540,
+            "w": 200,
+            "h": 80
+          },
+          "text": "ACR Push\n(Azure Container Registry)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#2ECC71"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 2,
+              "style": "dashed"
+            },
+            "textColor": "#FFFFFF"
+          },
+          "opacity": 70
+        },
+        {
+          "id": "fd",
+          "type": "process",
+          "boundingBox": {
+            "x": 550,
+            "y": 540,
+            "w": 200,
+            "h": 80
+          },
+          "text": "Deploy Dev\n(Container Apps Dev)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#F1C40F"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 2,
+              "style": "dashed"
+            },
+            "textColor": "#FFFFFF"
+          },
+          "opacity": 70
+        },
+        {
+          "id": "fp",
+          "type": "process",
+          "boundingBox": {
+            "x": 800,
+            "y": 540,
+            "w": 220,
+            "h": 80
+          },
+          "text": "Deploy Prod\n(Container Apps\nProd + WAF)",
+          "style": {
+            "fill": {
+              "type": "color",
+              "color": "#E74C3C"
+            },
+            "stroke": {
+              "color": "#333",
+              "width": 2,
+              "style": "dashed"
+            },
+            "textColor": "#FFFFFF"
+          },
+          "opacity": 70
+        }
+      ],
+      "lines": [
+        {
+          "id": "cl1",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "trigger"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "build"
+          },
+          "stroke": {
+            "color": "#2C3E50",
+            "width": 2,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "cl2",
+          "lineType": "elbow",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "trigger"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "checkstyle"
+          },
+          "stroke": {
+            "color": "#F39C12",
+            "width": 2,
+            "style": "solid"
+          }
+        },
+        {
+          "id": "cl3",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "build"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "spotbugs"
+          },
+          "stroke": {
+            "color": "#9B59B6",
+            "width": 2,
+            "style": "solid"
+          },
+          "text": [
+            {
+              "text": "needs",
+              "position": 0.5,
+              "side": "top"
+            }
+          ]
+        },
+        {
+          "id": "cl4",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "build"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "coverage"
+          },
+          "stroke": {
+            "color": "#1ABC9C",
+            "width": 2,
+            "style": "solid"
+          },
+          "text": [
+            {
+              "text": "needs",
+              "position": 0.5,
+              "side": "top"
+            }
+          ]
+        },
+        {
+          "id": "cl5",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "coverage"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "artifact"
+          },
+          "stroke": {
+            "color": "#27AE60",
+            "width": 1,
+            "style": "dashed"
+          },
+          "text": [
+            {
+              "text": "upload",
+              "position": 0.5,
+              "side": "top"
+            }
+          ]
+        },
+        {
+          "id": "fl0",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "fb"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "fa"
+          },
+          "stroke": {
+            "color": "#333",
+            "width": 2,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "fl1",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "fa"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "fd"
+          },
+          "stroke": {
+            "color": "#333",
+            "width": 2,
+            "style": "dashed"
+          }
+        },
+        {
+          "id": "fl2",
+          "lineType": "straight",
+          "endpoint1": {
+            "type": "shapeEndpoint",
+            "style": "none",
+            "shapeId": "fd"
+          },
+          "endpoint2": {
+            "type": "shapeEndpoint",
+            "style": "arrow",
+            "shapeId": "fp"
+          },
+          "stroke": {
+            "color": "#333",
+            "width": 2,
+            "style": "dashed"
+          }
+        }
+      ]
+    }
+  ]
+}

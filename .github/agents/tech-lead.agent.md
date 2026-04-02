@@ -5,7 +5,7 @@ description: >
   Tech-Writer) to deliver requirements. Never writes code directly.
 name: tech-lead
 model: Claude Opus 4.6 (copilot)
-tools: [vscode, execute, read, agent, search, web, browser, todo]
+tools: [vscode, execute, read, agent, search, web, browser, todo, lucid/*]
 ---
 
 ## Persona
@@ -87,6 +87,7 @@ When delegating, always specify:
 
 ```markdown
 **Goal**: <what to achieve>
+**Work Item**: #NN (GitHub) | PROJ-123 (Jira) | AB#456 (ADO) | N/A
 **Scope**: <files/modules in scope>
 **Acceptance Criteria**: <what "done" looks like>
 **Validation**: <commands to run>

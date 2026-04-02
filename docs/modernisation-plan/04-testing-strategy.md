@@ -19,6 +19,13 @@ The project already starts from a strong testing baseline: JUnit Jupiter 6.0.3, 
 
 The key point for this modernisation is simple: most Java refactoring should not change behaviour, so the existing automated test suite is the primary safety net. New runtime and infrastructure work needs additional black-box and deployment-focused checks.
 
+Phase 0 testing foundations are now present in the repository:
+
+- GitHub Actions modernisation pipeline: [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml)
+- JaCoCo build configuration: root [`../../pom.xml`](../../pom.xml)
+- Baseline metrics reference: [`../baseline-metrics.md`](../baseline-metrics.md)
+- Baseline capture automation: [`../../tools/capture-baseline-metrics.sh`](../../tools/capture-baseline-metrics.sh)
+
 ## 1. Testing principles for the modernisation
 
 ### Core principles
@@ -145,6 +152,7 @@ Static checks should be treated as part of regression protection, not as optiona
 - Maintain the current coverage level; do not allow coverage to decrease because code was modernised.
 - New constructs such as records and sealed classes should have equivalent effective coverage to the classes they replace.
 - JaCoCo reporting remains the coverage source of truth.
+- The JaCoCo plugin configuration now lives in the root [`../../pom.xml`](../../pom.xml), so coverage checks should be treated as part of the default build guardrails.
 - Use **non-regression coverage gating** against the main branch baseline rather than chasing arbitrary percentage gains during refactoring-only PRs.
 
 ### Recommended execution flow
@@ -297,8 +305,8 @@ The repository already has strong automation foundations:
 - Maven Surefire 3.5.5 for unit test execution
 - Maven-driven integration-test automation for `*IT.java`, `*DatabaseIT.java`, and `*PerformanceIT.java`
 - Testcontainers-based database tests
-- GitHub Actions build workflows that already run Maven tests on supported branches
-- JaCoCo coverage reporting
+- The dedicated modernisation workflow at [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml)
+- JaCoCo coverage reporting configured in the root [`../../pom.xml`](../../pom.xml)
 - SpotBugs, Checkstyle, and Spotless in the Maven build
 
 The `pom.xml` still references Bamboo as the CI system of record, so the modernisation should treat GitHub Actions as the active implementation path and Bamboo metadata/processes as cutover items to clean up deliberately.
@@ -308,6 +316,8 @@ The `pom.xml` still references Bamboo as the CI system of record, so the moderni
 #### GitHub Actions as the primary modernisation gate
 
 Extend the existing workflows so that modernisation work always runs:
+
+The current implementation anchor for this is [`../../.github/workflows/ci-modernisation.yml`](../../.github/workflows/ci-modernisation.yml).
 
 - unit tests
 - integration tests
@@ -347,6 +357,8 @@ Suggested approach:
 The repository already includes performance-oriented coverage such as `test-suite/performance/src/test/java/org/openmrs/StartupPerformanceIT.java`.
 
 Use that as the starting point for a before/after baseline:
+
+The baseline definition and capture process are now documented in [`../baseline-metrics.md`](../baseline-metrics.md) and automated by [`../../tools/capture-baseline-metrics.sh`](../../tools/capture-baseline-metrics.sh).
 
 - capture startup time before major modernisation waves
 - compare startup time after Java changes

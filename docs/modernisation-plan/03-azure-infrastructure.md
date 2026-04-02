@@ -13,12 +13,12 @@ It builds on the application runtime and container assumptions described in [REA
 - The container image runs the application as a **WAR on Tomcat 11**.
 - The runtime container exposes **port 8080** and runs as **non-root user 1001**.
 - Health endpoint: **`/openmrs/health/alive`**
-- Database engines supported by the application: **MariaDB, MySQL, PostgreSQL**
+- Database support remains broader than the Azure deployment target; Azure-managed deployments standardise on **Azure Database for PostgreSQL Flexible Server**
 - Schema migrations are handled by **Liquibase**
 - **Elasticsearch** is optional and should not block initial Azure adoption
 - Local development today uses Docker Compose for app + database, with optional Elasticsearch and Grafana
 
-> **Azure database note:** Azure does **not** offer a current “MariaDB Flexible Server” service. For Azure-native managed deployments, the recommended managed database is **Azure Database for MySQL Flexible Server**. If PostgreSQL becomes the preferred long-term managed option, the same network and secret patterns in this plan still apply.
+> **Azure database note:** OpenMRS Core still supports **MariaDB, MySQL, and PostgreSQL** at the application level. For Azure-managed deployments, this plan standardises on **Azure Database for PostgreSQL Flexible Server**. Local Docker Compose remains MariaDB-based for developer simplicity.
 
 ---
 
@@ -39,14 +39,13 @@ Azure Container App (public ingress, consumption)
   +--> Log Analytics
   |
   v
-Azure Database for MySQL Flexible Server (public access, firewall restricted)
+Azure Database for PostgreSQL Flexible Server (public access, firewall restricted)
 
 Optional:
   Azure-hosted Elasticsearch
 ```
 
-> 📐 **Lucidchart Diagram**: [Dev Environment Architecture — _link TBD, created in Phase 0_]
-> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative, detailed view.
+> 📐 **Diagram**: See [azure-architecture.drawio](../diagrams/azure-architecture.drawio) for the detailed view (open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension).
 
 **Design intent**
 
@@ -62,7 +61,7 @@ Optional:
 | Compute | Azure Container Apps Environment | Consumption | Shared environment for dev/test workloads |
 | App | Azure Container App | 1 app, external ingress | OpenMRS runtime on port 8080 |
 | Registry | Azure Container Registry | Basic | Stores OpenMRS images |
-| Database | Azure Database for MySQL Flexible Server | Burstable B1ms/B1s or Basic-equivalent low tier | Use public access with tight firewall rules |
+| Database | Azure Database for PostgreSQL Flexible Server | Burstable B1ms/B1s or equivalent low tier | Use public access with tight firewall rules |
 | Secrets | Azure Key Vault | Standard | Store DB credentials, OpenMRS admin/bootstrap secrets |
 | Logging | Log Analytics workspace | Pay-as-you-go | Required by Container Apps |
 | Search | Elasticsearch | Optional / skip | Skip in initial dev unless search validation is required |
@@ -92,11 +91,10 @@ Azure Container Apps Environment (workload profiles, internal ingress only)
   +--> Optional Elasticsearch / Azure AI Search equivalent, private access
   |
   v
-Azure Database for MySQL Flexible Server (private endpoint, HA, backups)
+Azure Database for PostgreSQL Flexible Server (private access, HA, backups)
 ```
 
-> 📐 **Lucidchart Diagram**: [Production Environment Architecture — _link TBD, created in Phase 0_]
-> The text diagram above is a simplified summary. See the Lucidchart diagram for the authoritative, detailed view including subnet CIDRs, NSG rules, and private endpoint connections.
+> 📐 **Diagram**: See [azure-architecture.drawio](../diagrams/azure-architecture.drawio) for the detailed view (open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension).
 
 **Design intent**
 
@@ -114,7 +112,7 @@ Azure Database for MySQL Flexible Server (private endpoint, HA, backups)
 | Compute platform | Azure Container Apps Environment | **Workload profiles** | Production-grade ACA environment |
 | App | Azure Container App | Internal ingress only | OpenMRS app on port 8080 |
 | Registry | Azure Container Registry | Standard or Premium | Premium preferred if private link and enterprise controls are required |
-| Database | Azure Database for MySQL Flexible Server | General Purpose or Business Critical | HA + geo-redundant backup |
+| Database | Azure Database for PostgreSQL Flexible Server | General Purpose or Memory Optimized | HA + geo-redundant backup |
 | Secrets | Azure Key Vault | Standard/Premium with private endpoint | Access via managed identity |
 | Monitoring | Azure Monitor + Log Analytics | Standard | Logs, metrics, alerting |
 | APM | Application Insights | Optional | Java agent-based tracing/telemetry |
@@ -148,7 +146,7 @@ This environment is for developer validation, integration testing, demos, and pr
 
 Recommended managed option:
 
-- **Azure Database for MySQL Flexible Server**
+- **Azure Database for PostgreSQL Flexible Server**
   - Tier: **Burstable**
   - Starting size: **B1ms** or equivalent lowest practical size
   - Public access: **enabled**
@@ -158,7 +156,7 @@ Recommended managed option:
   - Backups: default retention acceptable for dev
   - HA: **not required** for dev
 
-If strict MariaDB parity is needed for a specific test case, document that separately; the default Azure-native recommendation remains MySQL Flexible Server.
+If strict MariaDB parity is needed for a specific test case, document that separately; the default Azure-managed recommendation remains PostgreSQL Flexible Server, while local Docker Compose continues to use MariaDB.
 
 ### 2.3 Supporting services
 
@@ -193,7 +191,7 @@ rg-openmrs-dev
   - Microsoft.App/managedEnvironments
   - Microsoft.App/containerApps
   - Microsoft.ContainerRegistry/registries
-  - Microsoft.DBforMySQL/flexibleServers
+  - Microsoft.DBforPostgreSQL/flexibleServers
   - Microsoft.KeyVault/vaults
   - Microsoft.OperationalInsights/workspaces
 ```
@@ -207,7 +205,7 @@ rg-openmrs-dev
   - `aca-openmrs-dev`
   - `acropenmrsdev`
   - `kv-openmrs-dev`
-  - `mysql-openmrs-dev`
+  - `postgres-openmrs-dev`
 
 ---
 
@@ -254,8 +252,7 @@ If a separate subnet is preferred for strict segregation, split `snet-private-en
 - `snet-db-pe` – `10.40.3.0/25`
 - `snet-sec-pe` – `10.40.3.128/25`
 
-> 📐 **Lucidchart Diagram**: [Production Network Topology (VNET, Subnets, NSGs) — _link TBD, created in Phase 0_]
-> The subnet table and NSG rules below are a text summary. See the Lucidchart diagram for the authoritative network topology view with CIDR ranges, traffic flows, and NSG rule visualisation.
+> 📐 **Diagram**: See [azure-architecture.drawio](../diagrams/azure-architecture.drawio) for the detailed view (open with [draw.io](https://app.diagrams.net) or VS Code draw.io extension).
 
 ### 3.3 NSG design
 
@@ -287,7 +284,7 @@ Apply NSGs per subnet with explicit allow rules and deny-by-default behavior.
 
 Use Azure Private DNS zones and link them to the production VNET for:
 
-- MySQL Flexible Server private endpoint
+- PostgreSQL Flexible Server private access / private DNS
 - Key Vault private endpoint
 - ACR private endpoint
 - Any optional private search service
@@ -349,21 +346,21 @@ Private DNS is a mandatory part of the production design; without it, Applicatio
 
 Recommended production database:
 
-- **Azure Database for MySQL Flexible Server**
+- **Azure Database for PostgreSQL Flexible Server**
   - Tier: **General Purpose**
-  - Upgrade path: **Business Critical** for stricter latency and resilience requirements
-  - Connectivity: **private endpoint only**
+  - Upgrade path: **Memory Optimized** for stricter latency and larger working-set requirements
+  - Connectivity: **private access / VNET integration**
   - Public access: **disabled**
   - High availability: **zone-redundant** where available
-  - Backups: **geo-redundant**
+  - Backups: **geo-redundant** where required by recovery objectives
   - Maintenance window: set explicitly
   - Server parameters:
     - enable TLS enforcement
-    - tune connection limits and InnoDB settings after load tests
+    - tune connection limits, autovacuum, and query settings after load tests
 
 Database guidance:
 
-- Start with MySQL Flexible Server unless formal testing requires PostgreSQL instead
+- Standardise on PostgreSQL Flexible Server for the managed Azure path
 - Keep Liquibase migrations in the application release path
 - Treat schema migration as part of deployment readiness, not a manual post-step
 
@@ -500,7 +497,7 @@ Suggested responsibilities:
   - Container App
   - scaling rules
 - **database**
-  - MySQL Flexible Server
+  - PostgreSQL Flexible Server
   - backups
   - HA
   - private endpoint
@@ -605,7 +602,7 @@ Costs vary significantly by region, storage, retention, and traffic. The followi
 | Component | Expected monthly range | Notes |
 |---|---:|---|
 | Container Apps consumption | $10-$60 | Depends on active hours and scale-from-zero behavior |
-| MySQL Flexible Server burstable | $20-$60 | Small dev server, low storage |
+| PostgreSQL Flexible Server burstable | $20-$60 | Small dev server, low storage |
 | ACR Basic | $5-$10 | Small image footprint |
 | Key Vault | $1-$5 | Mostly transaction-based |
 | Log Analytics | $5-$30 | Depends on log retention and verbosity |
@@ -618,7 +615,7 @@ Costs vary significantly by region, storage, retention, and traffic. The followi
 |---|---:|---|
 | Application Gateway WAF v2 | $200-$500+ | One of the major fixed costs |
 | ACA workload profiles | $150-$600+ | Driven by always-on replicas and workload profile size |
-| MySQL Flexible Server GP/BC + storage | $250-$900+ | Depends on vCores, HA, storage, backups |
+| PostgreSQL Flexible Server GP/Memory Optimized + storage | $250-$900+ | Depends on vCores, HA, storage, backups |
 | ACR Standard/Premium | $20-$60+ | Premium if private link requirements apply |
 | Key Vault + private endpoint | $10-$30 | Includes private endpoint cost patterns |
 | Private endpoints (multiple) | $30-$80 | DB, Key Vault, ACR, optional others |
@@ -633,7 +630,7 @@ Costs vary significantly by region, storage, retention, and traffic. The followi
 - Delay Elasticsearch until required
 - Use shorter log retention in non-production
 - Right-size database storage and compute after load testing
-- Start production on **General Purpose**, move to **Business Critical** only if proven necessary
+- Start production on **General Purpose**, move to **Memory Optimized** only if proven necessary
 - Use App Gateway autoscaling carefully and monitor peak patterns
 
 ---
@@ -642,7 +639,7 @@ Costs vary significantly by region, storage, retention, and traffic. The followi
 
 ### Phase 1: deploy development environment
 
-- Provision ACR, Key Vault, Log Analytics, ACA consumption environment, and MySQL Flexible Server
+- Provision ACR, Key Vault, Log Analytics, ACA consumption environment, and PostgreSQL Flexible Server
 - Push the OpenMRS image
 - Validate:
   - container starts
@@ -659,7 +656,7 @@ Costs vary significantly by region, storage, retention, and traffic. The followi
 ### Phase 3: deploy production services
 
 - Provision ACA workload profiles environment
-- Provision MySQL Flexible Server with HA and backups
+- Provision PostgreSQL Flexible Server with HA and backups
 - Provision Key Vault, ACR, monitoring, Defender, and policy controls
 - Deploy OpenMRS with internal ingress only
 - Validate end-to-end through Application Gateway health probes
@@ -706,9 +703,9 @@ Suggested labels:
 
 ## Recommended decisions summary
 
-- **Dev**: Azure Container Apps Consumption + public ingress + MySQL Flexible Server public access + low-cost supporting services
+- **Dev**: Azure Container Apps Consumption + public ingress + PostgreSQL Flexible Server public access + low-cost supporting services
 - **Prod**: VNET-integrated Azure Container Apps Workload Profiles + internal ingress + Application Gateway WAF v2 + private endpoints everywhere possible
-- **Database**: standardise on **Azure Database for MySQL Flexible Server** for the managed Azure path
+- **Database**: standardise on **Azure Database for PostgreSQL Flexible Server** for the managed Azure path
 - **Secrets and auth**: use **managed identity** and **Key Vault**
 - **Ingress**: Application Gateway is the only public frontend in production
 - **IaC**: use **Bicep** with modular structure and environment parameter files
@@ -716,7 +713,7 @@ Suggested labels:
 
 ## Open gaps / follow-up decisions
 
-- Confirm whether the target managed production database should be **MySQL** or **PostgreSQL**
+- Confirm target PostgreSQL Flexible Server sizing, HA mode, and backup policy for production
 - Confirm whether **Elasticsearch** is required in phase 1 or can be deferred
 - Confirm whether the organisation requires **hub-spoke** on day 1 or accepts a dedicated flat VNET first
 - Confirm certificate ownership model: **Application Gateway managed certificate** vs **custom certificate in Key Vault**
@@ -728,17 +725,49 @@ This plan introduces a new documentation area under `docs/modernisation-plan/`. 
 
 ---
 
+## Best Practice Gaps (Microsoft Learn Review)
+
+A review of the current Bicep templates against [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/) and [Azure Container Apps landing zone accelerator](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/container-apps/landing-zone-accelerator) identified the following gaps. Each gap has a corresponding GitHub Issue for tracking.
+
+### Critical / High Priority (Phase 2)
+
+| # | Gap | Current State | Target State | Phase |
+|---|---|---|---|---|
+| 1 | **Database engine mismatch** | Bicep modules create MySQL Flexible Server | Rewrite to PostgreSQL Flexible Server (`Microsoft.DBforPostgreSQL/flexibleServers`) with version 16, port 5432 | Phase 2 |
+| 2 | **No geo-redundant backup** | `geoRedundantBackup: 'Disabled'` in prod | Enable geo-redundant backup for cross-region disaster recovery | Phase 4 |
+| 3 | **Image tag defaults to `latest`** | `imageTag: 'latest'` in prod main.bicep | Remove default in prod (require explicit tag); use semantic versioning | Phase 2 |
+| 4 | **Unrestricted ACA egress** | ACA subnet NSG allows all outbound on port 443 (`destinationAddressPrefix: '*'`) | Restrict to Azure service tags: `AzureContainerRegistry`, `AzureCloud`, `AzureMonitor` with explicit deny-all | Phase 4 |
+| 5 | **No WAF diagnostic logging** | App Gateway WAF events not captured | Add `Microsoft.Insights/diagnosticSettings` to App Gateway, send all logs and metrics to Log Analytics | Phase 4 |
+
+### Medium Priority (Phase 4)
+
+| # | Gap | Current State | Target State | Phase |
+|---|---|---|---|---|
+| 6 | **No Key Vault integration** | Secrets passed as deployment parameters | Add Key Vault module (`Microsoft.KeyVault/vaults`) with RBAC authorization, soft delete, purge protection, private endpoint in prod | Phase 4 |
+| 7 | **Password-based database auth** | Admin username/password for PostgreSQL | Future: Enable Azure AD (Entra ID) authentication using Container App managed identity. Requires JDBC Azure Identity plugin in application code | Phase 4 |
+| 8 | **ACR image scanning disabled** | Quarantine and Notary (content trust) policies disabled | Enable quarantine policy and trust policy for Premium SKU ACR | Phase 2 |
+| 9 | **WAF request body limit too small** | Hardcoded 128 KB max request body, 100 MB file upload | Parameterise limits; validate against actual OpenMRS API payload sizes (bulk operations, patient attachments) | Phase 4 |
+| 10 | **Database storage undersized** | Fixed 32 GB storage for all environments | Parameterise `storageSizeGB`; default 32 GB dev, 64+ GB prod | Phase 2 |
+
+### References
+
+- [Azure Well-Architected Framework — Security pillar](https://learn.microsoft.com/en-us/azure/well-architected/security/)
+- [Container Apps landing zone accelerator](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/container-apps/landing-zone-accelerator)
+- [Azure Database for PostgreSQL best practices](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-best-practices)
+- [Application Gateway WAF best practices](https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/best-practices)
+- [Azure Key Vault best practices](https://learn.microsoft.com/en-us/azure/key-vault/general/best-practices)
+
 ## Tracked Issues
 
 ### Phase 0 — Foundation (Azure)
 
 - [ ] #50 — Provision Azure subscription access and resource groups for dev and prod
-- [ ] #84 — Create Lucidchart architecture diagrams for Azure dev and production environments
+- [ ] #84 — Create architecture diagrams (draw.io) for Azure dev and production environments
 
 ### Phase 2 — Dev Environment
 
 - [ ] #52 — Deploy Azure Container Registry (Basic SKU)
-- [ ] #80 — Deploy dev Container Apps Environment (Consumption plan) + MySQL Flexible Server
+- [ ] #80 — Deploy dev Container Apps Environment (Consumption plan) + PostgreSQL Flexible Server
 - [ ] #83 — Deploy Azure Key Vault (dev) and seed secrets
 - [ ] #85 — Deploy OpenMRS Core Container App to dev environment
 
@@ -746,7 +775,7 @@ This plan introduces a new documentation area under `docs/modernisation-plan/`. 
 
 - [ ] #51 — Provision production VNET (10.0.0.0/16) and subnet layout
 - [ ] #105 — Configure NSGs for all production subnets
-- [ ] #106 — Deploy production MySQL Flexible Server with private endpoint and HA
+- [ ] #106 — Deploy production PostgreSQL Flexible Server with private access and HA
 - [ ] #107 — Deploy production Key Vault with private endpoint
 - [ ] #108 — Upgrade ACR to Standard SKU with private endpoint
 - [ ] #109 — Deploy Container Apps Environment into VNET (Workload profiles)

@@ -15,7 +15,9 @@ OpenMRS Core is **already partially containerised**:
 - there is a production Tomcat image that runs as a non-root user
 - there are health checks
 - local development is supported through Docker Compose
-- MariaDB, optional Elasticsearch, and optional Grafana are already available as containers
+- MariaDB, optional Elasticsearch, and optional Grafana are already available as containers for local development
+
+For Azure deployments, the equivalent managed database target is **Azure Database for PostgreSQL Flexible Server**, not a containerised MariaDB service.
 
 That is a strong starting point. The main gap is not "whether the app can run in containers"; it is that the current setup is still optimized for **local development and Docker Hub publishing**, not for **repeatable, secure, cloud deployment on Azure Container Apps**.
 
@@ -49,6 +51,8 @@ Current Compose files provide:
 - **OpenMRS API/application container** in `docker-compose.yml`
 - **Elasticsearch** in `docker-compose.es.yml`
 - **Grafana/Loki/Alloy** in `docker-compose.grafana.yml`
+
+These Compose dependencies remain local-development defaults. Azure environments use managed services, with **PostgreSQL** as the standard managed database target.
 
 ### Runtime startup automation
 
@@ -241,6 +245,8 @@ The Azure infrastructure decision belongs in [03. Azure Infrastructure](03-azure
 - secret-backed username/password variables
 - TLS-enabled JDBC configuration where supported by the selected managed database
 
+For Azure deployments, assume PostgreSQL-specific connection details unless a non-Azure environment explicitly chooses a different supported engine.
+
 ## Container registry
 
 ### Registry target
@@ -411,6 +417,8 @@ Base local development stack:
 - OpenMRS app
 - MariaDB
 - named volumes for local persistence
+
+This remains intentionally MariaDB-based for local developer convenience. Azure deployments use managed PostgreSQL instead.
 
 ### `docker-compose.override.yml`
 
@@ -589,7 +597,7 @@ Each of the following should be tracked as a separate GitHub issue:
 
 This document intentionally leaves these decisions for follow-up work:
 
-- exact Azure-managed database choice
+- exact Azure-managed PostgreSQL sizing and connectivity details
 - exact persistent storage implementation for mutable OpenMRS data
 - whether Elasticsearch remains optional or becomes environment-specific
 - whether distroless is viable after startup orchestration is simplified

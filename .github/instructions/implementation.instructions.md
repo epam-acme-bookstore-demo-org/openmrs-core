@@ -23,5 +23,5 @@ applyTo: "**"
 ## Delegation
 
 - The Tech Lead creates the plan and delegates to specialists.
-- Each delegation must include: goal, scope, acceptance criteria, and validation commands.
+- Each delegation must include: goal, work item reference, scope, acceptance criteria, and validation commands.
 - Each specialist responds with: summary, changed files, validation results, risks, and open questions.

@@ -24,6 +24,11 @@
       "type": "http",
       "url": "https://mcp.lucid.app/mcp",
       "headers": {}
+    },
+    "@drawio/mcp@latest": {
+      "type": "stdio",
+      "command": "npx",
+      "args": []
     }
   },
   "inputs": []
