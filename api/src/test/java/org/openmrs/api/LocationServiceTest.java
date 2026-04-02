@@ -369,7 +369,7 @@ public class LocationServiceTest extends BaseContextSensitiveTest {
 		// Check that only location #1 is returned
 		List<Location> locations = Context.getLocationService().getLocations(null, null, attrValues, false, null, null);
 		assertEquals(1, locations.size());
-		assertEquals(location1, locations.get(0));
+		assertEquals(location1, locations.getFirst());
 	}
 
 	/**
@@ -960,11 +960,11 @@ public class LocationServiceTest extends BaseContextSensitiveTest {
 	public void getAllLocations_shouldPushRetiredLocationsToTheEndOfTheListWhenIncludeRetiredIsTrue() {
 		LocationService ls = Context.getLocationService();
 		//retire the first location
-		ls.retireLocation(ls.getAllLocations().get(0), "Just Testing");
+		ls.retireLocation(ls.getAllLocations().getFirst(), "Just Testing");
 		// Get all locations.
 		List<Location> locations = ls.getAllLocations();
 		//The 2 retired locations should be always be at the end
-		assertTrue(locations.get(locations.size() - 1).getRetired(), "Retired locations should be at the end of the list");
+		assertTrue(locations.getLast().getRetired(), "Retired locations should be at the end of the list");
 		assertTrue(locations.get(locations.size() - 2).getRetired(), "Retired locations should be at the end of the list");
 	}
 

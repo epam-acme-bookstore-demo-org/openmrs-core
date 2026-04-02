@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.util.Locale;
 
 import org.hibernate.envers.Audited;
@@ -24,6 +25,7 @@ import org.springframework.util.StringUtils;
 @Audited
 public class ConceptStopWord extends BaseOpenmrsObject {
 
+	@Serial
 	private static final long serialVersionUID = 3671020002642184656L;
 
 	// Fields

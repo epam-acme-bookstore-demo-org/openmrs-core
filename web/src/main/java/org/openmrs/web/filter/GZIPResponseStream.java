@@ -57,9 +57,7 @@ public class GZIPResponseStream extends ServletOutputStream {
 		}
 
 		// if we buffered everything in memory, gzip it
-		if (bufferedOutput instanceof ByteArrayOutputStream) {
-			// get the content
-			ByteArrayOutputStream baos = (ByteArrayOutputStream) bufferedOutput;
+		if (bufferedOutput instanceof ByteArrayOutputStream baos) {
 
 			// prepare a gzip stream
 			ByteArrayOutputStream compressedContent = new ByteArrayOutputStream();
@@ -80,9 +78,7 @@ public class GZIPResponseStream extends ServletOutputStream {
 			closed = true;
 		}
 		// if things were not buffered in memory, finish the GZIP stream and response
-		else if (bufferedOutput instanceof GZIPOutputStream) {
-			// cast to appropriate type
-			GZIPOutputStream gzipstream = (GZIPOutputStream) bufferedOutput;
+		else if (bufferedOutput instanceof GZIPOutputStream gzipstream) {
 
 			// finish the compression
 			gzipstream.finish();
@@ -118,8 +114,7 @@ public class GZIPResponseStream extends ServletOutputStream {
 
 	private void checkBufferSize(int length) throws IOException {
 		// check if we are buffering too large of a file
-		if (bufferedOutput instanceof ByteArrayOutputStream) {
-			ByteArrayOutputStream baos = (ByteArrayOutputStream) bufferedOutput;
+		if (bufferedOutput instanceof ByteArrayOutputStream baos) {
 
 			if ((baos.size() + length) > bufferSize) {
 				// files too large to keep in memory are sent to the client without Content-Length specified

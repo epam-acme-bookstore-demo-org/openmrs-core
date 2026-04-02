@@ -147,7 +147,7 @@ public class ConceptReferenceRangeUtility {
 			    Collections.singletonList(concept), null, null, null, Collections.singletonList("dateCreated"), 1, null,
 			    null, null, false);
 
-			return observations.isEmpty() ? null : observations.get(0);
+			return observations.isEmpty() ? null : observations.getFirst();
 		}
 
 		return null;

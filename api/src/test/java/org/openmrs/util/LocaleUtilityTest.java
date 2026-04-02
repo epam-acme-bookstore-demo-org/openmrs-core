@@ -242,7 +242,7 @@ public class LocaleUtilityTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getLocalesInOrder_shouldHaveDefaultLocaleAsTheSecondElementIfUserHasAPreferredLocale() {
-		Locale lu_UG = new Locale("lu", "UG");
+		Locale lu_UG = Locale.of("lu", "UG");
 		Context.setLocale(lu_UG);
 		Set<Locale> localesInOrder = LocaleUtility.getLocalesInOrder();
 		Iterator<Locale> it = localesInOrder.iterator();
@@ -258,16 +258,16 @@ public class LocaleUtilityTest extends BaseContextSensitiveTest {
 		GlobalProperty gp = new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_LOCALE_ALLOWED_LIST,
 		        "lu, sw_KE, en_US, en_GB", "Test Allowed list of locales");
 		Context.getAdministrationService().saveGlobalProperty(gp);
-		Locale lu_UG = new Locale("lu", "UG");
+		Locale lu_UG = Locale.of("lu", "UG");
 		Context.setLocale(lu_UG);
 		Set<Locale> localesInOrder = LocaleUtility.getLocalesInOrder();
 		Iterator<Locale> it = localesInOrder.iterator();
-		assertEquals(new Locale("lu", "UG"), it.next());
+		assertEquals(Locale.of("lu", "UG"), it.next());
 		assertEquals(LocaleUtility.getDefaultLocale(), it.next());
-		assertEquals(new Locale("lu"), it.next());
-		assertEquals(new Locale("sw", "KE"), it.next());
-		assertEquals(new Locale("en", "US"), it.next());
-		assertEquals(new Locale("en"), it.next());
+		assertEquals(Locale.of("lu"), it.next());
+		assertEquals(Locale.of("sw", "KE"), it.next());
+		assertEquals(Locale.of("en", "US"), it.next());
+		assertEquals(Locale.of("en"), it.next());
 	}
 
 	/**
@@ -281,7 +281,7 @@ public class LocaleUtilityTest extends BaseContextSensitiveTest {
 		GlobalProperty defaultLocale = new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_DEFAULT_LOCALE, "lu",
 		        "Test Allowed list of locales");
 		Context.getAdministrationService().saveGlobalProperty(defaultLocale);
-		Locale lu_UG = new Locale("lu", "UG");
+		Locale lu_UG = Locale.of("lu", "UG");
 		Context.setLocale(lu_UG);
 		//note that unique list of locales should be lu_UG, lu, sw_KE, en_US, en
 		assertEquals(6, LocaleUtility.getLocalesInOrder().size());

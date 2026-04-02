@@ -20,7 +20,7 @@ import java.net.URLStreamHandlerFactory;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class ModuleClassLoader extends URLClassLoader {
 				if (!file.isDirectory()) {
 					continue;
 				}
-				File dir = Paths.get(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
+				File dir = Path.of(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
 				if (dir.exists()) {
 					Collection<File> files = FileUtils.listFiles(dir, new String[] { "class" }, true);
 					addClassFilePackages(files, dir.getAbsolutePath().length() + 1);
@@ -210,7 +210,7 @@ public class ModuleClassLoader extends URLClassLoader {
 						if (!file.isDirectory()) {
 							continue;
 						}
-						File dir = Paths.get(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
+						File dir = Path.of(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
 						if (dir.exists()) {
 							result.add(dir.toURI().toURL());
 							devFolderNames.add(file.getName());
@@ -396,9 +396,8 @@ public class ModuleClassLoader extends URLClassLoader {
 	static boolean isMatchingConditionalResource(Module module, URL fileUrl, ModuleConditionalResource conditionalResource) {
 		FileSystem fileSystem = FileSystems.getDefault();
 		if (ModuleUtil.matchRequiredVersions(module.getConfigVersion(), "2.0")) {
-			return fileSystem
-			        .getPathMatcher(String.format("glob:**/%s", preprocessGlobPattern(conditionalResource.getPath())))
-			        .matches(Paths.get(fileUrl.getPath()));
+			return fileSystem.getPathMatcher("glob:**/%s".formatted(preprocessGlobPattern(conditionalResource.getPath())))
+			        .matches(Path.of(fileUrl.getPath()));
 		}
 		return fileUrl.getPath().matches(".*" + conditionalResource.getPath() + "$");
 	}

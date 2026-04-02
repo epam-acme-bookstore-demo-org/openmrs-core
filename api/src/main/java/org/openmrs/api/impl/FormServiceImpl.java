@@ -358,7 +358,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 		if (forms == null || forms.isEmpty()) {
 			return null;
 		} else {
-			return forms.get(0);
+			return forms.getFirst();
 		}
 	}
 
@@ -572,8 +572,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 		Concept concept = tmpFormField.getField().getConcept();
 		if (concept != null && concept.isComplex()) {
 			ComplexObsHandler handler = Context.getObsService().getHandler(((ConceptComplex) concept).getHandler());
-			if (handler instanceof SerializableComplexObsHandler) {
-				SerializableComplexObsHandler sHandler = (SerializableComplexObsHandler) handler;
+			if (handler instanceof SerializableComplexObsHandler sHandler) {
 				if (sHandler.getFormFields() != null) {
 					for (FormField ff : sHandler.getFormFields()) {
 						ff.setParent(tmpFormField);

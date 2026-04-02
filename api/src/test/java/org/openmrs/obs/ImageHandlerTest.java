@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 
 import org.junit.jupiter.api.Test;
@@ -69,7 +68,7 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 	public void saveObs_shouldRetrieveCorrectMimetypeAndTitle() throws IOException {
 		String mimetype = "image/png";
 		String filename = "TestingComplexObsSaving.png";
-		File sourceFile = Paths.get("src", "test", "resources", "ComplexObsTestImage.png").toFile();
+		File sourceFile = Path.of("src", "test", "resources", "ComplexObsTestImage.png").toFile();
 
 		BufferedImage img = ImageIO.read(sourceFile);
 
@@ -101,7 +100,7 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 	public void getObs_shouldUpdateFromLegacyComplexDataFormatIfNeeded() throws IOException {
 		String mimetype = "image/png";
 		String filename = "TestingComplexObsSaving.png";
-		File sourceFile = Paths.get("src", "test", "resources", "ComplexObsTestImage.png").toFile();
+		File sourceFile = Path.of("src", "test", "resources", "ComplexObsTestImage.png").toFile();
 
 		BufferedImage img = ImageIO.read(sourceFile);
 
@@ -113,8 +112,6 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 		adminService.saveGlobalProperty(new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR, "obs"));
 
 		handler.saveObs(obs);
-		;
-
 		// hack to put the value complex in the "old" format
 		obs.setValueComplex(obs.getValueComplex().replaceFirst("TestingComplexObsSaving.", ""));
 
@@ -129,7 +126,7 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void saveObs_shouldHandleByteArrays() throws IOException {
-		Path sourceFile = Paths.get("src", "test", "resources", "ComplexObsTestImage.png");
+		Path sourceFile = Path.of("src", "test", "resources", "ComplexObsTestImage.png");
 
 		byte[] bytes = Files.readAllBytes(sourceFile);
 		ComplexData complexData = new ComplexData("TestingComplexObsSaving.png", bytes);
@@ -142,7 +139,7 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 	@Test
 	public void saveObs_shouldNotDuplicateKeyWhenUpdating() throws IOException {
 		String filename = "TestingComplexObsSaving.png";
-		File sourceFile = Paths.get("src", "test", "resources", "ComplexObsTestImage.png").toFile();
+		File sourceFile = Path.of("src", "test", "resources", "ComplexObsTestImage.png").toFile();
 
 		BufferedImage img = ImageIO.read(sourceFile);
 
@@ -154,8 +151,6 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 		adminService.saveGlobalProperty(new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR, "obs"));
 
 		handler.saveObs(obs);
-		;
-
 		// Get observation
 		Obs complexObs = handler.getObs(obs, "RAW_VIEW");
 
@@ -165,7 +160,6 @@ public class ImageHandlerTest extends BaseContextSensitiveTest {
 
 		// update
 		handler.saveObs(obs);
-		;
 		complexObs = handler.getObs(obs, "RAW_VIEW");
 		String updatedKey = complexObs.getValueComplex().split("\\|")[1];
 		Integer updatedKeyLength = updatedKey.length();

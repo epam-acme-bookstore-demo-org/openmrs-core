@@ -337,8 +337,8 @@ public class HibernateContextDAO implements ContextDAO {
 			if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
 				Object value = TransactionSynchronizationManager.unbindResource(sessionFactory);
 				try {
-					if (value instanceof SessionHolder) {
-						Session session = ((SessionHolder) value).getSession();
+					if (value instanceof SessionHolder holder) {
+						Session session = holder.getSession();
 						session.close();
 					}
 				} catch (RuntimeException e) {

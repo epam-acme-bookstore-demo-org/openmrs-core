@@ -23,7 +23,7 @@ public class AlertServiceTest extends BaseContextSensitiveTest {
 	public void notifySuperUsers_shouldAddAnAlertWithMessageOfLengthEqualsTextMaxLength() {
 		Context.getAlertService().notifySuperUsers("Module.startupError.notification.message", new Exception(), "test");
 
-		Alert lastAlert = Context.getAlertService().getAlertsByUser(null).iterator().next();
+		Alert lastAlert = Context.getAlertService().getAlertsByUser(null).getFirst();
 
 		assertEquals(Alert.TEXT_MAX_LENGTH, lastAlert.getText().length());
 	}
@@ -33,7 +33,7 @@ public class AlertServiceTest extends BaseContextSensitiveTest {
 
 		Context.getAlertService().notifySuperUsers("Module.startupError.notification.message", null, "test");
 
-		Alert lastAlert = Context.getAlertService().getAlertsByUser(null).iterator().next();
+		Alert lastAlert = Context.getAlertService().getAlertsByUser(null).getFirst();
 
 		String expectedText = Context.getMessageSourceService().getMessage("Module.startupError.notification.message",
 		    new Object[] { "test" }, Context.getLocale());
@@ -57,7 +57,7 @@ public class AlertServiceTest extends BaseContextSensitiveTest {
 		assertEquals(1, Context.getAlertService().getAlertsByUser(null).size());
 
 		// Set alertOne to be that one alert
-		Alert alertOne = Context.getAlertService().getAlertsByUser(null).iterator().next();
+		Alert alertOne = Context.getAlertService().getAlertsByUser(null).getFirst();
 
 		//Test that alert contains the expected content
 		assertTrue(alertOne.getText().equals(Context.getMessageSourceService()

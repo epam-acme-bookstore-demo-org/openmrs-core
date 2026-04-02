@@ -197,8 +197,8 @@ public class Database1_9_7UpgradeIT extends BaseContextSensitiveTest {
 		assertThat(orderFrequencySelect.size(), Matchers.is(2));
 
 		Map<String, String> conceptsToFrequencies = new HashMap<>();
-		conceptsToFrequencies.put(orderFrequencySelect.get(0).get("concept_id"),
-		    orderFrequencySelect.get(0).get("order_frequency_id"));
+		conceptsToFrequencies.put(orderFrequencySelect.getFirst().get("concept_id"),
+		    orderFrequencySelect.getFirst().get("order_frequency_id"));
 		conceptsToFrequencies.put(orderFrequencySelect.get(1).get("concept_id"),
 		    orderFrequencySelect.get(1).get("order_frequency_id"));
 
@@ -277,14 +277,15 @@ public class Database1_9_7UpgradeIT extends BaseContextSensitiveTest {
 		List<List<Object>> rows = DatabaseUtil.executeSQL(upgradeTestUtil.getConnection(),
 		    "select order_id from orders where orderer is null", true);
 		assertEquals(2, rows.size());
-		List<Integer> orderIdsWithNoOrderer = Arrays.asList((Integer) rows.get(0).get(0), (Integer) rows.get(1).get(0));
+		List<Integer> orderIdsWithNoOrderer = Arrays.asList((Integer) rows.getFirst().getFirst(),
+		    (Integer) rows.get(1).getFirst());
 
 		//Sanity check that we have orders with orderer column set
 		rows = DatabaseUtil.executeSQL(upgradeTestUtil.getConnection(),
 		    "select order_id, orderer from orders where orderer is not null", true);
 		List<OrderAndPerson> ordersAndOrderersWithAProviderAccount = new ArrayList<>();
 		for (List<Object> row : rows) {
-			ordersAndOrderersWithAProviderAccount.add(new OrderAndPerson((Integer) row.get(0), (Integer) row.get(1)));
+			ordersAndOrderersWithAProviderAccount.add(new OrderAndPerson((Integer) row.getFirst(), (Integer) row.get(1)));
 		}
 		assertEquals(3, ordersAndOrderersWithAProviderAccount.size());
 
@@ -303,9 +304,9 @@ public class Database1_9_7UpgradeIT extends BaseContextSensitiveTest {
 			    "select p.provider_id, p.person_id from provider p join orders o on p.provider_id = o.orderer where order_id = "
 			            + op.getOrderId(),
 			    true);
-			assertEquals(op.getPersonId(), rows.get(0).get(1));
+			assertEquals(op.getPersonId(), rows.getFirst().get(1));
 			//The provider account should have been among the existing ones prior to upgrade
-			assertTrue(originalProviderIds.contains(rows.get(0).get(0)));
+			assertTrue(originalProviderIds.contains(rows.getFirst().getFirst()));
 		}
 
 		//The orderer column for orders with null orderers previously should be set to Unknown Provider
@@ -316,8 +317,8 @@ public class Database1_9_7UpgradeIT extends BaseContextSensitiveTest {
 		    true);
 
 		assertEquals(orderIdsWithNoOrderer.size(), rows.size());
-		assertTrue(orderIdsWithNoOrderer.contains(rows.get(0).get(0)));
-		assertTrue(orderIdsWithNoOrderer.contains(rows.get(1).get(0)));
+		assertTrue(orderIdsWithNoOrderer.contains(rows.getFirst().getFirst()));
+		assertTrue(orderIdsWithNoOrderer.contains(rows.get(1).getFirst()));
 	}
 
 	@Test
@@ -332,7 +333,7 @@ public class Database1_9_7UpgradeIT extends BaseContextSensitiveTest {
 		List<Map<String, String>> drugs = upgradeTestUtil.select("drug", null, "strength");
 
 		assertThat(drugs.size(), Matchers.is(3));
-		assertTrue(drugs.get(0).containsValue("1.0tab(s)"));
+		assertTrue(drugs.getFirst().containsValue("1.0tab(s)"));
 		assertTrue(drugs.get(1).containsValue("325.0mg"));
 		assertNull(drugs.get(2).get("strength"));
 	}
@@ -400,24 +401,24 @@ public class Database1_9_7UpgradeIT extends BaseContextSensitiveTest {
 		    "mg=111\ntab(s)=112\n1/day\\ x\\ 7\\ days/week=113\n2/day\\ x\\ 7\\ days/week=114");
 		List<List<Object>> discontinuedOrders = DatabaseUtil.executeSQL(upgradeTestUtil.getConnection(),
 		    "SELECT count(*) order_id FROM orders WHERE discontinued = true", true);
-		long discontinuedOrdersCount = (Long) discontinuedOrders.get(0).get(0);
+		long discontinuedOrdersCount = (Long) discontinuedOrders.getFirst().getFirst();
 		assertEquals(3, discontinuedOrdersCount);
 
 		upgradeTestUtil.upgrade();
 		List<List<Object>> discontinuationOrders = DatabaseUtil.executeSQL(upgradeTestUtil.getConnection(),
 		    "SELECT count(*) FROM orders WHERE order_action = 'DISCONTINUE'", true);
-		assertEquals(discontinuedOrdersCount, discontinuationOrders.get(0).get(0));
+		assertEquals(discontinuedOrdersCount, discontinuationOrders.getFirst().getFirst());
 
 		//There should be no DC order with a null stop date
 		List<List<Object>> discontinuationOrdersWithNotStartDate = DatabaseUtil.executeSQL(upgradeTestUtil.getConnection(),
 		    "SELECT count(*) FROM orders WHERE order_action = 'DISCONTINUE' AND auto_expire_date IS NULL", true);
-		assertEquals(0L, discontinuationOrdersWithNotStartDate.get(0).get(0));
+		assertEquals(0L, discontinuationOrdersWithNotStartDate.getFirst().getFirst());
 
 		List<List<Object>> newer = DatabaseUtil.executeSQL(upgradeTestUtil.getConnection(),
 		    "SELECT count(*) FROM orders WHERE order_action = 'DISCONTINUE' AND "
 		            + "(date_activated IS NULL OR orderer IS NULL OR encounter_id IS NULL OR previous_order_id IS NULL)",
 		    true);
-		assertEquals(0L, newer.get(0).get(0));
+		assertEquals(0L, newer.getFirst().getFirst());
 	}
 
 	@Test

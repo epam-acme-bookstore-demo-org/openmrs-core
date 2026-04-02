@@ -233,9 +233,9 @@ public class HibernateAdministrationDAO implements AdministrationDAO, Applicatio
 				List<Column> columns = persistentClass.getProperty(fieldName).getColumns();
 				if (columns.isEmpty()) {
 					throw new Exception(
-					        String.format("No columns found for fieldName %s to determine maximum length", fieldName));
+					        "No columns found for fieldName %s to determine maximum length".formatted(fieldName));
 				}
-				Column column = columns.get(0);
+				Column column = columns.getFirst();
 				String columnDefinition = column.getSqlType();
 				if (columnDefinition != null && columnDefinition.equalsIgnoreCase("LONGTEXT")) {
 					fieldLength = Integer.MAX_VALUE;
@@ -285,8 +285,8 @@ public class HibernateAdministrationDAO implements AdministrationDAO, Applicatio
 			Type identifierType = metadata.getIdentifierType();
 			String identifierName = metadata.getIdentifierPropertyName();
 
-			if (identifierType instanceof BasicType<?>
-			        && String.class.equals(((BasicType<?>) identifierType).getJavaTypeDescriptor().getJavaType())) {
+			if (identifierType instanceof BasicType<?> type
+			        && String.class.equals(type.getJavaTypeDescriptor().getJavaType())) {
 				long maxLength = getMaximumPropertyLength(entityClass, identifierName);
 				String identifierValue = (String) metadata.getIdentifier(object,
 				    (SessionImplementor) sessionFactory.getCurrentSession());
@@ -300,8 +300,8 @@ public class HibernateAdministrationDAO implements AdministrationDAO, Applicatio
 			}
 			for (String propName : propNames) {
 				Type propType = metadata.getPropertyType(propName);
-				if (propType instanceof BasicType<?>
-				        && String.class.equals(((BasicType<?>) propType).getJavaTypeDescriptor().getJavaType())) {
+				if (propType instanceof BasicType<?> type
+				        && String.class.equals(type.getJavaTypeDescriptor().getJavaType())) {
 					String propertyValue = (String) metadata.getPropertyValue(object, propName);
 					if (propertyValue != null) {
 						long maxLength = getMaximumPropertyLength(entityClass, propName);

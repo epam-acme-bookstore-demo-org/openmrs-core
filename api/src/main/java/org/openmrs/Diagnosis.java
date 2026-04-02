@@ -9,6 +9,8 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
+
 import jakarta.persistence.AssociationOverride;
 import jakarta.persistence.AssociationOverrides;
 import jakarta.persistence.AttributeOverride;
@@ -41,6 +43,7 @@ import org.hibernate.type.SqlTypes;
 @Audited
 public class Diagnosis extends BaseCustomizableData<DiagnosisAttribute> implements FormRecordable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

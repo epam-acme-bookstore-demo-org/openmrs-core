@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -274,6 +275,7 @@ public class FormField extends BaseChangeableOpenmrsMetadata implements java.io.
 	 **/
 	public static class DefaultComparator implements Comparator<FormField>, Serializable {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		@Override

@@ -31,7 +31,7 @@ public class OrderGroupTest {
 
 		List<Order> orders = orderGroup.getOrders();
 
-		assertNotNull(orders.get(0).getOrderGroup(), "should have orderGroup in order");
+		assertNotNull(orders.getFirst().getOrderGroup(), "should have orderGroup in order");
 		assertNotNull(orders.get(1).getOrderGroup(), "should have orderGroup in order");
 	}
 

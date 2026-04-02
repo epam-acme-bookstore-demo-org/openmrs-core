@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestComponentTask {
 
-	private final AtomicInteger executions = new AtomicInteger(0);;
+	private final AtomicInteger executions = new AtomicInteger(0);
 
 	@ScheduledWithLock(name = "testComponentTask", fixedDelay = 100)
 	public void someScheduledTask() {

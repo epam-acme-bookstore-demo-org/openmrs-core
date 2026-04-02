@@ -9,6 +9,8 @@
  */
 package org.openmrs.hl7;
 
+import java.io.Serial;
+
 import org.hibernate.envers.Audited;
 
 /**
@@ -19,6 +21,7 @@ import org.hibernate.envers.Audited;
 @Audited
 public class HL7InQueue extends HL7QueueItem {
 
+	@Serial
 	private static final long serialVersionUID = 8882704913734764446L;
 
 	private Integer hl7InQueueId;

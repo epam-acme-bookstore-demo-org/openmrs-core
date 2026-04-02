@@ -537,7 +537,7 @@ class ThreadSafeCircularFifoQueueTest {
 			elements.add(elem);
 		}
 		assertEquals(3, elements.size());
-		assertEquals(Integer.valueOf(8), elements.get(0));
+		assertEquals(Integer.valueOf(8), elements.getFirst());
 		assertEquals(Integer.valueOf(9), elements.get(1));
 		assertEquals(Integer.valueOf(10), elements.get(2));
 	}

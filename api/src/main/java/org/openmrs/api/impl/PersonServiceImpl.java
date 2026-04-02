@@ -128,7 +128,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		if (types.isEmpty()) {
 			return null;
 		} else {
-			return types.get(0);
+			return types.getFirst();
 		}
 	}
 
@@ -151,7 +151,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		if (type.getSortWeight() == null) {
 			List<PersonAttributeType> allTypes = Context.getPersonService().getAllPersonAttributeTypes();
 			if (!allTypes.isEmpty()) {
-				type.setSortWeight(allTypes.get(allTypes.size() - 1).getSortWeight() + 1);
+				type.setSortWeight(allTypes.getLast().getSortWeight() + 1);
 			} else {
 				type.setSortWeight(1.0);
 			}
@@ -287,7 +287,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		if (types.isEmpty()) {
 			return null;
 		} else {
-			return types.get(0);
+			return types.getFirst();
 		}
 	}
 

@@ -158,7 +158,7 @@ public class HibernateUserDAO implements UserDAO {
 			return null;
 		}
 
-		return users.get(0);
+		return users.getFirst();
 	}
 
 	/**

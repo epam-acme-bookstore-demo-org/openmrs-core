@@ -60,24 +60,16 @@ public class Duration implements Operand {
 	 * @return the equivalent duration in days
 	 */
 	public Double getDurationInDays() {
-		switch (units) {
-			case SECONDS:
-				return duration / 86400;
-			case MINUTES:
-				return duration / 1440;
-			case HOURS:
-				return duration / 24;
-			case DAYS:
-				return duration;
-			case WEEKS:
-				return duration * 7;
-			case MONTHS:
-				return duration * 30;
-			case YEARS:
-				return duration * 365;
-			default:
-				return 0d;
-		}
+		return switch (units) {
+			case SECONDS -> duration / 86400;
+			case MINUTES -> duration / 1440;
+			case HOURS -> duration / 24;
+			case DAYS -> duration;
+			case WEEKS -> duration * 7;
+			case MONTHS -> duration * 30;
+			case YEARS -> duration * 365;
+			default -> 0d;
+		};
 	}
 
 	/**
@@ -87,24 +79,16 @@ public class Duration implements Operand {
 	 */
 	public long getDurationInMillis() {
 		long d = duration.longValue();
-		switch (units) {
-			case SECONDS:
-				return d * 1000;
-			case MINUTES:
-				return d * 60000;
-			case HOURS:
-				return d * 3600000;
-			case DAYS:
-				return d * 86400000;
-			case WEEKS:
-				return d * 10080000;
-			case MONTHS:
-				return d * 2628000000L;
-			case YEARS:
-				return d * 31536000000L;
-			default:
-				return 0;
-		}
+		return switch (units) {
+			case SECONDS -> d * 1000;
+			case MINUTES -> d * 60000;
+			case HOURS -> d * 3600000;
+			case DAYS -> d * 86400000;
+			case WEEKS -> d * 10080000;
+			case MONTHS -> d * 2628000000L;
+			case YEARS -> d * 31536000000L;
+			default -> 0;
+		};
 	}
 
 	/**
@@ -124,7 +108,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object for given number of seconds
 	 */
 	public static Duration seconds(int duration) {
-		return seconds(new Double(duration));
+		return seconds(Double.valueOf(duration));
 	}
 
 	/**
@@ -144,7 +128,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object for given number of minutes
 	 */
 	public static Duration minutes(int duration) {
-		return minutes(new Double(duration));
+		return minutes(Double.valueOf(duration));
 	}
 
 	/**
@@ -164,7 +148,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object for given number of hours
 	 */
 	public static Duration hours(int duration) {
-		return hours(new Double(duration));
+		return hours(Double.valueOf(duration));
 	}
 
 	/**
@@ -184,7 +168,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object with specified number of days
 	 */
 	public static Duration days(int duration) {
-		return days(new Double(duration));
+		return days(Double.valueOf(duration));
 	}
 
 	/**
@@ -204,7 +188,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object with specified number of weeks
 	 */
 	public static Duration weeks(int duration) {
-		return weeks(new Double(duration));
+		return weeks(Double.valueOf(duration));
 	}
 
 	/**
@@ -224,7 +208,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object with specified number of months
 	 */
 	public static Duration months(int duration) {
-		return months(new Double(duration));
+		return months(Double.valueOf(duration));
 	}
 
 	/**
@@ -244,7 +228,7 @@ public class Duration implements Operand {
 	 * @return <code>Duration</code> object with specified number of years
 	 */
 	public static Duration years(int duration) {
-		return years(new Double(duration));
+		return years(Double.valueOf(duration));
 	}
 
 	/**

@@ -179,7 +179,7 @@ public class ConceptNumericTest extends BaseContextSensitiveTest {
 
 		List<ConceptReferenceRange> referenceRangeList = new ArrayList<>(conceptNumeric.getReferenceRanges());
 
-		assertEquals(1, referenceRangeList.get(0).getId().intValue());
+		assertEquals(1, referenceRangeList.getFirst().getId().intValue());
 		assertEquals(2, referenceRangeList.get(1).getId().intValue());
 		assertEquals(3, referenceRangeList.get(2).getId().intValue());
 		assertEquals(4, referenceRangeList.get(3).getId().intValue());

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.Stream;
 
@@ -54,8 +53,8 @@ public class LocalStorageService extends BaseStorageService implements StorageSe
 	    @Autowired StreamDataService streamService) {
 		super(streamService);
 		this.storageDir = StringUtils.isBlank(storageDir)
-		        ? Paths.get(OpenmrsUtil.getApplicationDataDirectory(), "storage").toAbsolutePath()
-		        : Paths.get(storageDir).toAbsolutePath();
+		        ? Path.of(OpenmrsUtil.getApplicationDataDirectory(), "storage").toAbsolutePath()
+		        : Path.of(storageDir).toAbsolutePath();
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class LocalStorageService extends BaseStorageService implements StorageSe
 	 * @return the legacy storage dir
 	 */
 	private Path getLegacyStorageDir() {
-		return Paths.get(OpenmrsUtil.getApplicationDataDirectory());
+		return Path.of(OpenmrsUtil.getApplicationDataDirectory());
 	}
 
 	@Override

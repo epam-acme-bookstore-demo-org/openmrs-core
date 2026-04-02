@@ -670,7 +670,7 @@ public class ModuleUtilTest extends BaseContextSensitiveTest {
 		List<File> actualExpandedFiles = (List<File>) FileUtils.listFiles(destinationFolder, null, true);
 		assertEquals(numberOfFilesInSpecifiedJarDirectory, actualExpandedFiles.size());
 		File expectedPath = new File(destinationFolder, directoryPath);
-		assertEquals(expectedPath.toString(), actualExpandedFiles.get(0).getParent());
+		assertEquals(expectedPath.toString(), actualExpandedFiles.getFirst().getParent());
 
 		FileUtils.deleteDirectory(destinationFolder);
 	}
@@ -690,7 +690,7 @@ public class ModuleUtilTest extends BaseContextSensitiveTest {
 
 		List<File> actualExpandedFiles = (List<File>) FileUtils.listFiles(destinationFolder, null, true);
 		assertEquals(numberOfFilesInSpecifiedDirectory, actualExpandedFiles.size());
-		assertEquals(destinationFolder.toString(), actualExpandedFiles.get(0).getParent());
+		assertEquals(destinationFolder.toString(), actualExpandedFiles.getFirst().getParent());
 
 		FileUtils.deleteDirectory(destinationFolder);
 	}
@@ -741,7 +741,7 @@ public class ModuleUtilTest extends BaseContextSensitiveTest {
 		List<File> actualExpandedFiles = (List<File>) FileUtils.listFiles(destinationFolder, null, true);
 		assertEquals(1, actualExpandedFiles.size());
 		File expectedPath = new File(destinationFolder, fileName);
-		assertEquals(expectedPath.toString(), actualExpandedFiles.get(0).toString());
+		assertEquals(expectedPath.toString(), actualExpandedFiles.getFirst().toString());
 
 		FileUtils.deleteDirectory(destinationFolder);
 	}

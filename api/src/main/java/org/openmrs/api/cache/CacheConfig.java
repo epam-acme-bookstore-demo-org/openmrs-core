@@ -191,29 +191,6 @@ public class CacheConfig {
 	}
 
 	public String getJChannelConfig(String cacheStack) {
-		String jChannelConfig;
-		switch (cacheStack.trim()) {
-			case "tcp":
-				jChannelConfig = "default-configs/default-jgroups-tcp.xml";
-				break;
-			case "kubernetes":
-				jChannelConfig = "default-configs/default-jgroups-kubernetes.xml";
-				break;
-			case "google":
-				jChannelConfig = "default-configs/default-jgroups-google.xml";
-				break;
-			case "tunnel":
-				jChannelConfig = "default-configs/default-jgroups-tunnel.xml";
-				break;
-			case "ec2":
-				jChannelConfig = "default-configs/default-jgroups-ec2.xml";
-				break;
-			case "azure":
-				jChannelConfig = "default-configs/default-jgroups-azure.xml";
-				break;
-			default:
-				jChannelConfig = "default-configs/default-jgroups-udp.xml";
-		}
-		return jChannelConfig;
+		return switch(cacheStack.trim()){case"tcp"->"default-configs/default-jgroups-tcp.xml";case"kubernetes"->"default-configs/default-jgroups-kubernetes.xml";case"google"->"default-configs/default-jgroups-google.xml";case"tunnel"->"default-configs/default-jgroups-tunnel.xml";case"ec2"->"default-configs/default-jgroups-ec2.xml";case"azure"->"default-configs/default-jgroups-azure.xml";default->"default-configs/default-jgroups-udp.xml";};
 	}
 }

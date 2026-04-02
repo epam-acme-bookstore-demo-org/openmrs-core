@@ -9,12 +9,15 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 /**
  * An error of this type is thrown when a concept name is found in the database when one tries to
  * create a new one with the same preferred name in the same locale
  */
 public class DuplicateConceptNameException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = -1488550917363129782L;
 
 	public DuplicateConceptNameException() {

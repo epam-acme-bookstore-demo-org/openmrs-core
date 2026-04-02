@@ -83,7 +83,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	@Test
 	public void saveConcept_shouldReturnTheConceptWithNewConceptIDIfCreatingNewConcept() {
 		Concept c = new Concept();
-		ConceptName fullySpecifiedName = new ConceptName("requires one name min", new Locale("fr", "CA"));
+		ConceptName fullySpecifiedName = new ConceptName("requires one name min", Locale.of("fr", "CA"));
 		c.addName(fullySpecifiedName);
 		c.addDescription(new ConceptDescription("some description", null));
 		c.setDatatype(new ConceptDatatype(1));
@@ -100,7 +100,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	@Test
 	public void saveConcept_shouldReturnTheConceptWithSameConceptIDIfUpdatingExistingConcept() {
 		Concept c = new Concept();
-		ConceptName fullySpecifiedName = new ConceptName("requires one name min", new Locale("fr", "CA"));
+		ConceptName fullySpecifiedName = new ConceptName("requires one name min", Locale.of("fr", "CA"));
 		c.addName(fullySpecifiedName);
 		c.addDescription(new ConceptDescription("some description", null));
 		c.setDatatype(new ConceptDatatype(1));
@@ -118,7 +118,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void saveConcept_shouldLeavePreferredNamePreferredIfSet() {
-		Locale loc = new Locale("fr", "CA");
+		Locale loc = Locale.of("fr", "CA");
 		ConceptName fullySpecifiedName = new ConceptName("fully specified", loc);
 		fullySpecifiedName.setConceptNameType(ConceptNameType.FULLY_SPECIFIED); //be explicit for test case
 		ConceptName shortName = new ConceptName("short name", loc);
@@ -153,7 +153,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void saveConcept_shouldNotSetDefaultPreferredNameToShortOrIndexTerms() {
-		Locale loc = new Locale("fr", "CA");
+		Locale loc = Locale.of("fr", "CA");
 		ConceptName shortName = new ConceptName("short name", loc);
 		shortName.setConceptNameType(ConceptNameType.SHORT); //be explicit for test case
 		ConceptName indexTerm = new ConceptName("indexTerm", loc);
@@ -184,7 +184,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void saveConcept_shouldSetDefaultPreferredNameToFullySpecifiedFirst() {
-		Locale loc = new Locale("fr", "CA");
+		Locale loc = Locale.of("fr", "CA");
 		ConceptName fullySpecifiedName = new ConceptName("fully specified", loc);
 		fullySpecifiedName.setConceptNameType(ConceptNameType.FULLY_SPECIFIED); //be explicit for test case
 		ConceptName shortName = new ConceptName("short name", loc);
@@ -221,8 +221,8 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void saveConcept_shouldSetDefaultPreferredNameToASynonymSecond() {
-		Locale loc = new Locale("fr", "CA");
-		Locale otherLocale = new Locale("en", "US");
+		Locale loc = Locale.of("fr", "CA");
+		Locale otherLocale = Locale.of("en", "US");
 		//Create a fully specified name, but for another locale
 		//so the Concept passes validation
 		ConceptName fullySpecifiedName = new ConceptName("fully specified", otherLocale);
@@ -261,7 +261,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 		//Given
 		Concept concept = new Concept();
 		String nameWithSpaces = "  jwm  ";
-		concept.addName(new ConceptName(nameWithSpaces, new Locale("en", "US")));
+		concept.addName(new ConceptName(nameWithSpaces, Locale.of("en", "US")));
 		concept.addDescription(new ConceptDescription("some description", null));
 		concept.setDatatype(new ConceptDatatype(1));
 		concept.setConceptClass(new ConceptClass(1));
@@ -279,12 +279,12 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	public void saveConcept_shouldForceSetFlagIfSetMembersExist() {
 		//Given
 		Concept concept = new Concept();
-		concept.addName(new ConceptName("Concept", new Locale("en", "US")));
+		concept.addName(new ConceptName("Concept", Locale.of("en", "US")));
 		concept.addDescription(new ConceptDescription("some description", null));
 		concept.setDatatype(new ConceptDatatype(1));
 		concept.setConceptClass(new ConceptClass(1));
 		Concept conceptSetMember = new Concept();
-		conceptSetMember.addName(new ConceptName("Set Member", new Locale("en", "US")));
+		conceptSetMember.addName(new ConceptName("Set Member", Locale.of("en", "US")));
 		conceptSetMember.addDescription(new ConceptDescription("some description", null));
 		conceptSetMember.setConceptClass(new ConceptClass(1));
 		conceptSetMember.setDatatype(new ConceptDatatype(1));
@@ -304,8 +304,8 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	public void saveDrug_shouldPutGeneratedIdOntoReturnedDrug() {
 		Drug drug = new Drug();
 		Concept concept = new Concept();
-		concept.addName(new ConceptName("Concept", new Locale("en", "US")));
-		concept.addDescription(new ConceptDescription("Description", new Locale("en", "US")));
+		concept.addName(new ConceptName("Concept", Locale.of("en", "US")));
+		concept.addDescription(new ConceptDescription("Description", Locale.of("en", "US")));
 		concept.setConceptClass(new ConceptClass(1));
 		concept.setDatatype(new ConceptDatatype(1));
 		Concept savedConcept = conceptService.saveConcept(concept);
@@ -322,8 +322,8 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	public void saveDrug_shouldCreateNewDrugInDatabase() {
 		Drug drug = new Drug();
 		Concept concept = new Concept();
-		concept.addName(new ConceptName("Concept", new Locale("en", "US")));
-		concept.addDescription(new ConceptDescription("Description", new Locale("en", "US")));
+		concept.addName(new ConceptName("Concept", Locale.of("en", "US")));
+		concept.addDescription(new ConceptDescription("Description", Locale.of("en", "US")));
 		concept.setConceptClass(new ConceptClass(1));
 		concept.setDatatype(new ConceptDatatype(1));
 		Concept savedConcept = conceptService.saveConcept(concept);
@@ -341,8 +341,8 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	public void saveDrug_shouldUpdateDrugAlreadyExistingInDatabase() {
 		Drug drug = new Drug();
 		Concept concept = new Concept();
-		concept.addName(new ConceptName("Concept", new Locale("en", "US")));
-		concept.addDescription(new ConceptDescription("Description", new Locale("en", "US")));
+		concept.addName(new ConceptName("Concept", Locale.of("en", "US")));
+		concept.addDescription(new ConceptDescription("Description", Locale.of("en", "US")));
 		concept.setConceptClass(new ConceptClass(1));
 		concept.setDatatype(new ConceptDatatype(1));
 		Concept savedConcept = conceptService.saveConcept(concept);
@@ -362,8 +362,8 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	public void saveDrug_shouldSaveNewDrugReferenceMap() {
 		Drug drug = new Drug();
 		Concept concept = new Concept();
-		concept.addName(new ConceptName("Concept", new Locale("en", "US")));
-		concept.addDescription(new ConceptDescription("Description", new Locale("en", "US")));
+		concept.addName(new ConceptName("Concept", Locale.of("en", "US")));
+		concept.addDescription(new ConceptDescription("Description", Locale.of("en", "US")));
 		concept.setConceptClass(new ConceptClass(1));
 		concept.setDatatype(new ConceptDatatype(1));
 		Concept savedConcept = conceptService.saveConcept(concept);
@@ -617,7 +617,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 		Concept concept = conceptService.getConcept(18);
 		List<ConceptSet> conceptSets = conceptService.getSetsContainingConcept(concept);
 		assertNotNull(conceptSets);
-		assertEquals(conceptSets.get(0).getConcept(), concept);
+		assertEquals(conceptSets.getFirst().getConcept(), concept);
 	}
 
 	/**
@@ -645,10 +645,10 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getConcepts_shouldGiveAListOfConceptSearchResultForTheMatchingConcepts() {
-		Locale locale = new Locale("en", "GB");
+		Locale locale = Locale.of("en", "GB");
 		String phrase = "CD4 COUNT";
 		List<ConceptSearchResult> res = conceptService.getConcepts(phrase, locale, true);
-		assertEquals(res.get(0).getConceptName().getName(), phrase);
+		assertEquals(res.getFirst().getConceptName().getName(), phrase);
 	}
 
 	/**
@@ -738,7 +738,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	@Test
 	public void getMaxConceptId_shouldGiveTheMaximumConceptId() {
 		int maxConceptId = 5497;
-		assertEquals(new Integer(maxConceptId), conceptService.getMaxConceptId());
+		assertEquals(Integer.valueOf(maxConceptId), conceptService.getMaxConceptId());
 	}
 
 	/**
@@ -746,7 +746,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getLocalesOfConceptNames_shouldReturnAListOfMatchingLocales() {
-		Locale localeToSearch = new Locale("en", "GB");
+		Locale localeToSearch = Locale.of("en", "GB");
 		Set<Locale> locales = conceptService.getLocalesOfConceptNames();
 		assertTrue(locales.contains(localeToSearch));
 	}
@@ -839,12 +839,12 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void findConceptAnswers_shouldReturnAListOfAllMatchingConceptSearchResults() {
-		Locale locale = new Locale("en", "GB");
+		Locale locale = Locale.of("en", "GB");
 		String phrase = "CD4 COUNT";
 		int conceptId = 5497;
 		List<ConceptSearchResult> concepts = conceptService.findConceptAnswers(phrase, locale,
 		    conceptService.getConcept(conceptId));
-		assertEquals(concepts.get(0).getConceptName().getName(), phrase);
+		assertEquals(concepts.getFirst().getConceptName().getName(), phrase);
 	}
 
 	/**
@@ -865,7 +865,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	@Test
 	public void mapConceptProposalToConcept_shouldThrowAPIExceptionWhenMappingToNullConcept() {
 		ConceptProposal cp = conceptService.getConceptProposal(2);
-		Locale locale = new Locale("en", "GB");
+		Locale locale = Locale.of("en", "GB");
 		assertThrows(APIException.class, () -> conceptService.mapConceptProposalToConcept(cp, null, locale));
 	}
 
@@ -876,7 +876,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	public void getCountOfDrugs_shouldReturnTheTotalNumberOfMatchingNumbers() {
 		String phrase = "Triomune-30";
 		int conceptId = 792;
-		assertEquals(new Integer(1),
+		assertEquals(Integer.valueOf(1),
 		    conceptService.getCountOfDrugs(phrase, conceptService.getConcept(conceptId), true, true, true));
 	}
 
@@ -982,7 +982,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 		List<ConceptReferenceRange> savedConceptReferenceRange = conceptService
 		        .getConceptReferenceRangesByConceptId(conceptNumeric.getId());
 		assertEquals(1, savedConceptReferenceRange.size());
-		assertEquals(conceptReferenceRange.getHiAbsolute(), savedConceptReferenceRange.get(0).getHiAbsolute());
+		assertEquals(conceptReferenceRange.getHiAbsolute(), savedConceptReferenceRange.getFirst().getHiAbsolute());
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 
 	private ConceptNumeric createConceptNumeric() {
 		ConceptNumeric conceptNumeric = new ConceptNumeric();
-		ConceptName fullySpecifiedName = new ConceptName("concept name", new Locale("fr", "CA"));
+		ConceptName fullySpecifiedName = new ConceptName("concept name", Locale.of("fr", "CA"));
 		conceptNumeric.addName(fullySpecifiedName);
 		conceptNumeric.addDescription(new ConceptDescription("some description", null));
 		conceptNumeric.setDatatype(new ConceptDatatype(1));

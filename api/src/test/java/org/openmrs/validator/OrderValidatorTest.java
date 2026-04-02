@@ -60,7 +60,7 @@ public class OrderValidatorTest extends BaseContextSensitiveTest {
 		new OrderValidator().validate(null, errors);
 
 		assertTrue(errors.hasErrors());
-		assertEquals("error.general", errors.getAllErrors().get(0).getCode());
+		assertEquals("error.general", errors.getAllErrors().getFirst().getCode());
 	}
 
 	/**

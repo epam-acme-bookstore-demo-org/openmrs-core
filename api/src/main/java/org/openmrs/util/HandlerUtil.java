@@ -176,14 +176,14 @@ public class HandlerUtil implements ApplicationListener<ContextRefreshedEvent> {
 		}
 
 		if (handlers.size() > 1) {
-			int order1 = getOrderOfHandler(handlers.get(0).getClass());
+			int order1 = getOrderOfHandler(handlers.getFirst().getClass());
 			int order2 = getOrderOfHandler(handlers.get(1).getClass());
 			if (order1 == order2) {
 				throw new APIException("handler.type.multiple", new Object[] { handlerType, type });
 			}
 		}
 
-		return handlers.get(0);
+		return handlers.getFirst();
 	}
 
 	/**

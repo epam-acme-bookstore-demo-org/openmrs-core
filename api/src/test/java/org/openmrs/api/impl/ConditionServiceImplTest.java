@@ -354,7 +354,7 @@ public class ConditionServiceImplTest extends BaseContextSensitiveTest {
 	public void getActiveConditions_shouldGetActiveConditions() {
 		List<Condition> activeConditions = conditionService.getActiveConditions(patientService.getPatient(2));
 		assertThat(activeConditions, hasSize(1));
-		assertEquals("2cc6880e-2c46-11e4-9138-a6c5e4d20fb7", activeConditions.get(0).getUuid());
+		assertEquals("2cc6880e-2c46-11e4-9138-a6c5e4d20fb7", activeConditions.getFirst().getUuid());
 	}
 
 	/**
@@ -366,7 +366,7 @@ public class ConditionServiceImplTest extends BaseContextSensitiveTest {
 		List<Condition> conditions = conditionService.getAllConditions(patient);
 		assertThat(conditions, hasSize(2));
 		// Condition with uuid 2cb6880e-2cd6-11e4-9138-a6c5e4d20fb7 is voided
-		assertThat(conditions.get(0).getUuid(), equalTo("2cc6880e-2c46-15e4-9038-a6c5e4d22fb7"));
+		assertThat(conditions.getFirst().getUuid(), equalTo("2cc6880e-2c46-15e4-9038-a6c5e4d22fb7"));
 		assertThat(conditions.get(1).getUuid(), equalTo("2cc6880e-2c46-11e4-9138-a6c5e4d20fb7"));
 	}
 
@@ -379,7 +379,7 @@ public class ConditionServiceImplTest extends BaseContextSensitiveTest {
 
 		assertThat(conditions, hasSize(2));
 
-		assertThat(conditions.get(0).getUuid(), equalTo("054a376e-0bf6-4388-aa31-9dac63f8e315"));
+		assertThat(conditions.getFirst().getUuid(), equalTo("054a376e-0bf6-4388-aa31-9dac63f8e315"));
 		assertThat(conditions.get(1).getUuid(), equalTo("9757313d-92ef-4f51-a002-72a0493c5078"));
 	}
 

@@ -223,9 +223,9 @@ public class HibernateUtil {
 			return null;
 		}
 
-		if (persistentObject instanceof HibernateProxy) {
+		if (persistentObject instanceof HibernateProxy proxy) {
 			Hibernate.initialize(persistentObject);
-			persistentObject = (T) ((HibernateProxy) persistentObject).getHibernateLazyInitializer().getImplementation();
+			persistentObject = (T) proxy.getHibernateLazyInitializer().getImplementation();
 		}
 
 		return persistentObject;

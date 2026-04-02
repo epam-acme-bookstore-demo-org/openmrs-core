@@ -23,5 +23,5 @@ public enum TaskState {
 	PROCESSING,
 	FAILED,
 	SUCCEEDED,
-	DELETED;
+	DELETED
 }

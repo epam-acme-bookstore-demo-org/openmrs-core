@@ -484,7 +484,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 
 			//if the locale has an variants e.g en_GB, try names in the locale excluding the country code i.e en
 			if (!StringUtils.isBlank(currentLocale.getCountry()) || !StringUtils.isBlank(currentLocale.getVariant())) {
-				Locale broaderLocale = new Locale(currentLocale.getLanguage());
+				Locale broaderLocale = Locale.of(currentLocale.getLanguage());
 				ConceptName prefNameInBroaderLoc = getPreferredName(broaderLocale);
 				if (prefNameInBroaderLoc != null) {
 					return prefNameInBroaderLoc;
@@ -573,7 +573,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 
 			// if we have any matches, we'll return one of them
 			if (matches.size() == 1) {
-				return matches.get(0);
+				return matches.getFirst();
 			} else if (matches.size() > 1) {
 				for (ConceptName match : matches) {
 					if (match.getLocalePreferred()) {
@@ -581,12 +581,12 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 					}
 				}
 				// none was explicitly marked as preferred
-				return matches.get(0);
+				return matches.getFirst();
 			}
 		}
 
 		// if we reach here, there were no matching names, so try to look in the parent locale
-		Locale parent = new Locale(locale.getLanguage());
+		Locale parent = Locale.of(locale.getLanguage());
 		if (!parent.equals(locale)) {
 			return getName(parent, ofType, havingTag);
 		} else {
@@ -622,7 +622,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 		}
 
 		if (!exact) {
-			Locale broaderLocale = new Locale(locale.getLanguage());
+			Locale broaderLocale = Locale.of(locale.getLanguage());
 			ConceptName name = getNameInLocale(broaderLocale);
 			return name != null ? name : getName();
 		}
@@ -1303,7 +1303,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 
 		// Add preferred name first in the list.
 		if (preferredConceptName != null) {
-			syns.add(0, preferredConceptName);
+			syns.addFirst(preferredConceptName);
 		}
 		log.debug("returning: " + syns);
 		return syns;
@@ -1645,7 +1645,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 			// deals with list size of 1 and any large index given by dev
 			weight = sortedConceptSets.get(setsSize - 1).getSortWeight() + 10.0;
 		} else if (index == 0) {
-			weight = sortedConceptSets.get(0).getSortWeight() - 10.0;
+			weight = sortedConceptSets.getFirst().getSortWeight() - 10.0;
 		} else {
 			// put the weight between two
 			double prevSortWeight = sortedConceptSets.get(index - 1).getSortWeight();

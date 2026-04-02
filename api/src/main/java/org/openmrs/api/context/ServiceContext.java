@@ -750,13 +750,12 @@ public class ServiceContext implements ApplicationContextAware {
 	 * @param params list of parameters
 	 */
 	public void setModuleService(List<Object> params) {
-		String classString = (String) params.get(0);
+		String classString = (String) params.getFirst();
 		Object classInstance = params.get(1);
 
 		if (classString == null || classInstance == null) {
-			throw new APIException(
-			        String.format("Unable to find service as unexpected null value found for class [%s] or instance [%s]",
-			            classString, classInstance));
+			throw new APIException("Unable to find service as unexpected null value found for class [%s] or instance [%s]"
+			        .formatted(classString, classInstance));
 		}
 
 		Class cls = null;

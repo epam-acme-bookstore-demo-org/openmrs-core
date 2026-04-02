@@ -326,7 +326,7 @@ public class UserValidatorTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void validate_shouldFailValidationIfEmailIsNotUnique() {
-		User existingUser = userService.getAllUsers().get(0);
+		User existingUser = userService.getAllUsers().getFirst();
 		existingUser.setEmail("test@example.com");
 		userService.saveUser(existingUser);
 

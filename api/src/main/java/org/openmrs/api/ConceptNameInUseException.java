@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 /**
  * This exception is thrown when one attempts to delete a concept that has a conceptName that is
  * being used by an observation
@@ -18,6 +20,7 @@ package org.openmrs.api;
  */
 public class ConceptNameInUseException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = 1034355111901825174L;
 
 	/**

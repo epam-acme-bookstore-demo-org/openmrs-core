@@ -106,7 +106,7 @@ public class GenerateUuid implements CustomTaskChange {
 			if ("mysql".equals(database.getShortName()) || "mariadb".equals(database.getShortName())) {
 				String updateSql = "update %s set " + columnName + " = uuid() where " + columnName + " is null";
 				for (String tablename : tableNamesArray) {
-					String rawSql = String.format(updateSql, tablename);
+					String rawSql = updateSql.formatted(tablename);
 
 					Statement statement = null;
 					try {

@@ -9,11 +9,14 @@
  */
 package org.openmrs.logic;
 
+import java.io.Serial;
+
 /**
  * Logic-specific exception
  */
 public class LogicException extends RuntimeException {
 
+	@Serial
 	private static final long serialVersionUID = -2985522122680870005L;
 
 	public LogicException() {

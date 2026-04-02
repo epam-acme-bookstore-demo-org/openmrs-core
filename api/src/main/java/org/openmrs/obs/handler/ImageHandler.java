@@ -142,17 +142,17 @@ public class ImageHandler extends AbstractHandler implements ComplexObsHandler {
 				Object data = obs.getComplexData().getData();
 
 				InputStream in = null;
-				if (data instanceof byte[]) {
-					in = new ByteArrayInputStream((byte[]) data);
-				} else if (data instanceof InputStream) {
-					in = (InputStream) data;
+				if (data instanceof byte[] bytes) {
+					in = new ByteArrayInputStream(bytes);
+				} else if (data instanceof InputStream stream) {
+					in = stream;
 				}
 
 				BufferedImage img = null;
 				if (in != null) {
 					img = ImageIO.read(in);
-				} else if (data instanceof BufferedImage) {
-					img = (BufferedImage) data;
+				} else if (data instanceof BufferedImage image) {
+					img = image;
 				}
 
 				if (img == null) {

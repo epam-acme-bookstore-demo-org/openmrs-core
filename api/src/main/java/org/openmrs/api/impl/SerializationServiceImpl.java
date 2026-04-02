@@ -72,7 +72,7 @@ public class SerializationServiceImpl extends BaseOpenmrsService implements Seri
 			try {
 				Class<?> clazz = Context.loadClass(prop);
 				if (clazz != null && OpenmrsSerializer.class.isAssignableFrom(clazz)) {
-					return (OpenmrsSerializer) clazz.newInstance();
+					return (OpenmrsSerializer) clazz.getDeclaredConstructor().newInstance();
 				}
 			} catch (Exception e) {
 				log.info("Cannot create an instance of " + prop + " - using builtin SimpleXStreamSerializer.");

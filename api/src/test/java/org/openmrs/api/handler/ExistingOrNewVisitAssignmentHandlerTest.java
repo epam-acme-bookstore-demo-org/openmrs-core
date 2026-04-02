@@ -80,7 +80,7 @@ public class ExistingOrNewVisitAssignmentHandlerTest extends BaseContextSensitiv
 	 */
 	@Test
 	public void beforeCreateEncounter_shouldAssignFirstVisitTypeIfMappingGlobalPropertyIsNotSet() {
-		VisitType visitType = Context.getVisitService().getAllVisitTypes().get(0);
+		VisitType visitType = Context.getVisitService().getAllVisitTypes().getFirst();
 
 		Encounter encounter = Context.getEncounterService().getEncounter(1);
 		assertNull(encounter.getVisit());

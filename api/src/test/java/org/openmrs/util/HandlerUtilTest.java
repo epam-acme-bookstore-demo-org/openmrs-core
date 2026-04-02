@@ -44,7 +44,7 @@ public class HandlerUtilTest extends BaseContextSensitiveTest {
 	public void getHandlersForType_shouldReturnAListOfAllClassesThatCanHandleThePassedType() {
 		List<Validator> l = HandlerUtil.getHandlersForType(Validator.class, Order.class);
 		assertEquals(1, l.size());
-		assertEquals(OrderValidator.class, l.iterator().next().getClass());
+		assertEquals(OrderValidator.class, l.getFirst().getClass());
 		l = HandlerUtil.getHandlersForType(Validator.class, DrugOrder.class);
 		assertEquals(2, l.size());
 	}

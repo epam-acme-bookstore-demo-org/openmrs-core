@@ -253,7 +253,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		assertNotNull(patientIdTypes);
 		PatientIdentifier patientIdentifier = new PatientIdentifier();
 		patientIdentifier.setIdentifier("123-0");
-		patientIdentifier.setIdentifierType(patientIdTypes.get(0));
+		patientIdentifier.setIdentifierType(patientIdTypes.getFirst());
 		patientIdentifier.setLocation(new Location(1));
 		patientIdentifier.setPreferred(true);
 
@@ -985,7 +985,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 
 		Patient patient = new Patient();
 		PatientIdentifier patientIdentifier = new PatientIdentifier();
-		patientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).get(0));
+		patientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).getFirst());
 		patientIdentifier.setLocation(new Location(1));
 		patientIdentifier.setVoided(true);
 		patientIdentifier.setVoidedBy(Context.getAuthenticatedUser());
@@ -996,7 +996,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		// "at least one nonvoided identifier" check passes
 		patientIdentifier = new PatientIdentifier();
 		patientIdentifier.setIdentifier("a non empty string");
-		patientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).get(0));
+		patientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).getFirst());
 		patientIdentifier.setLocation(new Location(1));
 		patientIdentifier.setVoided(false);
 		patientIdentifier.setVoidedBy(Context.getAuthenticatedUser());
@@ -1018,7 +1018,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 
 		Patient patient = new Patient();
 		PatientIdentifier patientIdentifier = new PatientIdentifier();
-		patientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).get(0));
+		patientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).getFirst());
 		patient.addIdentifier(patientIdentifier);
 
 		// Should throw blank identifier exception
@@ -1041,7 +1041,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		nonBlankIdentifierWithoutLocation.setIdentifierType(new PatientIdentifierType(21345));
 
 		nonBlankIdentifierWithoutLocation
-		        .setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).get(0));
+		        .setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).getFirst());
 		patient.addIdentifier(nonBlankIdentifierWithoutLocation);
 
 		assertEquals(1, patient.getIdentifiers().size());
@@ -1072,7 +1072,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		blankPatientIdentifier.setIdentifier("");
 		blankPatientIdentifier.setIdentifierType(new PatientIdentifierType(21345));
 
-		blankPatientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).get(0));
+		blankPatientIdentifier.setIdentifierType(Context.getPatientService().getAllPatientIdentifierTypes(false).getFirst());
 		patient.addIdentifier(blankPatientIdentifier);
 
 		assertEquals(1, patient.getIdentifiers().size());
@@ -1479,7 +1479,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void savePatientIdentifierType_shouldUpdateExistingPatientIdentifierType() throws Exception {
 
-		PatientIdentifierType identifierType = Context.getPatientService().getAllPatientIdentifierTypes().get(0);
+		PatientIdentifierType identifierType = Context.getPatientService().getAllPatientIdentifierTypes().getFirst();
 
 		assertNotNull(identifierType);
 		assertNotNull(identifierType.getPatientIdentifierTypeId());
@@ -2687,7 +2687,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		PatientIdentifier preferredIdentifier = new PatientIdentifier();
 		preferredIdentifier.setIdentifier("9999-4");
 		preferredIdentifier.setIdentifierType(patientIdentifierType);
-		preferredIdentifier.setLocation(locations.get(0));
+		preferredIdentifier.setLocation(locations.getFirst());
 		preferred.addIdentifier(preferredIdentifier);
 		preferred.addName(new PersonName("givenName", "middleName", "familyName"));
 		patientService.savePatient(preferred);
@@ -2698,7 +2698,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		PatientIdentifier nonPreferredIdentifier = new PatientIdentifier();
 		nonPreferredIdentifier.setIdentifier("9999-4");
 		nonPreferredIdentifier.setIdentifierType(patientIdentifierType);
-		nonPreferredIdentifier.setLocation(locations.get(0));
+		nonPreferredIdentifier.setLocation(locations.getFirst());
 		notPreferred.addIdentifier(nonPreferredIdentifier);
 		patientService.savePatient(notPreferred);
 		PersonMergeLog audit = mergeAndRetrieveAudit(preferred, notPreferred);
@@ -2710,7 +2710,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		patientService.mergePatients(preferred, notPreferred);
 		List<PersonMergeLog> result = personService.getAllPersonMergeLogs(true);
 		assertTrue(result.size() > 0, "person merge was not audited");
-		return result.get(0);
+		return result.getFirst();
 	}
 
 	private boolean isValueInList(String value, List<String> list) {
@@ -3323,7 +3323,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 
 		EncounterService encounterService = Context.getEncounterService();
 
-		assertEquals(57, encounterService.getEncountersByPatient(notPreffered).get(0).getId().intValue());
+		assertEquals(57, encounterService.getEncountersByPatient(notPreffered).getFirst().getId().intValue());
 		assertEquals(3, encounterService.getEncounter(57).getAllObs(false).size());
 		assertEquals(4, encounterService.getEncounter(57).getAllObs(true).size());
 		assertEquals(1, encounterService.getEncounter(57).getObsAtTopLevel(false).size());
@@ -3366,7 +3366,7 @@ public class PatientServiceTest extends BaseContextSensitiveTest {
 		        .getPatientIdentifiersByPatientProgram(patientProgram);
 
 		assertEquals(patientIdentifier.size(), 1);
-		assertEquals(patientIdentifier.iterator().next().getIdentifier(), "XXXCCCAAA11");
+		assertEquals(patientIdentifier.getFirst().getIdentifier(), "XXXCCCAAA11");
 	}
 
 	@Test

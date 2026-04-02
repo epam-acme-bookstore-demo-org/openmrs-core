@@ -228,8 +228,8 @@ public class PatientServiceImplTest extends BaseContextMockTest {
 
 		// then
 		verify(patientDaoMock, times(1)).getPatientIdentifierTypes("a name", "a format", true, false);
-		assertEquals(expectedIdentifierTypes.get(0).getPatientIdentifierTypeId(),
-		    actualIdentifierTypes.get(0).getPatientIdentifierTypeId());
+		assertEquals(expectedIdentifierTypes.getFirst().getPatientIdentifierTypeId(),
+		    actualIdentifierTypes.getFirst().getPatientIdentifierTypeId());
 	}
 
 	@Test

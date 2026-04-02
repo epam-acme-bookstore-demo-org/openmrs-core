@@ -638,7 +638,7 @@ public class HibernateOrderDAO implements OrderDAO {
 			locales.add(locale);
 			//look in the broader locale too if exactLocale is false e.g en for en_GB
 			if (!exactLocale && StringUtils.isNotBlank(locale.getCountry())) {
-				locales.add(new Locale(locale.getLanguage()));
+				locales.add(Locale.of(locale.getLanguage()));
 			}
 			predicates.add(conceptNameJoin.get("locale").in(locales));
 		}

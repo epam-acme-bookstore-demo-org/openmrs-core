@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -216,6 +217,7 @@ public class PersonAttributeType extends BaseChangeableOpenmrsMetadata implement
 	 **/
 	public static class DefaultComparator implements Comparator<PersonAttributeType>, Serializable {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		@Override

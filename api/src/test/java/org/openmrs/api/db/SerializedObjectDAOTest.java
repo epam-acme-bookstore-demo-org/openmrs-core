@@ -122,7 +122,7 @@ public class SerializedObjectDAOTest extends BaseContextSensitiveTest {
 	public void getAllObjects_shouldReturnAllSavedObjectsWithTheGivenTypeAndExactName() {
 		List<Program> l = dao.getAllObjectsByName(Program.class, "TestProgram", true);
 		assertEquals(1, l.size());
-		assertEquals(l.get(0).getName(), "TestProgram");
+		assertEquals(l.getFirst().getName(), "TestProgram");
 	}
 
 	@Test

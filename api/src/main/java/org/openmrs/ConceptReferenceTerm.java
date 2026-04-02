@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -43,6 +44,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericFie
 @AttributeOverrides({ @AttributeOverride(name = "name", column = @Column(name = "name", nullable = true)) })
 public class ConceptReferenceTerm extends BaseChangeableOpenmrsMetadata {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId

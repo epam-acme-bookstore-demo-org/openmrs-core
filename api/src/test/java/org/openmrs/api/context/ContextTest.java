@@ -220,7 +220,7 @@ public class ContextTest extends BaseContextSensitiveTest {
 	public void getRegisteredComponents_shouldReturnAListOfAllRegisteredBeansOfThePassedType() {
 		List<Validator> validators = Context.getRegisteredComponents(Validator.class);
 		assertTrue(validators.size() > 0);
-		assertTrue(Validator.class.isAssignableFrom(validators.iterator().next().getClass()));
+		assertTrue(Validator.class.isAssignableFrom(validators.getFirst().getClass()));
 	}
 
 	/**

@@ -9,6 +9,7 @@
  */
 package org.openmrs.logic.result;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import org.openmrs.logic.LogicException;
  */
 public class Result extends ArrayList<Result> {
 
+	@Serial
 	private static final long serialVersionUID = -5587574403423820797L;
 
 	/**
@@ -314,7 +316,7 @@ public class Result extends ArrayList<Result> {
 			return this.datatype;
 		}
 		// TODO: better option than defaulting to first element's datatype?
-		return this.get(0).getDatatype();
+		return this.getFirst().getDatatype();
 	}
 
 	/**
@@ -403,7 +405,7 @@ public class Result extends ArrayList<Result> {
 		if (isSingleResult()) {
 			return resultDatetime;
 		}
-		return this.get(0).getResultDate();
+		return this.getFirst().getResultDate();
 	}
 
 	/**
@@ -464,22 +466,16 @@ public class Result extends ArrayList<Result> {
 				return valueBoolean;
 			}
 
-			switch (datatype) {
-				case BOOLEAN:
-					return (valueBoolean == null ? false : valueBoolean);
-				case CODED:
-					return (valueCoded != null); // TODO: return
+			return switch (datatype) {
+				case BOOLEAN -> (valueBoolean == null ? false : valueBoolean);
+				case CODED -> (valueCoded != null); // TODO: return
 				// false for "FALSE"
 				// concept
-				case DATETIME:
-					return (valueDatetime != null);
-				case NUMERIC:
-					return (valueNumeric != null && valueNumeric != 0);
-				case TEXT:
-					return (valueText != null && valueText.length() >= 1);
-				default:
-					return valueBoolean;
-			}
+				case DATETIME -> (valueDatetime != null);
+				case NUMERIC -> (valueNumeric != null && valueNumeric != 0);
+				case TEXT -> (valueText != null && valueText.length() >= 1);
+				default -> valueBoolean;
+			};
 		}
 		for (Result r : this) {
 			if (!r.toBoolean()) {
@@ -498,7 +494,7 @@ public class Result extends ArrayList<Result> {
 		if (isSingleResult()) {
 			return valueCoded;
 		}
-		return this.get(0).toConcept();
+		return this.getFirst().toConcept();
 	}
 
 	/**
@@ -543,7 +539,7 @@ public class Result extends ArrayList<Result> {
 			}
 			return valueDatetime;
 		}
-		return this.get(0).toDatetime();
+		return this.getFirst().toDatetime();
 	}
 
 	/**
@@ -602,7 +598,7 @@ public class Result extends ArrayList<Result> {
 					return valueNumeric;
 			}
 		}
-		return this.get(0).toNumber();
+		return this.getFirst().toNumber();
 	}
 
 	/**
@@ -618,20 +614,14 @@ public class Result extends ArrayList<Result> {
 				return valueText == null ? "" : valueText;
 			}
 
-			switch (datatype) {
-				case BOOLEAN:
-					return (valueBoolean ? "true" : "false");
-				case CODED:
-					return (valueCoded == null ? "" : valueCoded.getName(Context.getLocale()).getName());
-				case DATETIME:
-					return (valueDatetime == null ? "" : Context.getDateFormat().format(valueDatetime));
-				case NUMERIC:
-					return (valueNumeric == null ? "" : String.valueOf(valueNumeric));
-				case TEXT:
-					return (valueText == null ? "" : valueText);
-				default:
-					return valueText;
-			}
+			return switch (datatype) {
+				case BOOLEAN -> (valueBoolean ? "true" : "false");
+				case CODED -> (valueCoded == null ? "" : valueCoded.getName(Context.getLocale()).getName());
+				case DATETIME -> (valueDatetime == null ? "" : Context.getDateFormat().format(valueDatetime));
+				case NUMERIC -> (valueNumeric == null ? "" : String.valueOf(valueNumeric));
+				case TEXT -> (valueText == null ? "" : valueText);
+				default -> valueText;
+			};
 		}
 		StringBuilder s = new StringBuilder();
 		for (Result r : this) {
@@ -656,7 +646,7 @@ public class Result extends ArrayList<Result> {
 			return resultObject;
 		}
 		if (this.size() == 1) {
-			return this.get(0).toObject();
+			return this.getFirst().toObject();
 		}
 		throw new LogicException(
 		        "This result represents more than one result, you cannot call toObject on multiple results");
@@ -784,20 +774,14 @@ public class Result extends ArrayList<Result> {
 				return false;
 			}
 			// both are single results
-			switch (datatype) {
-				case BOOLEAN:
-					return (valueBoolean.equals(r.valueBoolean));
-				case CODED:
-					return (valueCoded.equals(r.valueCoded));
-				case DATETIME:
-					return (valueDatetime.equals(r.valueDatetime));
-				case NUMERIC:
-					return (valueNumeric.equals(r.valueNumeric));
-				case TEXT:
-					return (valueText.equals(r.valueText));
-				default:
-					return false;
-			}
+			return switch (datatype) {
+				case BOOLEAN -> (valueBoolean.equals(r.valueBoolean));
+				case CODED -> (valueCoded.equals(r.valueCoded));
+				case DATETIME -> (valueDatetime.equals(r.valueDatetime));
+				case NUMERIC -> (valueNumeric.equals(r.valueNumeric));
+				case TEXT -> (valueText.equals(r.valueText));
+				default -> false;
+			};
 		}
 		if (isSingleResult() || r.isSingleResult()) {
 			// we already know they're not both single results, so if one is
@@ -867,7 +851,7 @@ public class Result extends ArrayList<Result> {
 		// default the returned result to the first item
 		// in case all resultDates are null
 		if (size() > 0) {
-			first = get(0);
+			first = getFirst();
 		}
 
 		for (Result r : this) {
@@ -897,7 +881,7 @@ public class Result extends ArrayList<Result> {
 		// default the returned result to the first item
 		// in case all resultDates are null
 		if (size() > 0) {
-			last = get(0);
+			last = getFirst();
 		}
 
 		for (Result r : this) {

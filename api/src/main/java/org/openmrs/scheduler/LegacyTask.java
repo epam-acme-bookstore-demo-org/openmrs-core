@@ -30,8 +30,7 @@ public class LegacyTask implements TaskHandler<TaskDefinition> {
 		}
 		Object instance = taskClass.getDeclaredConstructor().newInstance();
 
-		if (instance instanceof Task) {
-			Task task = (Task) instance;
+		if (instance instanceof Task task) {
 			task.initialize(taskData);
 			task.execute();
 		} else {

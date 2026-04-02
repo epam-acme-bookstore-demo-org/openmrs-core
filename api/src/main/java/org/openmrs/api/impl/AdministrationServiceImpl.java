@@ -901,7 +901,7 @@ public class AdministrationServiceImpl extends BaseOpenmrsService implements Adm
 	public List<Locale> getSearchLocales(Locale currentLocale, User user) throws APIException {
 		Set<Locale> locales = new LinkedHashSet<>();
 		locales.add(currentLocale); //the currently used full locale
-		locales.add(new Locale(currentLocale.getLanguage()));
+		locales.add(Locale.of(currentLocale.getLanguage()));
 
 		if (user != null) {
 			List<Locale> proficientLocales = user.getProficientLocales();
@@ -917,7 +917,7 @@ public class AdministrationServiceImpl extends BaseOpenmrsService implements Adm
 
 			for (Locale allowedLocale : allowedLocales) {
 				retainLocales.add(allowedLocale);
-				retainLocales.add(new Locale(allowedLocale.getLanguage()));
+				retainLocales.add(Locale.of(allowedLocale.getLanguage()));
 			}
 
 			locales.retainAll(retainLocales);

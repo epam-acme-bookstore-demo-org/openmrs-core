@@ -12,7 +12,6 @@ package org.openmrs.liquibase;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,14 +36,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CoreDataTunerTest {
 
-	private static final String LIQUIBASE_CORE_DATA_SNAPSHOT_XML = Paths
-	        .get("org", "openmrs", "liquibase", "snapshots", "core-data", "liquibase-core-data-SNAPSHOT.xml").toString();
+	private static final String LIQUIBASE_CORE_DATA_SNAPSHOT_XML = Path
+	        .of("org", "openmrs", "liquibase", "snapshots", "core-data", "liquibase-core-data-SNAPSHOT.xml").toString();
 
-	private static final String LIQUIBASE_CORE_DATA_UPDATED_SNAPSHOT_XML = Paths
-	        .get("org", "openmrs", "liquibase", "snapshots", "core-data", "liquibase-core-data-UPDATED-SNAPSHOT.xml")
+	private static final String LIQUIBASE_CORE_DATA_UPDATED_SNAPSHOT_XML = Path
+	        .of("org", "openmrs", "liquibase", "snapshots", "core-data", "liquibase-core-data-UPDATED-SNAPSHOT.xml")
 	        .toString();
 
-	private static String PATH_TO_TEST_RESOURCES = Paths.get("src", "test", "resources").toString();
+	private static String PATH_TO_TEST_RESOURCES = Path.of("src", "test", "resources").toString();
 
 	public static final int TWENTY_FIVE = 25;
 

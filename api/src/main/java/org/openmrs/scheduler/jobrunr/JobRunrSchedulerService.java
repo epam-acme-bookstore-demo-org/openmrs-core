@@ -97,9 +97,9 @@ public class JobRunrSchedulerService extends BaseOpenmrsService implements Sched
 			}
 
 			Optional<RecurringTaskDetails> recurringTask = getRecurringTask(taskDefinition.getUuid());
-			if (!recurringTask.isPresent()) {
+			if (recurringTask.isEmpty()) {
 				Optional<TaskDetails> task = getTask(taskDefinition.getUuid());
-				if (!task.isPresent()) {
+				if (task.isEmpty()) {
 					try {
 						scheduleTask(taskDefinition);
 						log.info("Scheduled legacy task {} [{}] to run on schedule", taskDefinition.getName(),

@@ -9,6 +9,8 @@
  */
 package org.openmrs.customdatatype;
 
+import java.io.Serial;
+
 import org.openmrs.api.APIException;
 
 /**
@@ -16,6 +18,7 @@ import org.openmrs.api.APIException;
  */
 public class CustomDatatypeException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

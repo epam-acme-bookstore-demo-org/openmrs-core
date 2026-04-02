@@ -148,7 +148,7 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 		List<Concept> conceptsByAnswer = dao.getConceptsByAnswer(concept);
 		assertNotNull(conceptsByAnswer);
 		assertEquals(1, conceptsByAnswer.size());
-		Concept conceptByAnswer = conceptsByAnswer.get(0);
+		Concept conceptByAnswer = conceptsByAnswer.getFirst();
 		assertEquals(21, conceptByAnswer.getConceptId().intValue());
 	}
 
@@ -172,9 +172,9 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 
 		assertEquals(2, searchResults.size());
 		//the first concept is the one with a word with the highest weight
-		assertEquals(conceptWithMultipleMatchingNames, searchResults.get(0).getConcept());
+		assertEquals(conceptWithMultipleMatchingNames, searchResults.getFirst().getConcept());
 		//For conceptId=3000, its search result should ALWAYS match on 'TRUST ME' because it is shorter THAN 'TRUST ALWAYS'
-		assertEquals(9998, searchResults.get(0).getConceptName().getConceptNameId().intValue());
+		assertEquals(9998, searchResults.getFirst().getConceptName().getConceptNameId().intValue());
 	}
 
 	/**
@@ -218,8 +218,8 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 		    null);
 
 		assertEquals(2, searchResults1.size());
-		assertEquals(c1, searchResults1.get(0).getConcept());
-		assertEquals(cn1b, searchResults1.get(0).getConceptName());
+		assertEquals(c1, searchResults1.getFirst().getConcept());
+		assertEquals(cn1b, searchResults1.getFirst().getConceptName());
 	}
 
 	/**
@@ -234,6 +234,6 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 		    false, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null,
 		    null, null);
 		assertEquals(4, searchResults.size());
-		assertEquals("Hystérectomie", searchResults.get(0).getConcept().getName().getName());
+		assertEquals("Hystérectomie", searchResults.getFirst().getConcept().getName().getName());
 	}
 }

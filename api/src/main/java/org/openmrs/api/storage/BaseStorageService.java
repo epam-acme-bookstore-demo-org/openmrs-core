@@ -17,7 +17,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,7 +37,7 @@ public abstract class BaseStorageService extends BaseOpenmrsService implements S
 
 	private final StreamDataService streamService;
 
-	private final Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+	private final Path tempDir = Path.of(System.getProperty("java.io.tmpdir"));
 
 	private final DateTimeFormatter keyDateTimeFormat = DateTimeFormatter.ofPattern("yyyy/MM-dd/yyyy-MM-dd-HH-mm-ss-SSS-");
 

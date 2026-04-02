@@ -49,7 +49,7 @@ class Log4JCompatibilityTest {
 
 			List<String> logLines = ma.getLogLines();
 			assertThat(logLines.size(), greaterThan(0));
-			assertThat(logLines.get(0), containsString("This message should be logged."));
+			assertThat(logLines.getFirst(), containsString("This message should be logged."));
 		} finally {
 			compatibilityLogger.removeAppender(ma);
 			compatibilityLogger.setLevel(originalLevel);

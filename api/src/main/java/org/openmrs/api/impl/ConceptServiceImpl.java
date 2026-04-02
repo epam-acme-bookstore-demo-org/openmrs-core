@@ -551,7 +551,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 			if (drugs.isEmpty()) {
 				return null;
 			}
-			return drugs.get(0);
+			return drugs.getFirst();
 		}
 	}
 
@@ -654,7 +654,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 			log.warn("More than one ConceptClass found with name: " + name);
 		}
 		if (ccList.size() == 1) {
-			return ccList.get(0);
+			return ccList.getFirst();
 		}
 		return null;
 	}
@@ -1208,7 +1208,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 		else if (concepts.size() > 1 && !concepts.get(1).getRetired()) {
 			throw new APIException("Concept.error.multiple.non.retired", new Object[] { code, sourceName });
 		} else {
-			return concepts.get(0);
+			return concepts.getFirst();
 		}
 	}
 
@@ -2171,11 +2171,11 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 */
 	private static ConceptReferenceRange findStrictestReferenceRange(List<ConceptReferenceRange> conceptReferenceRanges) {
 		if (conceptReferenceRanges.size() == 1) {
-			return conceptReferenceRanges.get(0);
+			return conceptReferenceRanges.getFirst();
 		}
 
 		ConceptReferenceRange strictestRange = new ConceptReferenceRange();
-		strictestRange.setConceptNumeric(conceptReferenceRanges.get(0).getConceptNumeric());
+		strictestRange.setConceptNumeric(conceptReferenceRanges.getFirst().getConceptNumeric());
 
 		for (ConceptReferenceRange conceptReferenceRange : conceptReferenceRanges) {
 			if (conceptReferenceRange.getLowAbsolute() != null && (strictestRange.getLowAbsolute() == null

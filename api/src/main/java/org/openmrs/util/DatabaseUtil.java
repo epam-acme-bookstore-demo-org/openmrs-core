@@ -212,7 +212,7 @@ public class DatabaseUtil {
 		List<List<Object>> rows = DatabaseUtil.executeSQL(connection, select, true);
 		for (List<Object> row : rows) {
 			//There can only be one column since we are selecting one
-			uniqueValues.add((T) row.get(0));
+			uniqueValues.add((T) row.getFirst());
 		}
 
 		return uniqueValues;

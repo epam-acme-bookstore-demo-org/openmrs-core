@@ -9,6 +9,7 @@
  */
 package org.openmrs.util;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -21,6 +22,7 @@ import org.openmrs.Drug;
  */
 public class DrugsByNameComparator implements Comparator<Drug>, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/* (non-Jsdoc)

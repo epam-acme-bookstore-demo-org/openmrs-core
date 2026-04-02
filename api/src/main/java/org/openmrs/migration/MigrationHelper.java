@@ -232,7 +232,7 @@ public class MigrationHelper {
 			{ // first try looking for non-voided users
 				List<User> users = us.getUsersByName(userFirstName, userLastName, false);
 				if (users.size() == 1) {
-					user = users.get(0);
+					user = users.getFirst();
 				} else if (users.size() > 1) {
 					throw new IllegalArgumentException(
 					        "Found " + users.size() + " users named '" + userLastName + ", " + userFirstName + "'");
@@ -242,7 +242,7 @@ public class MigrationHelper {
 				// next try looking for voided users
 				List<User> users = us.getUsersByName(userFirstName, userLastName, false);
 				if (users.size() == 1) {
-					user = users.get(0);
+					user = users.getFirst();
 				} else if (users.size() > 1) {
 					throw new IllegalArgumentException(
 					        "Found " + users.size() + " voided users named '" + userLastName + ", " + userFirstName + "'");
@@ -286,7 +286,7 @@ public class MigrationHelper {
 				throw new IllegalArgumentException("Found " + found.size() + " patients with identifier '" + identifier
 				        + "' of type " + identifierType);
 			}
-			Person relative = personService.getPerson(found.get(0).getPatient().getPatientId());
+			Person relative = personService.getPerson(found.getFirst().getPatient().getPatientId());
 			Relationship rel = new Relationship();
 			rel.setPersonA(person);
 			rel.setRelationshipType(relationship);
@@ -328,7 +328,7 @@ public class MigrationHelper {
 					throw new IllegalArgumentException(
 					        "Found " + pis.size() + " instances of identifier " + identifier + " of type " + pit);
 				}
-				Patient p = pis.get(0).getPatient();
+				Patient p = pis.getFirst().getPatient();
 				Program program = programsByName.get(temp[2]);
 				if (program == null) {
 					throw new RuntimeException("Couldn't find program \"" + temp[2] + "\" in " + programsByName);

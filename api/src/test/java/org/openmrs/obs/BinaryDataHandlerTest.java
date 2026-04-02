@@ -114,7 +114,6 @@ public class BinaryDataHandlerTest extends BaseContextSensitiveTest {
 
 		// update
 		handler.saveObs(obs);
-		;
 		complexObs = handler.getObs(obs, "RAW_VIEW");
 		String updatedKey = complexObs.getValueComplex().split("\\|")[1];
 		Integer updatedKeyLength = updatedKey.length();

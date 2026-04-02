@@ -9,6 +9,8 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Audited
 public class ConceptMapType extends BaseChangeableOpenmrsMetadata {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

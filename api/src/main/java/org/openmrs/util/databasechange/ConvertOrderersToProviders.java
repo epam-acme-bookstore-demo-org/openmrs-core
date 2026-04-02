@@ -66,7 +66,7 @@ public class ConvertOrderersToProviders implements CustomTaskChange {
 			boolean supportsBatchUpdate = connection.getMetaData().supportsBatchUpdates();
 			for (List<Object> row : usersAndProviders) {
 				updateStatement.setInt(1, (Integer) row.get(1));
-				updateStatement.setInt(2, (Integer) row.get(0));
+				updateStatement.setInt(2, (Integer) row.getFirst());
 				if (supportsBatchUpdate) {
 					updateStatement.addBatch();
 					index++;

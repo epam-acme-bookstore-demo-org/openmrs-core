@@ -76,15 +76,15 @@ public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 			List<File> configurationFiles = getConfigurationFiles();
 			if (!configurationFiles.isEmpty()) {
 				if (configurationFiles.size() == 1) {
-					System.out.println("Adding log4j2 configuration file: " + configurationFiles.get(0).getPath());
-					return super.getConfiguration(loggerContext, name, configurationFiles.get(0).toURI());
+					System.out.println("Adding log4j2 configuration file: " + configurationFiles.getFirst().getPath());
+					return super.getConfiguration(loggerContext, name, configurationFiles.getFirst().toURI());
 				} else {
 					List<AbstractConfiguration> abstractConfigurations = new ArrayList<>();
 					for (File configFile : configurationFiles) {
 						Configuration configuration = super.getConfiguration(loggerContext, name, configFile.toURI());
-						if (configuration instanceof AbstractConfiguration) {
+						if (configuration instanceof AbstractConfiguration abstractConfiguration) {
 							System.out.println("Adding log4j2 configuration file: " + configFile.getPath());
-							abstractConfigurations.add((AbstractConfiguration) configuration);
+							abstractConfigurations.add(abstractConfiguration);
 						} else {
 							System.err.println("Unable to add log4j2 configuration file: " + configFile.getPath());
 						}

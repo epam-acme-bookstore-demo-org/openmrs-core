@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 import org.openmrs.User;
 import org.openmrs.util.OpenmrsUtil;
 
@@ -22,6 +24,7 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class WeakPasswordException extends PasswordException {
 
+	@Serial
 	private static final long serialVersionUID = 31620091004L;
 
 	public WeakPasswordException() {

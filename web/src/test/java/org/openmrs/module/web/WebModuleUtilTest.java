@@ -11,7 +11,7 @@ package org.openmrs.module.web;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -349,7 +349,7 @@ public class WebModuleUtilTest {
 	public void getModuleWebFolder_shouldReturnTheCorrectModuleFolder() {
 		setupMocks(false);
 		String moduleId = "basicmodule";
-		String expectedPath = Paths.get(REAL_PATH, "WEB-INF", "view", "module", moduleId).toString();
+		String expectedPath = Path.of(REAL_PATH, "WEB-INF", "view", "module", moduleId).toString();
 
 		String actualPath = WebModuleUtil.getModuleWebFolder(moduleId);
 
@@ -363,7 +363,7 @@ public class WebModuleUtilTest {
 	public void getModuleWebFolder_shouldReturnTheCorrectModuleFolderIfRealPathHasATrailingSlash() {
 		setupMocks(true);
 		String moduleId = "basicmodule";
-		String expectedPath = Paths.get(REAL_PATH, "WEB-INF", "view", "module", moduleId).toString();
+		String expectedPath = Path.of(REAL_PATH, "WEB-INF", "view", "module", moduleId).toString();
 		String actualPath = WebModuleUtil.getModuleWebFolder(moduleId);
 
 		assertEquals(expectedPath, actualPath);

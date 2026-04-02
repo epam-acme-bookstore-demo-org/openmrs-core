@@ -124,10 +124,10 @@ public class Cohort extends BaseChangeableOpenmrsData {
 		this(name, description, (Integer[]) null);
 		if (patientsOrIds != null) {
 			for (Object o : patientsOrIds) {
-				if (o instanceof Patient) {
-					addMembership(new CohortMembership(((Patient) o).getPatientId()));
-				} else if (o instanceof Integer) {
-					addMembership(new CohortMembership((Integer) o));
+				if (o instanceof Patient patient) {
+					addMembership(new CohortMembership(patient.getPatientId()));
+				} else if (o instanceof Integer integer) {
+					addMembership(new CohortMembership(integer));
 				}
 			}
 		}

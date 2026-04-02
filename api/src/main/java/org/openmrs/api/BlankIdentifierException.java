@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 
@@ -21,6 +23,7 @@ import org.openmrs.PatientIdentifier;
  */
 public class BlankIdentifierException extends PatientIdentifierException {
 
+	@Serial
 	private static final long serialVersionUID = -3404483383593320184L;
 
 	/**

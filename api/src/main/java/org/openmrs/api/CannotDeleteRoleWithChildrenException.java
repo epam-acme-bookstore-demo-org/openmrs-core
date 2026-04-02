@@ -9,11 +9,14 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 /**
  * This exception is thrown when a user tries remove role with child.
  */
 public class CannotDeleteRoleWithChildrenException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

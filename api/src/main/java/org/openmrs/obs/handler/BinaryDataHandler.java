@@ -105,14 +105,14 @@ public class BinaryDataHandler extends AbstractHandler implements ComplexObsHand
 		try {
 			Object data = obs.getComplexData().getData();
 			ObjectMetadata metadata = new ObjectMetadata();
-			if (data instanceof byte[]) {
-				metadata.setLength((long) ((byte[]) data).length);
+			if (data instanceof byte[] bytes) {
+				metadata.setLength((long) bytes.length);
 			}
 			metadata.setFilename(obs.getComplexData().getTitle());
 
 			String key = storageService.saveData(outputStream -> {
-				if (data instanceof byte[]) {
-					IOUtils.write((byte[]) data, outputStream);
+				if (data instanceof byte[] bytes) {
+					IOUtils.write(bytes, outputStream);
 				} else if (InputStream.class.isAssignableFrom(data.getClass())) {
 					IOUtils.copy((InputStream) data, outputStream);
 				}

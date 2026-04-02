@@ -842,9 +842,9 @@ public class ModuleFactory {
 			try {
 				cls = Context.loadClass(advice.getPoint());
 				Object aopObject = advice.getClassInstance();
-				if (aopObject instanceof Advisor) {
+				if (aopObject instanceof Advisor advisor) {
 					log.debug("adding advisor [{}]", aopObject.getClass());
-					Context.addAdvisor(cls, (Advisor) aopObject);
+					Context.addAdvisor(cls, advisor);
 				} else if (aopObject != null) {
 					log.debug("adding advice [{}]", aopObject.getClass());
 					Context.addAdvice(cls, (Advice) aopObject);
@@ -1072,9 +1072,9 @@ public class ModuleFactory {
 						try {
 							cls = Context.loadClass(advice.getPoint());
 							Object aopObject = advice.getClassInstance();
-							if (aopObject instanceof Advisor) {
+							if (aopObject instanceof Advisor advisor) {
 								log.debug("adding advisor: " + aopObject.getClass());
-								Context.removeAdvisor(cls, (Advisor) aopObject);
+								Context.removeAdvisor(cls, advisor);
 							} else {
 								log.debug("Adding advice: " + aopObject.getClass());
 								Context.removeAdvice(cls, (Advice) aopObject);

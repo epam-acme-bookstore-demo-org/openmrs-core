@@ -30,7 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -553,7 +553,7 @@ public class OpenmrsUtil {
 		} else if (d2 == null) {
 			return false;
 		}
-		return (d1 instanceof Date && d2 instanceof Date) ? compare((Date) d1, (Date) d2) == 0 : d1.equals(d2);
+		return (d1 instanceof Date d && d2 instanceof Date d3) ? compare(d, d3) == 0 : d1.equals(d2);
 	}
 
 	/**
@@ -978,16 +978,16 @@ public class OpenmrsUtil {
 
 		if (filepath == null) {
 			if (OpenmrsConstants.UNIX_BASED_OPERATING_SYSTEM) {
-				filepath = Paths.get(System.getProperty("user.home"), "." + openmrsDir).toString();
+				filepath = Path.of(System.getProperty("user.home"), "." + openmrsDir).toString();
 				if (!canWrite(new File(filepath))) {
 					log.warn("Unable to write to users home dir, fallback to: "
 					        + OpenmrsConstants.APPLICATION_DATA_DIRECTORY_FALLBACK_UNIX);
-					filepath = Paths.get(OpenmrsConstants.APPLICATION_DATA_DIRECTORY_FALLBACK_UNIX, openmrsDir).toString();
+					filepath = Path.of(OpenmrsConstants.APPLICATION_DATA_DIRECTORY_FALLBACK_UNIX, openmrsDir).toString();
 				}
 			} else {
-				filepath = Paths.get(System.getProperty("user.home"), "Application Data", "OpenMRS").toString();
+				filepath = Path.of(System.getProperty("user.home"), "Application Data", "OpenMRS").toString();
 				if (!new File(filepath).exists()) {
-					filepath = Paths.get(System.getenv("appdata"), "OpenMRS").toString();
+					filepath = Path.of(System.getenv("appdata"), "OpenMRS").toString();
 				}
 				if (!canWrite(new File(filepath))) {
 					log.warn("Unable to write to users home dir, fallback to: "
@@ -2150,7 +2150,7 @@ public class OpenmrsUtil {
 
 		if ((conceptReferenceRange.getHiAbsolute() != null && conceptReferenceRange.getHiAbsolute() < value)
 		        || (conceptReferenceRange.getLowAbsolute() != null && conceptReferenceRange.getLowAbsolute() > value)) {
-			return String.format("Expected value between %s and %s", conceptReferenceRange.getLowAbsolute(),
+			return "Expected value between %s and %s".formatted(conceptReferenceRange.getLowAbsolute(),
 			    conceptReferenceRange.getHiAbsolute());
 		} else {
 			return "";

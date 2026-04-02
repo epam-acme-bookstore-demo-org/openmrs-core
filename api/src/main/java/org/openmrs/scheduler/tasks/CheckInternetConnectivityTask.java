@@ -10,7 +10,7 @@
 package org.openmrs.scheduler.tasks;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class CheckInternetConnectivityTask extends AbstractTask {
 		// TODO url should be provided as a property to taskconfig
 		String url = "http://www.google.com:80/index.html";
 		try {
-			URLConnection connection = new URL(url).openConnection();
+			URLConnection connection = URI.create(url).toURL().openConnection();
 			connection.connect();
 		} catch (IOException ioe) {
 			try {

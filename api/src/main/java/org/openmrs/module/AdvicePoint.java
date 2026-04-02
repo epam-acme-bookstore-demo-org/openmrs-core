@@ -30,7 +30,7 @@ public class AdvicePoint {
 	public AdvicePoint(String point, Class<?> clazz) {
 		this.point = point;
 		try {
-			this.classInstance = clazz.newInstance();
+			this.classInstance = clazz.getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			log.error("Unable to get instance of: [{}]", clazz.getName(), e);
 		}

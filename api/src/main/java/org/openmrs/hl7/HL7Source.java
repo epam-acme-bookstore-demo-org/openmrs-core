@@ -9,6 +9,8 @@
  */
 package org.openmrs.hl7;
 
+import java.io.Serial;
+
 import org.hibernate.envers.Audited;
 import org.openmrs.BaseChangeableOpenmrsMetadata;
 
@@ -18,6 +20,7 @@ import org.openmrs.BaseChangeableOpenmrsMetadata;
 @Audited
 public class HL7Source extends BaseChangeableOpenmrsMetadata {
 
+	@Serial
 	private static final long serialVersionUID = 3062136520728193223L;
 
 	private Integer hl7SourceId;

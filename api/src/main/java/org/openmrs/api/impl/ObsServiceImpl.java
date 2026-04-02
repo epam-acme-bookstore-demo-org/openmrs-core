@@ -648,7 +648,7 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService, Re
 	public void registerHandler(String key, String handlerClass) throws APIException {
 		try {
 			Class<?> loadedClass = OpenmrsClassLoader.getInstance().loadClass(handlerClass);
-			registerHandler(key, (ComplexObsHandler) loadedClass.newInstance());
+			registerHandler(key, (ComplexObsHandler) loadedClass.getDeclaredConstructor().newInstance());
 
 		} catch (Exception e) {
 			throw new APIException("unable.load.and.instantiate.handler", null, e);

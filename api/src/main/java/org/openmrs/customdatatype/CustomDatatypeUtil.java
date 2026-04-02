@@ -98,7 +98,7 @@ public class CustomDatatypeUtil {
 			try {
 				Class<? extends CustomDatatypeHandler> clazz = (Class<? extends CustomDatatypeHandler>) Context
 				        .loadClass(preferredHandlerClassname);
-				CustomDatatypeHandler handler = clazz.newInstance();
+				CustomDatatypeHandler handler = clazz.getDeclaredConstructor().newInstance();
 				if (handlerConfig != null) {
 					handler.setHandlerConfiguration(handlerConfig);
 				}

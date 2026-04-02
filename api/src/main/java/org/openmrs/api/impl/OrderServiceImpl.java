@@ -325,7 +325,7 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		if (type == null) {
 			List<OrderType> types = getOrderTypesByClassName(orderSubclass.getName(), true, false);
 			if (types.size() == 1) {
-				type = types.get(0);
+				type = types.getFirst();
 			}
 		}
 		return type;
@@ -484,8 +484,8 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	 */
 	private Class<?> getActualType(Object persistentObject) {
 		Class<?> type = persistentObject.getClass();
-		if (persistentObject instanceof HibernateProxy) {
-			type = ((HibernateProxy) persistentObject).getHibernateLazyInitializer().getPersistentClass();
+		if (persistentObject instanceof HibernateProxy proxy) {
+			type = proxy.getHibernateLazyInitializer().getPersistentClass();
 		}
 		return type;
 	}

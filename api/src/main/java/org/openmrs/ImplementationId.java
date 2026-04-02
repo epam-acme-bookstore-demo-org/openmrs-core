@@ -33,8 +33,7 @@ public class ImplementationId implements java.io.Serializable {
 	 */
 	@Override
 	public boolean equals(Object o) {
-		if (o instanceof ImplementationId) {
-			ImplementationId other = (ImplementationId) o;
+		if (o instanceof ImplementationId other) {
 
 			if (getImplementationId() != null && other.getImplementationId() != null) {
 				return getImplementationId().equals(other.getImplementationId());

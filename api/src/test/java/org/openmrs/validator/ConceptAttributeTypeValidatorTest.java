@@ -64,7 +64,7 @@ public class ConceptAttributeTypeValidatorTest extends BaseContextSensitiveTest 
 		validator.validate(type, errors);
 
 		assertTrue(errors.hasFieldErrors("name"));
-		assertThat(errors.getFieldErrors("name").get(0).getCode(), is("error.name"));
+		assertThat(errors.getFieldErrors("name").getFirst().getCode(), is("error.name"));
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class ConceptAttributeTypeValidatorTest extends BaseContextSensitiveTest 
 		validator.validate(type, errors);
 
 		assertTrue(errors.hasFieldErrors("name"));
-		assertThat(errors.getFieldErrors("name").get(0).getCode(), is("error.name"));
+		assertThat(errors.getFieldErrors("name").getFirst().getCode(), is("error.name"));
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class ConceptAttributeTypeValidatorTest extends BaseContextSensitiveTest 
 		validator.validate(type, errors);
 
 		assertTrue(errors.hasFieldErrors("name"));
-		assertThat(errors.getFieldErrors("name").get(0).getCode(), is("error.name"));
+		assertThat(errors.getFieldErrors("name").getFirst().getCode(), is("error.name"));
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ConceptAttributeTypeValidatorTest extends BaseContextSensitiveTest 
 		validator.validate(type, errors);
 
 		assertTrue(errors.hasFieldErrors("name"));
-		assertThat(errors.getFieldErrors("name").get(0).getCode(), is("ConceptAttributeType.error.nameAlreadyInUse"));
+		assertThat(errors.getFieldErrors("name").getFirst().getCode(), is("ConceptAttributeType.error.nameAlreadyInUse"));
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class ConceptAttributeTypeValidatorTest extends BaseContextSensitiveTest 
 	}
 
 	private void assertThatFieldExceedsMaxLength(String field) {
-		assertTrue(errors.hasFieldErrors(field), String.format("Field '%s' has error(s)", field));
-		assertThat(errors.getFieldErrors(field).get(0).getCode(), is("error.exceededMaxLengthOfField"));
+		assertTrue(errors.hasFieldErrors(field), "Field '%s' has error(s)".formatted(field));
+		assertThat(errors.getFieldErrors(field).getFirst().getCode(), is("error.exceededMaxLengthOfField"));
 	}
 }

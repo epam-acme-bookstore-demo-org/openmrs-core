@@ -12,6 +12,7 @@ package org.openmrs.module.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serial;
 import java.nio.file.Path;
 
 import jakarta.servlet.ServletException;
@@ -29,6 +30,7 @@ public class ModuleResourcesServlet extends HttpServlet {
 
 	private static final String MODULE_PATH = "/WEB-INF/view/module/";
 
+	@Serial
 	private static final long serialVersionUID = 1239820102030344L;
 
 	private static final Logger log = LoggerFactory.getLogger(ModuleResourcesServlet.class);

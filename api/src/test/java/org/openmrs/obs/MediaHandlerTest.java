@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.openmrs.GlobalProperty;
@@ -66,7 +66,7 @@ public class MediaHandlerTest extends BaseContextSensitiveTest {
 
 		adminService.saveGlobalProperty(new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_COMPLEX_OBS_DIR, "obs"));
 
-		File sourceFile = Paths.get("src", "test", "resources", "ComplexObsTestAudio.mp3").toFile();
+		File sourceFile = Path.of("src", "test", "resources", "ComplexObsTestAudio.mp3").toFile();
 		String filename = "TestingComplexObsSaving.mp3";
 
 		Obs complexObs1 = null;

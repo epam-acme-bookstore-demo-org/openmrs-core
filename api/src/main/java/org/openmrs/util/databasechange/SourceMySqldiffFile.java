@@ -141,21 +141,21 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 		} catch (IOException io) {
 			if (io.getMessage().endsWith("not found")) {
 				throw new CustomChangeException(
-				        "Unable to run command: " + commands.get(0)
+				        "Unable to run command: " + commands.getFirst()
 				                + ".  Make sure that it is on the PATH and then restart your server and try again. "
 				                + " Or run " + errorCommand + " at the command line with the appropriate full mysql path",
 				        io);
 			}
 		} catch (Exception e) {
-			throw new CustomChangeException("Error while executing command: '" + commands.get(0) + "'", e);
+			throw new CustomChangeException("Error while executing command: '" + commands.getFirst() + "'", e);
 		}
 
 		log.debug("Exec called: " + Collections.singletonList(commands));
 
 		if (exitValue != 0) {
-			log.error("There was an error while running the " + commands.get(0) + " command.  Command output: "
+			log.error("There was an error while running the " + commands.getFirst() + " command.  Command output: "
 			        + output.toString());
-			throw new CustomChangeException("There was an error while running the " + commands.get(0)
+			throw new CustomChangeException("There was an error while running the " + commands.getFirst()
 			        + " command. See your server's error log for the full error output. As an alternative, you"
 			        + " can run this command manually on your database to skip over this error.  Run this at the command line "
 			        + errorCommand + "  ");

@@ -708,15 +708,14 @@ public class ModuleUtil {
 		int redirects = 0;
 		InputStream in;
 		do {
-			if (c instanceof HttpURLConnection) {
-				((HttpURLConnection) c).setInstanceFollowRedirects(false);
+			if (c instanceof HttpURLConnection connection) {
+				connection.setInstanceFollowRedirects(false);
 			}
 			// We want to open the input stream before getting headers
 			// because getHeaderField() et al swallow IOExceptions.
 			in = c.getInputStream();
 			redir = false;
-			if (c instanceof HttpURLConnection) {
-				HttpURLConnection http = (HttpURLConnection) c;
+			if (c instanceof HttpURLConnection http) {
 				int stat = http.getResponseCode();
 				if (stat == 300 || stat == 301 || stat == 302 || stat == 303 || stat == 305 || stat == 307) {
 					URL base = http.getURL();

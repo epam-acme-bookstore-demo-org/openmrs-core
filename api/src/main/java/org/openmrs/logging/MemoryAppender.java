@@ -146,8 +146,8 @@ public class MemoryAppender extends AbstractAppender {
 
 		@Override
 		public MemoryAppenderBuilder setLayout(Layout<? extends Serializable> layout) {
-			if (layout instanceof StringLayout) {
-				return setLayout((StringLayout) layout);
+			if (layout instanceof StringLayout stringLayout) {
+				return setLayout(stringLayout);
 			}
 
 			throw new IllegalArgumentException("MemoryAppender layouts must output string values");

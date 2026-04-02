@@ -340,7 +340,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 		if (list.isEmpty()) {
 			return null;
 		}
-		return list.get(0);
+		return list.getFirst();
 	}
 
 	/* (non-Javadoc)

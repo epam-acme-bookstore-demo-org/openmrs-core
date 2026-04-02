@@ -75,7 +75,7 @@ public class HibernateMedicationDispenseDAOTest extends BaseContextSensitiveTest
 		b.setPatient(new Patient(2));
 		List<MedicationDispense> l = medicationDispenseDAO.getMedicationDispenseByCriteria(b.build());
 		assertThat(l.size(), is(1));
-		testMedicationDispense1(l.get(0));
+		testMedicationDispense1(l.getFirst());
 
 		b.setPatient(new Patient(7));
 		l = medicationDispenseDAO.getMedicationDispenseByCriteria(b.build());
@@ -95,7 +95,7 @@ public class HibernateMedicationDispenseDAOTest extends BaseContextSensitiveTest
 		b.setEncounter(new Encounter(6));
 		List<MedicationDispense> l = medicationDispenseDAO.getMedicationDispenseByCriteria(b.build());
 		assertThat(l.size(), is(1));
-		testMedicationDispense1(l.get(0));
+		testMedicationDispense1(l.getFirst());
 
 		b.setEncounter(new Encounter(3));
 		l = medicationDispenseDAO.getMedicationDispenseByCriteria(b.build());
@@ -115,7 +115,7 @@ public class HibernateMedicationDispenseDAOTest extends BaseContextSensitiveTest
 		b.setDrugOrder(new DrugOrder(2));
 		List<MedicationDispense> l = medicationDispenseDAO.getMedicationDispenseByCriteria(b.build());
 		assertThat(l.size(), is(1));
-		testMedicationDispense1(l.get(0));
+		testMedicationDispense1(l.getFirst());
 
 		b.setDrugOrder(new DrugOrder(1));
 		l = medicationDispenseDAO.getMedicationDispenseByCriteria(b.build());

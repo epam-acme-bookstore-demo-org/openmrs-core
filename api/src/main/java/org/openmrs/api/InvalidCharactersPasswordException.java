@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 import org.openmrs.util.OpenmrsUtil;
 
 /**
@@ -20,6 +22,7 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class InvalidCharactersPasswordException extends PasswordException {
 
+	@Serial
 	private static final long serialVersionUID = 31620091003L;
 
 	public InvalidCharactersPasswordException() {

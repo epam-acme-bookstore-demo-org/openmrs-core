@@ -710,7 +710,7 @@ public class PersonTest extends BaseContextSensitiveTest {
 	@Test
 	public void getAttribute_shouldreturnPersonAttributeBasedOnAttributeTypeId() {
 		Person person = personHelper(false, 1, 2, 3, "name1", "name2", "name3", "value1", "value2", "value3");
-		assertEquals(new Integer(3), person.getAttribute(3).getAttributeType().getId());
+		assertEquals(Integer.valueOf(3), person.getAttribute(3).getAttributeType().getId());
 	}
 
 	/**
