@@ -896,3 +896,58 @@ Goal:
 - This document should remain the reference for Java language modernization decisions.
 - Phase sequencing should be documented in [`05-migration-phases.md`](./05-migration-phases.md).
 - The main [`README.md`](../../README.md) should be reviewed separately for Java-version wording, because it still contains Java 8-era build guidance that can drift from the actual Java 21 baseline.
+
+---
+
+## Tracked Issues
+
+### Phase 0 — Foundation (Java standards)
+
+- [ ] #24 — Document Java 21 coding standards for OpenMRS Core
+- [ ] #33 — Update PR template and review checklist for modernisation work
+- [ ] #66 — Evaluate OpenRewrite for automated Java 21 migration
+- [ ] #70 — Update Spotless and Checkstyle configuration for Java 21 syntax
+
+### Phase 1 — Low-Risk Java Modernisation
+
+- [ ] #19 — Apply pattern matching instanceof — tools module
+- [ ] #16 — Apply pattern matching instanceof — test module
+- [ ] #21 — Apply pattern matching instanceof — liquibase module
+- [ ] #17 — Apply pattern matching instanceof — api module
+- [ ] #20 — Apply pattern matching instanceof — web module
+- [ ] #22 — Apply pattern matching instanceof — webapp module
+- [ ] #18 — Apply pattern matching instanceof — test-suite module
+- [ ] #39 — Adopt var for local variables — tools module
+- [ ] #35 — Adopt var for local variables — test module
+- [ ] #41 — Adopt var for local variables — liquibase module
+- [ ] #36 — Adopt var for local variables — api module
+- [ ] #37 — Adopt var for local variables — web module
+- [ ] #40 — Adopt var for local variables — webapp module
+- [ ] #38 — Adopt var for local variables — test-suite module
+- [ ] #56 — Convert switch statements to switch expressions — all modules
+- [ ] #58 — Adopt text blocks for multi-line strings — all modules
+- [ ] #55 — Adopt String API improvements (isBlank, strip, etc.) — all modules
+- [ ] #54 — Adopt Collections factory methods (List.of, Map.of) — all modules
+- [ ] #53 — Simplify try-with-resources patterns — all modules
+
+### Phase 3 — Medium-Risk Java Modernisation
+
+- [ ] #29 — Identify DTO and value object candidates for record conversion
+- [ ] #27 — Convert low-risk DTOs to records in internal modules
+- [ ] #26 — Convert DTOs to records in api module
+- [ ] #28 — Identify sealed class hierarchy candidates
+- [ ] #59 — Apply sealed class hierarchies to domain model
+- [ ] #62 — java.time migration — Phase A: Internal/private methods
+- [ ] #61 — java.time migration — Phase B: Add java.time overloads to public API
+- [ ] #60 — java.time migration — Phase C: Migrate callers module by module
+- [ ] #63 — java.time migration — Phase D: Remove deprecated Date-based methods
+- [ ] #76 — Modernise Stream API usage (.toList(), mapMulti()) — all modules
+- [ ] #77 — Prepare public API java.time migration proposal and versioning strategy
+
+### Phase 5 — High-Risk Changes
+
+- [ ] #34 — Investigate OpenmrsSecurityManager usage, callers, and module system impact
+- [ ] #81 — Design SecurityManager replacement model (propose StackWalker alternative)
+- [ ] #86 — Implement SecurityManager removal and approved replacement
+- [ ] #91 — Assess and migrate legacy HTTP client usage to java.net.http.HttpClient
+- [ ] #95 — Apply Optional API improvements (ifPresentOrElse, or, stream)

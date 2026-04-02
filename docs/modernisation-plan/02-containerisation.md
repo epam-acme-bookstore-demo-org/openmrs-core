@@ -596,3 +596,22 @@ This document intentionally leaves these decisions for follow-up work:
 - final ACA probe timings and scale rules
 
 Those should be resolved in the linked Azure infrastructure and migration planning documents.
+
+---
+
+## Tracked Issues
+
+### Phase 2 — Containerisation and Dev Environment
+
+- [ ] #14 — Switch production Docker image to JRE-only base
+- [ ] #25 — Add JVM container tuning flags (MaxRAMPercentage, G1GC)
+- [ ] #32 — Optimise Dockerfile layer caching and build performance
+- [ ] #43 — Add OCI standard labels and image metadata
+- [ ] #47 — Review and update .dockerignore
+- [ ] #65 — Configure container image vulnerability scanning
+- [ ] #69 — Create GitHub Actions container build workflow (build → test → scan → push)
+- [ ] #73 — Set up multi-platform builds with Docker Buildx (amd64 + arm64)
+- [ ] #94 — Create .env.example for docker-compose secrets management
+- [ ] #97 — Create docker-compose.test.yml for CI integration testing
+- [ ] #98 — Document image tagging and promotion strategy
+- [ ] #101 — Add VS Code Dev Container configuration

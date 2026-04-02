@@ -399,3 +399,31 @@ The following gaps should be resolved as part of execution:
 - document the exact login and REST smoke-test fixtures and credentials strategy per environment
 
 Until those are finalised, the quality gates in this document should be treated as the minimum required direction.
+
+---
+
+## Tracked Issues
+
+### Phase 0 — Foundation (Testing)
+
+- [ ] #12 — Set up GitHub Actions CI pipeline for modernisation branches
+- [ ] #45 — Capture baseline test coverage, SpotBugs, startup, and latency metrics
+- [ ] #79 — Establish test coverage baseline with JaCoCo
+
+### Phase 2 — Dev Environment Validation
+
+- [ ] #89 — Create automated smoke test suite for post-deployment validation
+- [ ] #92 — Validate dev deployment end-to-end (health, DB, Liquibase, login)
+
+### Phase 3 — java.time Testing
+
+- [ ] #74 — Add serialization round-trip tests for java.time types
+
+### Phase 5 — Performance Benchmarking
+
+- [ ] #104 — Performance benchmarking — compare against Phase 0 baseline
+
+### Phase 6 — Go-Live Validation
+
+- [ ] #13 — Pre-production validation — full regression suite in staging
+- [ ] #42 — Load testing in production environment

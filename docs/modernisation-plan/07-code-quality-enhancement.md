@@ -197,3 +197,31 @@ The following prompts from the `performance-code-quality` skill should be used d
 | P1.5-13 | Audit and remove dead `@Deprecated` code | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
 | P1.5-14 | Flatten deeply nested methods (>3 levels) in top 10 files | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
 | P1.5-15 | Refactor methods with 5+ parameters into config objects | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
+
+---
+
+## Tracked Issues
+
+### Priority 1 — Error Handling Hardening
+
+- [ ] #15 — Error handling hardening — api module (256 broad catches)
+- [ ] #30 — Error handling hardening — web module
+- [ ] #44 — Remove silent exception swallowing (71 catch blocks)
+
+### Priority 2 — God Class Decomposition
+
+- [ ] #48 — Decompose OpenmrsUtil.java (2,160 lines)
+- [ ] #67 — Decompose HibernateConceptDAO.java (2,405 lines)
+- [ ] #71 — Decompose ConceptServiceImpl.java (2,343 lines)
+- [ ] #78 — Decompose InitializationFilter.java (1,985 lines)
+- [ ] #82 — Decompose ModuleFactory.java (1,597 lines)
+- [ ] #87 — Decompose remaining god classes (Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil)
+
+### Priority 3 — Complexity Reduction
+
+- [ ] #90 — Audit and eliminate boolean flag parameters in public API
+- [ ] #93 — Convert string switch dispatch to enum-based dispatch
+- [ ] #96 — Audit and resolve @SuppressWarnings annotations
+- [ ] #99 — Audit and remove dead @Deprecated code
+- [ ] #102 — Flatten deeply nested methods (>3 levels) in top 10 files
+- [ ] #103 — Refactor methods with 5+ parameters into config objects
