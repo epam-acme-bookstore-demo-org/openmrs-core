@@ -725,6 +725,38 @@ This plan introduces a new documentation area under `docs/modernisation-plan/`. 
 
 ---
 
+## Best Practice Gaps (Microsoft Learn Review)
+
+A review of the current Bicep templates against [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/) and [Azure Container Apps landing zone accelerator](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/container-apps/landing-zone-accelerator) identified the following gaps. Each gap has a corresponding GitHub Issue for tracking.
+
+### Critical / High Priority (Phase 2)
+
+| # | Gap | Current State | Target State | Phase |
+|---|---|---|---|---|
+| 1 | **Database engine mismatch** | Bicep modules create MySQL Flexible Server | Rewrite to PostgreSQL Flexible Server (`Microsoft.DBforPostgreSQL/flexibleServers`) with version 16, port 5432 | Phase 2 |
+| 2 | **No geo-redundant backup** | `geoRedundantBackup: 'Disabled'` in prod | Enable geo-redundant backup for cross-region disaster recovery | Phase 4 |
+| 3 | **Image tag defaults to `latest`** | `imageTag: 'latest'` in prod main.bicep | Remove default in prod (require explicit tag); use semantic versioning | Phase 2 |
+| 4 | **Unrestricted ACA egress** | ACA subnet NSG allows all outbound on port 443 (`destinationAddressPrefix: '*'`) | Restrict to Azure service tags: `AzureContainerRegistry`, `AzureCloud`, `AzureMonitor` with explicit deny-all | Phase 4 |
+| 5 | **No WAF diagnostic logging** | App Gateway WAF events not captured | Add `Microsoft.Insights/diagnosticSettings` to App Gateway, send all logs and metrics to Log Analytics | Phase 4 |
+
+### Medium Priority (Phase 4)
+
+| # | Gap | Current State | Target State | Phase |
+|---|---|---|---|---|
+| 6 | **No Key Vault integration** | Secrets passed as deployment parameters | Add Key Vault module (`Microsoft.KeyVault/vaults`) with RBAC authorization, soft delete, purge protection, private endpoint in prod | Phase 4 |
+| 7 | **Password-based database auth** | Admin username/password for PostgreSQL | Future: Enable Azure AD (Entra ID) authentication using Container App managed identity. Requires JDBC Azure Identity plugin in application code | Phase 4 |
+| 8 | **ACR image scanning disabled** | Quarantine and Notary (content trust) policies disabled | Enable quarantine policy and trust policy for Premium SKU ACR | Phase 2 |
+| 9 | **WAF request body limit too small** | Hardcoded 128 KB max request body, 100 MB file upload | Parameterise limits; validate against actual OpenMRS API payload sizes (bulk operations, patient attachments) | Phase 4 |
+| 10 | **Database storage undersized** | Fixed 32 GB storage for all environments | Parameterise `storageSizeGB`; default 32 GB dev, 64+ GB prod | Phase 2 |
+
+### References
+
+- [Azure Well-Architected Framework — Security pillar](https://learn.microsoft.com/en-us/azure/well-architected/security/)
+- [Container Apps landing zone accelerator](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/app-platform/container-apps/landing-zone-accelerator)
+- [Azure Database for PostgreSQL best practices](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-best-practices)
+- [Application Gateway WAF best practices](https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/best-practices)
+- [Azure Key Vault best practices](https://learn.microsoft.com/en-us/azure/key-vault/general/best-practices)
+
 ## Tracked Issues
 
 ### Phase 0 — Foundation (Azure)
