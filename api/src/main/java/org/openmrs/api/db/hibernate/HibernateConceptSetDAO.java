@@ -9,7 +9,6 @@
  */
 package org.openmrs.api.db.hibernate;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -130,34 +129,6 @@ class HibernateConceptSetDAO {
 		cq.where(cb.equal(root.get("concept"), concept));
 
 		return session.createQuery(cq).getResultList();
-	}
-
-	/**
-	 * returns a list of n-generations of parents of a concept in a concept set
-	 *
-	 * @param current
-	 * @return List&lt;Concept&gt;
-	 * @throws DAOException
-	 */
-	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
-	private List<Concept> getParents(Concept current) throws DAOException {
-		var parents = new ArrayList<Concept>();
-		if (current != null) {
-			Query query = sessionFactory.getCurrentSession()
-			        .createQuery("from Concept c join c.conceptSets sets where sets.concept = ?").setParameter(0, current);
-			List<Concept> immedParents = query.getResultList();
-			for (Concept c : immedParents) {
-				parents.addAll(getParents(c));
-			}
-			parents.add(current);
-			if (log.isDebugEnabled()) {
-				log.debug("parents found: ");
-				for (Concept c : parents) {
-					log.debug("id: {}", c.getConceptId());
-				}
-			}
-		}
-		return parents;
 	}
 
 	Set<Locale> getLocalesOfConceptNames() {

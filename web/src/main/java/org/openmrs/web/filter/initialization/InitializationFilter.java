@@ -1241,7 +1241,7 @@ public class InitializationFilter extends StartupFilter {
 			Runnable r = () -> {
 				try {
 					// Phase 1: Create database schema
-					if (!databaseSetupHandler.createSchema(wizardModel, this)) {
+					if (!databaseSetupHandler.createSchema(wizardModel, this, this.errors)) {
 						return;
 					}
 

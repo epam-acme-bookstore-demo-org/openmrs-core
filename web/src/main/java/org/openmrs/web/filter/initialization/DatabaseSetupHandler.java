@@ -10,6 +10,7 @@
 package org.openmrs.web.filter.initialization;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,7 +19,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Random;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.liquibase.ChangeLogDetective;
@@ -61,9 +61,10 @@ class DatabaseSetupHandler implements WizardStepHandler {
 	 *
 	 * @param wizardModel the wizard configuration model
 	 * @param callback progress callback for reporting status
+	 * @param errors the error map to populate on SQL failure
 	 * @return true if schema creation succeeded (or was not needed), false on error
 	 */
-	boolean createSchema(InitializationWizardModel wizardModel, ProgressCallback callback) {
+	boolean createSchema(InitializationWizardModel wizardModel, ProgressCallback callback, Map<String, Object[]> errors) {
 		if (wizardModel.hasCurrentOpenmrsDatabase) {
 			return true;
 		}
@@ -85,7 +86,7 @@ class DatabaseSetupHandler implements WizardStepHandler {
 		int result;
 		if (sql != null) {
 			result = executeStatement(false, wizardModel.createDatabaseUsername, wizardModel.createDatabasePassword, sql,
-			    wizardModel, null, wizardModel.databaseName);
+			    wizardModel, errors, wizardModel.databaseName);
 		} else {
 			result = 1;
 		}
@@ -123,7 +124,7 @@ class DatabaseSetupHandler implements WizardStepHandler {
 		// generate random password from this subset of alphabet
 		// intentionally left out these characters: ufsb$() to prevent certain words forming randomly
 		String chars = "acdeghijklmnopqrtvwxyzACDEGHIJKLMNOPQRTVWXYZ0123456789.|~@#^&";
-		Random r = new Random();
+		SecureRandom r = new SecureRandom();
 		StringBuilder connectionPassword = new StringBuilder();
 		for (int x = 0; x < 12; x++) {
 			connectionPassword.append(chars.charAt(r.nextInt(chars.length())));

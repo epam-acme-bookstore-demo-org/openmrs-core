@@ -172,9 +172,9 @@ final class ModuleStopper {
 		}
 
 		// remove from list of loaded modules
-		ModuleFactory.getLoadedModules().remove(mod);
-
 		if (mod != null) {
+			ModuleFactory.getLoadedModulesMap().remove(mod.getModuleId());
+
 			// remove the file from the module repository
 			File file = mod.getFile();
 
@@ -183,7 +183,6 @@ final class ModuleStopper {
 				file.deleteOnExit();
 				log.warn("Could not delete " + file.getAbsolutePath());
 			}
-
 		}
 	}
 
