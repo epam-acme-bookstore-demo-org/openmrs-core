@@ -200,6 +200,17 @@ The following prompts from the `performance-code-quality` skill should be used d
 
 ---
 
+## Phase 1.5 Delivery Status
+
+| Wave | Scope | Status | PR |
+|---|---|---|---|
+| Wave 1 — Audit & Cleanup | Initial code-quality audit, baseline metrics, suppressions cleanup | ✅ Completed | [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) |
+| Wave 2 — Parameter Refactoring | Long parameter list refactoring, config/options object introduction | ✅ Completed | [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150) |
+| Wave 3 — God Class Decomposition | Decompose HibernateConceptDAO, ConceptServiceImpl, InitializationFilter, ModuleFactory | ✅ Completed | [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) |
+| Wave 3b — Remaining God Classes | Decompose Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil (#87) | ⏳ Pending | — |
+
+---
+
 ## Tracked Issues
 
 ### Priority 1 — Error Handling Hardening
@@ -211,10 +222,10 @@ The following prompts from the `performance-code-quality` skill should be used d
 ### Priority 2 — God Class Decomposition
 
 - [ ] #48 — Decompose OpenmrsUtil.java (2,160 lines)
-- [ ] #67 — Decompose HibernateConceptDAO.java (2,405 lines)
-- [ ] #71 — Decompose ConceptServiceImpl.java (2,343 lines)
-- [ ] #78 — Decompose InitializationFilter.java (1,985 lines)
-- [ ] #82 — Decompose ModuleFactory.java (1,597 lines)
+- [x] #67 — Decompose HibernateConceptDAO.java (2,405 lines) — PR #151
+- [x] #71 — Decompose ConceptServiceImpl.java (2,343 lines) — PR #151
+- [x] #78 — Decompose InitializationFilter.java (1,985 lines) — PR #151
+- [x] #82 — Decompose ModuleFactory.java (1,597 lines) — PR #151
 - [ ] #87 — Decompose remaining god classes (Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil)
 
 ### Priority 3 — Complexity Reduction
