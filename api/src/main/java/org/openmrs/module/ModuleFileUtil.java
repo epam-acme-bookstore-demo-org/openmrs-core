@@ -223,6 +223,7 @@ final class ModuleFileUtil {
 					if (loc != null) {
 						target = new URL(base, loc);
 					}
+					in.close();
 					http.disconnect();
 					// Redirection should be allowed only for HTTP and HTTPS
 					// and should be limited to 5 redirects at most.

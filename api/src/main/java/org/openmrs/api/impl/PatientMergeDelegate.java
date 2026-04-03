@@ -82,7 +82,7 @@ class PatientMergeDelegate {
 		mergeIdentifiers(preferred, notPreferred, mergedData);
 
 		mergeNames(preferred, notPreferred, mergedData);
-		mergeAddresses(preferred, notPreferred, mergedData, service);
+		mergeAddresses(preferred, notPreferred, mergedData);
 		mergePersonAttributes(preferred, notPreferred, mergedData);
 		mergeGenderInformation(preferred, notPreferred, mergedData);
 		mergeDateOfBirth(preferred, notPreferred, mergedData);
@@ -346,8 +346,7 @@ class PatientMergeDelegate {
 		return tmpName;
 	}
 
-	private void mergeAddresses(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData,
-	        PatientServiceImpl service) throws SerializationException {
+	private void mergeAddresses(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
 		// move all addresses
 		// (must be done after all calls to services above so hbm doesn't try to save things prematurely (hacky)
 		for (PersonAddress newAddress : notPreferred.getAddresses()) {

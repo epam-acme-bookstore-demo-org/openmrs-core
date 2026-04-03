@@ -10,8 +10,10 @@
 package org.openmrs.api.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -271,7 +273,8 @@ class PatientIdentifierDelegate {
 		final Set<PatientIdentifierType> patientIdentifierTypes = patientIdentifiers.stream()
 		        .map(PatientIdentifier::getIdentifierType).collect(Collectors.toSet());
 
-		final List<PatientIdentifierType> requiredTypes = dao.getPatientIdentifierTypes(null, null, true, null);
+		final List<PatientIdentifierType> requiredTypes = Optional
+		        .ofNullable(dao.getPatientIdentifierTypes(null, null, true, null)).orElse(Collections.emptyList());
 		final Set<String> missingRequiredTypeNames = requiredTypes.stream()
 		        .filter(requiredType -> !patientIdentifierTypes.contains(requiredType)).map(BaseOpenmrsMetadata::getName)
 		        .collect(Collectors.toSet());
