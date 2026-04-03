@@ -474,9 +474,30 @@ public interface OrderService extends OpenmrsService {
 	 *
 	 * @param includeRetired specifies whether retired care settings should be returned or not
 	 * @return A List of CareSettings
+	 * @deprecated As of 3.0.0, use {@link #getCareSettings()} to get non-retired care settings, or
+	 *             {@link #getCareSettingsIncludingRetired()} to include retired ones.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_CARE_SETTINGS)
 	public List<CareSetting> getCareSettings(boolean includeRetired);
+
+	/**
+	 * Gets all non-retired care settings.
+	 *
+	 * @return A List of non-retired CareSettings
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CARE_SETTINGS)
+	public List<CareSetting> getCareSettings();
+
+	/**
+	 * Gets all care settings including retired ones.
+	 *
+	 * @return A List of all CareSettings including retired
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CARE_SETTINGS)
+	public List<CareSetting> getCareSettingsIncludingRetired();
 
 	/**
 	 * Gets OrderType that matches the specified name
@@ -536,9 +557,30 @@ public interface OrderService extends OpenmrsService {
 	 * @return List&lt;OrderFrequency&gt;
 	 * @since 1.10
 	 * @param includeRetired specifies whether retired ones should be included or not
+	 * @deprecated As of 3.0.0, use {@link #getOrderFrequencies()} to get non-retired frequencies, or
+	 *             {@link #getOrderFrequenciesIncludingRetired()} to include retired ones.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_ORDER_FREQUENCIES)
 	public List<OrderFrequency> getOrderFrequencies(boolean includeRetired);
+
+	/**
+	 * Gets all non-retired order frequencies.
+	 *
+	 * @return List of non-retired OrderFrequency objects
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_ORDER_FREQUENCIES)
+	public List<OrderFrequency> getOrderFrequencies();
+
+	/**
+	 * Gets all order frequencies including retired ones.
+	 *
+	 * @return List of all OrderFrequency objects including retired
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_ORDER_FREQUENCIES)
+	public List<OrderFrequency> getOrderFrequenciesIncludingRetired();
 
 	/**
 	 * Gets all non retired order frequencies associated to concepts that match the specified search
@@ -706,9 +748,30 @@ public interface OrderService extends OpenmrsService {
 	 *            not
 	 * @return list of order types
 	 * @since 1.10
+	 * @deprecated As of 3.0.0, use {@link #getOrderTypes()} to get non-retired order types, or
+	 *             {@link #getOrderTypesIncludingRetired()} to include retired ones.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_ORDER_TYPES)
 	public List<OrderType> getOrderTypes(boolean includeRetired);
+
+	/**
+	 * Gets all non-retired order types.
+	 *
+	 * @return list of non-retired order types
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_ORDER_TYPES)
+	public List<OrderType> getOrderTypes();
+
+	/**
+	 * Gets all order types including retired ones.
+	 *
+	 * @return list of all order types including retired
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_ORDER_TYPES)
+	public List<OrderType> getOrderTypesIncludingRetired();
 
 	/**
 	 * Creates or updates the given order type in the database

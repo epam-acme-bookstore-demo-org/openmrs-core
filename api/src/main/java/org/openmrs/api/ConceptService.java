@@ -42,6 +42,7 @@ import org.openmrs.DrugIngredient;
 import org.openmrs.Person;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.db.ConceptDAO;
+import org.openmrs.parameter.DrugSearchCriteria;
 import org.openmrs.util.PrivilegeConstants;
 
 /**
@@ -429,9 +430,21 @@ public interface ConceptService extends OpenmrsService {
 	 *
 	 * @param includeRetired If <code>true</code> then the search will include voided Drugs
 	 * @return A List&lt;Drug&gt; object containing all matching Drugs
+	 * @deprecated As of 3.0.0, use {@link #getAllDrugs()} to get all drugs, or
+	 *             {@link #getAllDrugsIncludingRetired()} to include retired drugs.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_CONCEPTS)
 	public List<Drug> getAllDrugs(boolean includeRetired);
+
+	/**
+	 * Get all drugs including retired ones.
+	 *
+	 * @return A List&lt;Drug&gt; of all drugs including retired
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CONCEPTS)
+	public List<Drug> getAllDrugsIncludingRetired();
 
 	/**
 	 * Find drugs in the system. The string search can match either drug.name or drug.concept.name,
@@ -490,9 +503,22 @@ public interface ConceptService extends OpenmrsService {
 	 * @param includeRetired include retired concept classes in the search results?
 	 * @throws APIException
 	 * @return List&lt;ConceptClass&gt; object with all ConceptClass objects
+	 * @deprecated As of 3.0.0, use {@link #getAllConceptClasses()} to get all concept classes, or
+	 *             {@link #getAllConceptClassesIncludingRetired()} to include retired ones.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_CONCEPT_CLASSES)
 	public List<ConceptClass> getAllConceptClasses(boolean includeRetired) throws APIException;
+
+	/**
+	 * Return all concept classes including retired ones.
+	 *
+	 * @return List&lt;ConceptClass&gt; of all ConceptClass objects including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CONCEPT_CLASSES)
+	public List<ConceptClass> getAllConceptClassesIncludingRetired() throws APIException;
 
 	/**
 	 * Get ConceptClass by its UUID
@@ -922,9 +948,32 @@ public interface ConceptService extends OpenmrsService {
 	 *
 	 * @param includeRetired whether or not to include retired sources
 	 * @return List of Concept source objects
+	 * @deprecated As of 3.0.0, use {@link #getAllConceptSources()} to get non-retired sources, or
+	 *             {@link #getAllConceptSourcesIncludingRetired()} to include retired sources.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_CONCEPT_SOURCES)
 	public List<ConceptSource> getAllConceptSources(boolean includeRetired) throws APIException;
+
+	/**
+	 * Return all non-retired concept sources in the database.
+	 *
+	 * @return List of non-retired ConceptSource objects
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CONCEPT_SOURCES)
+	public List<ConceptSource> getAllConceptSources() throws APIException;
+
+	/**
+	 * Return all concept sources in the database, including retired ones.
+	 *
+	 * @return List of all ConceptSource objects including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CONCEPT_SOURCES)
+	public List<ConceptSource> getAllConceptSourcesIncludingRetired() throws APIException;
 
 	/**
 	 * Return a Concept source matching the given concept source id
@@ -1387,7 +1436,9 @@ public interface ConceptService extends OpenmrsService {
 	 * @return the number of matching drugs
 	 * @throws APIException
 	 * @since 1.8
+	 * @deprecated As of 3.0.0, replaced by {@link #getCountOfDrugs(DrugSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_CONCEPTS)
 	public Integer getCountOfDrugs(String drugName, Concept concept, boolean searchOnPhrase, boolean searchDrugConceptNames,
 	        boolean includeRetired) throws APIException;
@@ -1411,10 +1462,34 @@ public interface ConceptService extends OpenmrsService {
 	 * @return a list of matching drugs
 	 * @throws APIException
 	 * @since 1.8
+	 * @deprecated As of 3.0.0, replaced by {@link #getDrugs(DrugSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_CONCEPTS)
 	public List<Drug> getDrugs(String drugName, Concept concept, boolean searchKeywords, boolean searchDrugConceptNames,
 	        boolean includeRetired, Integer start, Integer length) throws APIException;
+
+	/**
+	 * Get drugs matching a variety of criteria contained in the parameter object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return a list of matching drugs
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CONCEPTS)
+	public List<Drug> getDrugs(DrugSearchCriteria criteria) throws APIException;
+
+	/**
+	 * Return the number of drugs matching criteria contained in the parameter object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return the number of matching drugs
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_CONCEPTS)
+	public Integer getCountOfDrugs(DrugSearchCriteria criteria) throws APIException;
 
 	/**
 	 * Gets the list of <code>ConceptStopWord</code> for given locale

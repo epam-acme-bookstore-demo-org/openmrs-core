@@ -21,6 +21,7 @@ import org.openmrs.Form;
 import org.openmrs.FormField;
 import org.openmrs.FormResource;
 import org.openmrs.annotation.Authorized;
+import org.openmrs.parameter.FormSearchCriteria;
 import org.openmrs.util.PrivilegeConstants;
 
 /**
@@ -161,7 +162,9 @@ public interface FormService extends OpenmrsService {
 	 * @param fields whether the form has any of these fields. If a field is used more than once on a
 	 *            form, that form is returning more than once in this list
 	 * @return All forms that match the criteria
+	 * @deprecated As of 3.0.0, replaced by {@link #getForms(FormSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_FORMS)
 	public List<Form> getForms(String partialNameSearch, Boolean published, Collection<EncounterType> encounterTypes,
 	        Boolean retired, Collection<FormField> containingAnyFormField, Collection<FormField> containingAllFormFields,
@@ -173,11 +176,34 @@ public interface FormService extends OpenmrsService {
 	 * except that it returns an integer that is the size of the list that would be returned
 	 *
 	 * @see #getForms(String, Boolean, Collection, Boolean, Collection, Collection, Collection)
+	 * @deprecated As of 3.0.0, replaced by {@link #getFormCount(FormSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_FORMS)
 	public Integer getFormCount(String partialNameSearch, Boolean published, Collection<EncounterType> encounterTypes,
 	        Boolean retired, Collection<FormField> containingAnyFormField, Collection<FormField> containingAllFormFields,
 	        Collection<Field> fields);
+
+	/**
+	 * Get all forms that match a variety of (nullable) criteria contained in the parameter object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return all forms that match the criteria
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_FORMS)
+	public List<Form> getForms(FormSearchCriteria criteria);
+
+	/**
+	 * Get the count of forms that match a variety of (nullable) criteria contained in the parameter
+	 * object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return the count of forms matching the criteria
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_FORMS)
+	public Integer getFormCount(FormSearchCriteria criteria);
 
 	/**
 	 * Returns all published forms (not including retired ones)

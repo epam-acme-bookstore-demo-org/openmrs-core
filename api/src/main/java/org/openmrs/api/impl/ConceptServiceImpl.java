@@ -69,6 +69,7 @@ import org.openmrs.api.db.ConceptDAO;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.api.db.hibernate.HibernateUtil;
 import org.openmrs.customdatatype.CustomDatatypeUtil;
+import org.openmrs.parameter.DrugSearchCriteria;
 import org.openmrs.util.ConceptReferenceRangeUtility;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
@@ -578,8 +579,18 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<Drug> getAllDrugs(boolean includeRetired) {
 		return dao.getDrugs(null, null, includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.ConceptService#getAllDrugsIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Drug> getAllDrugsIncludingRetired() {
+		return dao.getDrugs(null, null, true);
 	}
 
 	/**
@@ -639,8 +650,18 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<ConceptClass> getAllConceptClasses(boolean includeRetired) {
 		return dao.getAllConceptClasses(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.ConceptService#getAllConceptClassesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<ConceptClass> getAllConceptClassesIncludingRetired() {
+		return dao.getAllConceptClasses(true);
 	}
 
 	/**
@@ -1017,8 +1038,27 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<ConceptSource> getAllConceptSources(boolean includeRetired) {
 		return dao.getAllConceptSources(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.ConceptService#getAllConceptSources()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<ConceptSource> getAllConceptSources() {
+		return dao.getAllConceptSources(false);
+	}
+
+	/**
+	 * @see org.openmrs.api.ConceptService#getAllConceptSourcesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<ConceptSource> getAllConceptSourcesIncludingRetired() {
+		return dao.getAllConceptSources(true);
 	}
 
 	/**
@@ -2346,6 +2386,26 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 		    ConceptAttribute.class, ConceptName.class, ConceptDatatype.class, ConceptMapType.class, ConceptNumeric.class,
 		    ConceptProposal.class, Drug.class, ConceptDescription.class, ConceptNameTag.class, ConceptClass.class,
 		    ConceptAnswer.class, ConceptReferenceTerm.class, ConceptReferenceRange.class, Concept.class);
+	}
+
+	/**
+	 * @see ConceptService#getDrugs(DrugSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Drug> getDrugs(DrugSearchCriteria criteria) throws APIException {
+		return this.getDrugs(criteria.drugName(), criteria.concept(), criteria.searchKeywords(),
+		    criteria.searchDrugConceptNames(), criteria.includeRetired(), criteria.start(), criteria.length());
+	}
+
+	/**
+	 * @see ConceptService#getCountOfDrugs(DrugSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Integer getCountOfDrugs(DrugSearchCriteria criteria) throws APIException {
+		return this.getCountOfDrugs(criteria.drugName(), criteria.concept(), criteria.searchKeywords(),
+		    criteria.searchDrugConceptNames(), criteria.includeRetired());
 	}
 
 }

@@ -43,6 +43,7 @@ import org.openmrs.api.db.LoginCredential;
 import org.openmrs.api.db.UserDAO;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.notification.MessageException;
+import org.openmrs.parameter.UserSearchCriteria;
 import org.openmrs.patient.impl.LuhnIdentifierValidator;
 import org.openmrs.util.LocaleUtility;
 import org.openmrs.util.OpenmrsConstants;
@@ -839,6 +840,16 @@ public class UserServiceImpl extends BaseOpenmrsService implements UserService, 
 	@Override
 	public List<Class<?>> getRefTypes() {
 		return Arrays.asList(Role.class, Privilege.class, User.class);
+	}
+
+	/**
+	 * @see org.openmrs.api.UserService#getUsers(UserSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<User> getUsers(UserSearchCriteria criteria) throws APIException {
+		return this.getUsers(criteria.name(), criteria.roles(), criteria.includeRetired(), criteria.start(),
+		    criteria.length());
 	}
 
 }

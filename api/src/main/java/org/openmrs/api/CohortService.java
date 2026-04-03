@@ -134,9 +134,22 @@ public interface CohortService extends OpenmrsService {
 	 * @param includeVoided whether or not to include voided Cohorts
 	 * @return All Cohorts, maybe including the voided ones
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, use {@link #getAllCohorts()} to get non-voided cohorts, or
+	 *             {@link #getAllCohortsIncludingVoided()} to include voided cohorts.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PATIENT_COHORTS })
 	public List<Cohort> getAllCohorts(boolean includeVoided) throws APIException;
+
+	/**
+	 * Gets all Cohorts including voided ones.
+	 *
+	 * @return All Cohorts in the database including voided
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PATIENT_COHORTS })
+	public List<Cohort> getAllCohortsIncludingVoided() throws APIException;
 
 	/**
 	 * Returns Cohorts whose names match the given string. Returns an empty list in the case of no

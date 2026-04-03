@@ -51,9 +51,21 @@ public interface VisitService extends OpenmrsService {
 	 * @param includeRetired
 	 * @return List of all visit types
 	 * @since 1.9
+	 * @deprecated As of 3.0.0, use {@link #getAllVisitTypes()} to get all visit types, or
+	 *             {@link #getAllVisitTypesIncludingRetired()} to include retired types.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.MANAGE_VISIT_TYPES })
 	public List<VisitType> getAllVisitTypes(boolean includeRetired);
+
+	/**
+	 * Get all visit types including retired ones.
+	 *
+	 * @return all visit types including retired
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.MANAGE_VISIT_TYPES })
+	public List<VisitType> getAllVisitTypesIncludingRetired();
 
 	/**
 	 * Gets a visit type by its visit type id.

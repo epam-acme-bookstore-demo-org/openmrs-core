@@ -27,6 +27,7 @@ import org.openmrs.api.RefByUuid;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.LocationDAO;
 import org.openmrs.customdatatype.CustomDatatypeUtil;
+import org.openmrs.parameter.LocationSearchCriteria;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,8 +192,18 @@ public class LocationServiceImpl extends BaseOpenmrsService implements LocationS
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<Location> getAllLocations(boolean includeRetired) throws APIException {
 		return dao.getAllLocations(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.LocationService#getAllLocationsIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Location> getAllLocationsIncludingRetired() throws APIException {
+		return dao.getAllLocations(true);
 	}
 
 	/**
@@ -316,8 +327,18 @@ public class LocationServiceImpl extends BaseOpenmrsService implements LocationS
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<LocationTag> getAllLocationTags(boolean includeRetired) throws APIException {
 		return dao.getAllLocationTags(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.LocationService#getAllLocationTagsIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<LocationTag> getAllLocationTagsIncludingRetired() throws APIException {
+		return dao.getAllLocationTags(true);
 	}
 
 	/**
@@ -536,6 +557,16 @@ public class LocationServiceImpl extends BaseOpenmrsService implements LocationS
 	@Override
 	public List<Class<?>> getRefTypes() {
 		return Arrays.asList(LocationAttributeType.class, LocationTag.class, LocationAttribute.class, Location.class);
+	}
+
+	/**
+	 * @see org.openmrs.api.LocationService#getLocations(LocationSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Location> getLocations(LocationSearchCriteria criteria) throws APIException {
+		return this.getLocations(criteria.nameFragment(), criteria.parent(), criteria.attributeValues(),
+		    criteria.includeRetired(), criteria.start(), criteria.length());
 	}
 
 }

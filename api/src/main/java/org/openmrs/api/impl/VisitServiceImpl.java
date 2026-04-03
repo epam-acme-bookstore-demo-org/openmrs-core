@@ -79,8 +79,18 @@ public class VisitServiceImpl extends BaseOpenmrsService implements VisitService
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<VisitType> getAllVisitTypes(boolean includeRetired) {
 		return dao.getAllVisitTypes(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.VisitService#getAllVisitTypesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<VisitType> getAllVisitTypesIncludingRetired() {
+		return dao.getAllVisitTypes(true);
 	}
 
 	/**

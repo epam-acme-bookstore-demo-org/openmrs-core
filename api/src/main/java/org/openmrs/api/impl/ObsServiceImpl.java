@@ -35,6 +35,7 @@ import org.openmrs.api.db.ObsDAO;
 import org.openmrs.api.handler.SaveHandler;
 import org.openmrs.obs.ComplexData;
 import org.openmrs.obs.ComplexObsHandler;
+import org.openmrs.parameter.ObsSearchCriteria;
 import org.openmrs.util.OpenmrsClassLoader;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.openmrs.util.OpenmrsUtil;
@@ -685,6 +686,29 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService, Re
 	@Override
 	public List<Class<?>> getRefTypes() {
 		return Arrays.asList(Obs.class);
+	}
+
+	/**
+	 * @see org.openmrs.api.ObsService#getObservations(ObsSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Obs> getObservations(ObsSearchCriteria criteria) throws APIException {
+		return this.getObservations(criteria.whom(), criteria.encounters(), criteria.questions(), criteria.answers(),
+		    criteria.personTypes(), criteria.locations(), criteria.sort(), criteria.visits(), criteria.mostRecentN(),
+		    criteria.obsGroupId(), criteria.fromDate(), criteria.toDate(), criteria.includeVoidedObs(),
+		    criteria.accessionNumber());
+	}
+
+	/**
+	 * @see org.openmrs.api.ObsService#getObservationCount(ObsSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Integer getObservationCount(ObsSearchCriteria criteria) throws APIException {
+		return this.getObservationCount(criteria.whom(), criteria.encounters(), criteria.questions(), criteria.answers(),
+		    criteria.personTypes(), criteria.locations(), criteria.visits(), criteria.obsGroupId(), criteria.fromDate(),
+		    criteria.toDate(), criteria.includeVoidedObs(), criteria.accessionNumber());
 	}
 
 }

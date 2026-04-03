@@ -23,6 +23,7 @@ import org.openmrs.Visit;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.db.ObsDAO;
 import org.openmrs.obs.ComplexObsHandler;
+import org.openmrs.parameter.ObsSearchCriteria;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.openmrs.util.PrivilegeConstants;
 
@@ -232,7 +233,9 @@ public interface ObsService extends OpenmrsService {
 	 * @param includeVoidedObs true/false whether to also include the voided obs (required)
 	 * @return list of Observations that match all of the criteria given in the arguments
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, replaced by {@link #getObservations(ObsSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_OBS)
 	public List<Obs> getObservations(List<Person> whom, List<Encounter> encounters, List<Concept> questions,
 	        List<Concept> answers, List<PERSON_TYPE> personTypes, List<Location> locations, List<String> sort,
@@ -280,7 +283,9 @@ public interface ObsService extends OpenmrsService {
 	 * @return list of Observations that match all of the criteria given in the arguments
 	 * @since 1.12
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, replaced by {@link #getObservations(ObsSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_OBS)
 	public List<Obs> getObservations(List<Person> whom, List<Encounter> encounters, List<Concept> questions,
 	        List<Concept> answers, List<PERSON_TYPE> personTypes, List<Location> locations, List<String> sort,
@@ -315,7 +320,9 @@ public interface ObsService extends OpenmrsService {
 	 * @param includeVoidedObs true/false whether to also include the voided obs (required)
 	 * @return list of Observations that match all of the criteria given in the arguments
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, replaced by {@link #getObservationCount(ObsSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_OBS)
 	public Integer getObservationCount(List<Person> whom, List<Encounter> encounters, List<Concept> questions,
 	        List<Concept> answers, List<PERSON_TYPE> personTypes, List<Location> locations, Integer obsGroupId,
@@ -359,7 +366,9 @@ public interface ObsService extends OpenmrsService {
 	 * @return list of Observations that match all of the criteria given in the arguments
 	 * @since 1.12
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, replaced by {@link #getObservationCount(ObsSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_OBS)
 	public Integer getObservationCount(List<Person> whom, List<Encounter> encounters, List<Concept> questions,
 	        List<Concept> answers, List<PERSON_TYPE> personTypes, List<Location> locations, Integer obsGroupId,
@@ -526,7 +535,9 @@ public interface ObsService extends OpenmrsService {
 	 *      the old one is however kept for backward compatibility reasons.
 	 * @param visits List&lt;Visit&gt; to restrict obs to (optional)
 	 * @since 2.7.0
+	 * @deprecated As of 3.0.0, replaced by {@link #getObservations(ObsSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_OBS)
 	public List<Obs> getObservations(List<Person> whom, List<Encounter> encounters, List<Concept> questions,
 	        List<Concept> answers, List<PERSON_TYPE> personTypes, List<Location> locations, List<String> sort,
@@ -541,10 +552,38 @@ public interface ObsService extends OpenmrsService {
 	 *      the old one is however kept for backward compatibility reasons.
 	 * @param visits List&lt;Visit&gt; to restrict obs to (optional)
 	 * @since 2.7.0
+	 * @deprecated As of 3.0.0, replaced by {@link #getObservationCount(ObsSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized(PrivilegeConstants.GET_OBS)
 	public Integer getObservationCount(List<Person> whom, List<Encounter> encounters, List<Concept> questions,
 	        List<Concept> answers, List<PERSON_TYPE> personTypes, List<Location> locations, List<Visit> visits,
 	        Integer obsGroupId, Date fromDate, Date toDate, boolean includeVoidedObs, String accessionNumber)
 	        throws APIException;
+
+	/**
+	 * Get all observations that match a variety of (nullable) criteria contained in the parameter
+	 * object. Each extra value for a parameter that is provided acts as an "and" and will reduce the
+	 * number of results returned.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return a list of observations matching the criteria
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_OBS)
+	public List<Obs> getObservations(ObsSearchCriteria criteria) throws APIException;
+
+	/**
+	 * Get the count of observations that match a variety of (nullable) criteria contained in the
+	 * parameter object. Each extra value for a parameter that is provided acts as an "and" and will
+	 * reduce the count returned.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return the count of observations matching the criteria
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized(PrivilegeConstants.GET_OBS)
+	public Integer getObservationCount(ObsSearchCriteria criteria) throws APIException;
 }

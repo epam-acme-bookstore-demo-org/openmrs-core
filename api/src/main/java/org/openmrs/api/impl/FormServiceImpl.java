@@ -41,6 +41,7 @@ import org.openmrs.api.handler.SaveHandler;
 import org.openmrs.customdatatype.CustomDatatypeUtil;
 import org.openmrs.obs.ComplexObsHandler;
 import org.openmrs.obs.SerializableComplexObsHandler;
+import org.openmrs.parameter.FormSearchCriteria;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.validator.FormValidator;
@@ -828,6 +829,26 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	public List<Class<?>> getRefTypes() {
 		return Arrays.asList(Field.class, FieldAnswer.class, Form.class, FormField.class, FormResource.class,
 		    FieldType.class);
+	}
+
+	/**
+	 * @see org.openmrs.api.FormService#getForms(FormSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Form> getForms(FormSearchCriteria criteria) {
+		return this.getForms(criteria.partialNameSearch(), criteria.published(), criteria.encounterTypes(),
+		    criteria.retired(), criteria.containingAnyFormField(), criteria.containingAllFormFields(), criteria.fields());
+	}
+
+	/**
+	 * @see org.openmrs.api.FormService#getFormCount(FormSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Integer getFormCount(FormSearchCriteria criteria) {
+		return this.getFormCount(criteria.partialNameSearch(), criteria.published(), criteria.encounterTypes(),
+		    criteria.retired(), criteria.containingAnyFormField(), criteria.containingAllFormFields(), criteria.fields());
 	}
 
 }
