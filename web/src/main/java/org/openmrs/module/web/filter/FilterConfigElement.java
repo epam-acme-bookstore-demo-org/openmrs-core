@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * configuration file.
  *
  * @see ModuleFilterDefinition#retrieveFilterDefinitions
- * @since 2.9.x
+ * @since 3.0.0
  */
 public enum FilterConfigElement {
 

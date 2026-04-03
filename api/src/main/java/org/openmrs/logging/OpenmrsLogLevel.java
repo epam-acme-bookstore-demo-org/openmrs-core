@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Level;
 /**
  * Represents the valid OpenMRS log levels, mapping each to the corresponding Log4j2 {@link Level}.
  *
- * @since 2.9.x
+ * @since 3.0.0
  */
 public enum OpenmrsLogLevel {
 

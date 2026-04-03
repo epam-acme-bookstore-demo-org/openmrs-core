@@ -123,14 +123,13 @@ public class ModuleUtil {
 	}
 
 	private static void expandClasspathModule(String modulePath, File file, List<File> modulesToLoad) {
-		InputStream stream = ModuleUtil.class.getClassLoader().getResourceAsStream(modulePath);
-		if (stream == null) {
-			log.error("Unable to load module at path: " + modulePath
-			        + " because no file exists there and it is not found on the classpath. (absolute path tried: "
-			        + file.getAbsolutePath() + ")");
-			return;
-		}
-		try {
+		try (InputStream stream = ModuleUtil.class.getClassLoader().getResourceAsStream(modulePath)) {
+			if (stream == null) {
+				log.error("Unable to load module at path: " + modulePath
+				        + " because no file exists there and it is not found on the classpath. (absolute path tried: "
+				        + file.getAbsolutePath() + ")");
+				return;
+			}
 			String tmpDir = System.getProperty("java.io.tmpdir");
 			File expandedFile = File.createTempFile(file.getName() + "-", ".omod", new File(tmpDir));
 			var outStream = new FileOutputStream(expandedFile, false);

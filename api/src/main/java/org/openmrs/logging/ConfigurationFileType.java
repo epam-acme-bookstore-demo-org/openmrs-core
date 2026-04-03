@@ -17,7 +17,7 @@ import java.util.Optional;
  * Represents the supported log4j2 configuration file types for the
  * {@link OpenmrsConfigurationFactory}.
  *
- * @since 2.9.x
+ * @since 3.0.0
  */
 public enum ConfigurationFileType {
 

@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * These correspond to properties referenced in log4j2 configuration as
  * <tt>${openmrs:&lt;property&gt;}</tt>.
  *
- * @since 2.9.x
+ * @since 3.0.0
  */
 public enum LoggingProperty {
 
