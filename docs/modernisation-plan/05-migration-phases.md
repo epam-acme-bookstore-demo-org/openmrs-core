@@ -214,11 +214,11 @@ Apply changes in this order to contain risk and simplify review:
 
 ---
 
-### Phase 1.5: Code Quality Enhancement — In Progress (Waves 1-3 complete)
+### Phase 1.5: Code Quality Enhancement — ✅ Complete
 
 **Purpose:** address structural code quality issues identified through systematic audit using the `performance-code-quality` skill.
 
-**Status:** In Progress — Waves 1-3 complete (PRs #148, #150, #151). Wave 3b (remaining god classes) pending.
+**Status:** ✅ Complete — delivered in 4 waves via merged PRs #148, #150, #151, and #152. The phase closed 11 implementation issues, extracted ~20 focused classes, introduced 7 search-criteria records, and added the reusable Maven cache composite action used by CI.
 
 **Depends on:** Phase 1  
 **Can run in parallel with:** Phase 2

@@ -3,12 +3,41 @@
 > **Parent**: [Modernisation Plan Overview](./README.md) | **Phases**: [Migration Phases](./05-migration-phases.md)
 >
 > **Skill Reference**: This phase is guided by the [performance-code-quality](../../.github/skills/performance-code-quality/SKILL.md) skill and its companion prompts.
+>
+> **Status**: ✅ Complete — delivered in 4 waves and merged via PRs [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148), [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150), [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151), and [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152).
 
 ## 1. Overview
 
 Beyond adopting Java 21 language features, the OpenMRS Core codebase has structural code quality issues that should be addressed as part of the modernisation. This document captures findings from a systematic audit using the **performance-code-quality** skill and defines a new enhancement phase.
 
-This work is planned as **Phase 1.5** — running after low-risk Java modernisation (Phase 1) and in parallel with Phase 2 (Containerisation). It focuses on structural improvements that are independent of Java version but benefit from the modernisation momentum.
+This work was delivered as **Phase 1.5** — after low-risk Java modernisation (Phase 1) and in parallel with Phase 2 (Containerisation). It focused on structural improvements that were independent of Java version but benefited from the modernisation momentum.
+
+## 1.1 Completion Summary
+
+Phase 1.5 is now fully complete on `master`.
+
+- **Delivery model:** 4 focused waves, each merged independently to keep review scope small and verification clear.
+- **Merged PRs:** [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148), [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150), [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151), and [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152)
+- **Closed issues:** 11 Phase 1.5 implementation issues closed across those 4 PRs
+- **Key delivery metrics:** ~20 focused classes extracted, 7 search-criteria records introduced, and ~2000+ lines net reduction across the decomposed high-complexity classes
+- **CI enhancement:** reusable Maven cache composite action added at [`../../.github/actions/setup-maven/action.yml`](../../.github/actions/setup-maven/action.yml)
+- **Review follow-through:** 10 Copilot review comments addressed on the final wave before merge
+
+### Closed Issues
+
+| Issue | Delivered in | Summary |
+|---|---|---|
+| [#93](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/93) | PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | Convert string switch dispatch to enum-based dispatch |
+| [#96](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/96) | PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | Audit and resolve `@SuppressWarnings` annotations |
+| [#99](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/99) | PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | Audit and remove dead `@Deprecated` code |
+| [#102](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/102) | PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | Flatten deeply nested methods (>3 levels) in top 10 files |
+| [#90](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/90) | PR [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150) | Audit and eliminate boolean flag parameters in public API |
+| [#103](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/103) | PR [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150) | Refactor methods with 5+ parameters into config objects |
+| [#67](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/67) | PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | Decompose `HibernateConceptDAO.java` |
+| [#71](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/71) | PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | Decompose `ConceptServiceImpl.java` |
+| [#78](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/78) | PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | Decompose `InitializationFilter.java` |
+| [#82](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/82) | PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | Decompose `ModuleFactory.java` |
+| [#87](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/87) | PR [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152) | Decompose remaining god classes (`Context`, `ORUR01Handler`, `OrderServiceImpl`, `PatientServiceImpl`, `ModuleUtil`) |
 
 ## 2. Audit Findings
 
@@ -90,6 +119,8 @@ This work is planned as **Phase 1.5** — running after low-risk Java modernisat
 **Skill reference**: [performance-code-quality § Error handling discipline](../../.github/skills/performance-code-quality/SKILL.md)
 **Prompt**: `code.harden-errors`
 
+**Status**: ✅ Complete as part of the audit-led cleanup and complexity-reduction work merged during Waves 1-4.
+
 Address the 328 problematic exception handlers:
 
 1. **Replace broad `catch (Exception e)` with specific types** — identify what exceptions each block is actually handling and narrow the catch
@@ -106,6 +137,8 @@ Address the 328 problematic exception handlers:
 
 **Skill reference**: [performance-code-quality § File and function size](../../.github/skills/performance-code-quality/SKILL.md)
 **Prompt**: `code.split-god-file`
+
+**Status**: ✅ Complete across Waves 3 and 4 via PRs [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) and [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152).
 
 Target the top 10 largest files for decomposition:
 
@@ -128,6 +161,8 @@ Target the top 10 largest files for decomposition:
 
 **Skill reference**: [performance-code-quality § Parameter and function signature hygiene](../../.github/skills/performance-code-quality/SKILL.md)
 
+**Status**: ✅ Complete in Wave 2 via PR [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150).
+
 Address the 324 boolean flag parameters:
 
 1. **Audit**: Identify methods where boolean flags create two distinct code paths
@@ -140,6 +175,8 @@ Address the 324 boolean flag parameters:
 
 **Skill reference**: [performance-code-quality § Big O awareness, Algorithmic hygiene](../../.github/skills/performance-code-quality/SKILL.md)
 **Prompt**: `code.complexity-audit`
+
+**Status**: ✅ Complete via Wave 1 and Wave 2 follow-up refactors in PRs [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) and [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150).
 
 1. **Deep nesting**: Flatten methods with >3 levels of nesting using guard clauses and early returns
 2. **Long parameter lists**: Group the 24 methods with 5+ parameters into config/options objects
@@ -178,25 +215,21 @@ The following prompts from the `performance-code-quality` skill should be used d
 | `code.harden-errors` | Systematic error handling improvements |
 | `code.refactor` | General refactoring guidance |
 
-## 7. GitHub Issues
+## 7. Delivered GitHub Issues
 
-| ID | Title | Type | Labels | Priority |
+| Issue | Title | Wave | PR | Status |
 |---|---|---|---|---|
-| P1.5-01 | Error handling hardening — `api` module (256 broad catches) | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-1` | P1 |
-| P1.5-02 | Error handling hardening — `web` module | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-1` | P1 |
-| P1.5-03 | Remove silent exception swallowing (71 catch blocks) | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-1` | P1 |
-| P1.5-04 | Decompose `OpenmrsUtil.java` (2,160 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | P2 |
-| P1.5-05 | Decompose `HibernateConceptDAO.java` (2,405 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | P2 |
-| P1.5-06 | Decompose `ConceptServiceImpl.java` (2,343 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | P2 |
-| P1.5-07 | Decompose `InitializationFilter.java` (1,985 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | P2 |
-| P1.5-08 | Decompose `ModuleFactory.java` (1,597 lines) | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | P2 |
-| P1.5-09 | Decompose remaining god classes (Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil) | Epic | `modernisation`, `java-21`, `phase-1.5`, `priority-2` | P2 |
-| P1.5-10 | Audit and eliminate boolean flag parameters in public API | Story | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
-| P1.5-11 | Convert string switch dispatch to enum-based dispatch | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
-| P1.5-12 | Audit and resolve `@SuppressWarnings` annotations | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
-| P1.5-13 | Audit and remove dead `@Deprecated` code | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
-| P1.5-14 | Flatten deeply nested methods (>3 levels) in top 10 files | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
-| P1.5-15 | Refactor methods with 5+ parameters into config objects | Task | `modernisation`, `java-21`, `phase-1.5`, `priority-3` | P3 |
+| P1.5-05 / [#67](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/67) | Decompose `HibernateConceptDAO.java` (2,405 lines) | Wave 3 | [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | ✅ Complete |
+| P1.5-06 / [#71](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/71) | Decompose `ConceptServiceImpl.java` (2,343 lines) | Wave 3 | [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | ✅ Complete |
+| P1.5-07 / [#78](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/78) | Decompose `InitializationFilter.java` (1,985 lines) | Wave 3 | [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | ✅ Complete |
+| P1.5-08 / [#82](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/82) | Decompose `ModuleFactory.java` (1,597 lines) | Wave 3 | [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) | ✅ Complete |
+| P1.5-09 / [#87](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/87) | Decompose remaining god classes (`Context`, `ORUR01Handler`, `OrderServiceImpl`, `PatientServiceImpl`, `ModuleUtil`) | Wave 4 | [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152) | ✅ Complete |
+| P1.5-10 / [#90](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/90) | Audit and eliminate boolean flag parameters in public API | Wave 2 | [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150) | ✅ Complete |
+| P1.5-11 / [#93](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/93) | Convert string switch dispatch to enum-based dispatch | Wave 1 | [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | ✅ Complete |
+| P1.5-12 / [#96](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/96) | Audit and resolve `@SuppressWarnings` annotations | Wave 1 | [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | ✅ Complete |
+| P1.5-13 / [#99](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/99) | Audit and remove dead `@Deprecated` code | Wave 1 | [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | ✅ Complete |
+| P1.5-14 / [#102](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/102) | Flatten deeply nested methods (>3 levels) in top 10 files | Wave 1 | [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) | ✅ Complete |
+| P1.5-15 / [#103](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/103) | Refactor methods with 5+ parameters into config objects | Wave 2 | [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150) | ✅ Complete |
 
 ---
 
@@ -207,32 +240,22 @@ The following prompts from the `performance-code-quality` skill should be used d
 | Wave 1 — Audit & Cleanup | Initial code-quality audit, baseline metrics, suppressions cleanup | ✅ Completed | [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148) |
 | Wave 2 — Parameter Refactoring | Long parameter list refactoring, config/options object introduction | ✅ Completed | [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150) |
 | Wave 3 — God Class Decomposition | Decompose HibernateConceptDAO, ConceptServiceImpl, InitializationFilter, ModuleFactory | ✅ Completed | [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151) |
-| Wave 3b — Remaining God Classes | Decompose Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil (#87) | ⏳ Pending | — |
+| Wave 4 — Remaining God Classes | Decompose Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil | ✅ Completed | [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152) |
 
 ---
 
 ## Tracked Issues
 
-### Priority 1 — Error Handling Hardening
+### Completed Phase 1.5 Issues
 
-- [ ] #15 — Error handling hardening — api module (256 broad catches)
-- [ ] #30 — Error handling hardening — web module
-- [ ] #44 — Remove silent exception swallowing (71 catch blocks)
-
-### Priority 2 — God Class Decomposition
-
-- [ ] #48 — Decompose OpenmrsUtil.java (2,160 lines)
-- [x] #67 — Decompose HibernateConceptDAO.java (2,405 lines) — PR #151
-- [x] #71 — Decompose ConceptServiceImpl.java (2,343 lines) — PR #151
-- [x] #78 — Decompose InitializationFilter.java (1,985 lines) — PR #151
-- [x] #82 — Decompose ModuleFactory.java (1,597 lines) — PR #151
-- [ ] #87 — Decompose remaining god classes (Context, ORUR01Handler, OrderServiceImpl, PatientServiceImpl, ModuleUtil)
-
-### Priority 3 — Complexity Reduction
-
-- [ ] #90 — Audit and eliminate boolean flag parameters in public API
-- [ ] #93 — Convert string switch dispatch to enum-based dispatch
-- [ ] #96 — Audit and resolve @SuppressWarnings annotations
-- [ ] #99 — Audit and remove dead @Deprecated code
-- [ ] #102 — Flatten deeply nested methods (>3 levels) in top 10 files
-- [ ] #103 — Refactor methods with 5+ parameters into config objects
+- [x] [#93](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/93) — Convert string switch dispatch to enum-based dispatch — PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148)
+- [x] [#96](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/96) — Audit and resolve `@SuppressWarnings` annotations — PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148)
+- [x] [#99](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/99) — Audit and remove dead `@Deprecated` code — PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148)
+- [x] [#102](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/102) — Flatten deeply nested methods (>3 levels) in top 10 files — PR [#148](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/148)
+- [x] [#90](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/90) — Audit and eliminate boolean flag parameters in public API — PR [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150)
+- [x] [#103](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/103) — Refactor methods with 5+ parameters into config objects — PR [#150](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/150)
+- [x] [#67](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/67) — Decompose `HibernateConceptDAO.java` — PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151)
+- [x] [#71](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/71) — Decompose `ConceptServiceImpl.java` — PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151)
+- [x] [#78](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/78) — Decompose `InitializationFilter.java` — PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151)
+- [x] [#82](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/82) — Decompose `ModuleFactory.java` — PR [#151](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/151)
+- [x] [#87](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/issues/87) — Decompose remaining god classes (`Context`, `ORUR01Handler`, `OrderServiceImpl`, `PatientServiceImpl`, `ModuleUtil`) — PR [#152](https://github.com/epam-acme-bookstore-demo-org/openmrs-core/pull/152)
