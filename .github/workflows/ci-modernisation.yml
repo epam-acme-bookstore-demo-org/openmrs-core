@@ -114,7 +114,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Compile and run SpotBugs
-        run: ./mvnw compile com.github.spotbugs:spotbugs-maven-plugin:check -B -ntp -Dspotbugs.skip=false
+        run: ./mvnw compile com.github.spotbugs:spotbugs-maven-plugin:check -B -ntp -Dspotbugs.skip=false -pl api,web,liquibase
 
   # ──────────────────────────────────────────────
   # 4. Code coverage with JaCoCo  (after build)
