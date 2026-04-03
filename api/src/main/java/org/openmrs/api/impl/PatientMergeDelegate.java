@@ -266,8 +266,13 @@ class PatientMergeDelegate {
 
 	private void mergeDateOfDeath(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
 		mergedData.setPriorDateOfDeath(preferred.getDeathDate());
+		mergedData.setPriorDateOfDeathEstimated(preferred.getDeathdateEstimated());
 		if (preferred.getDeathDate() == null) {
 			preferred.setDeathDate(notPreferred.getDeathDate());
+		}
+
+		if (preferred.getDeathdateEstimated() == null) {
+			preferred.setDeathdateEstimated(notPreferred.getDeathdateEstimated());
 		}
 
 		if (preferred.getCauseOfDeath() != null) {
