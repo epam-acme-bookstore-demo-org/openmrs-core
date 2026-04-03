@@ -240,7 +240,7 @@ public class DatatypeServiceImpl extends BaseOpenmrsService implements DatatypeS
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (ClobDatatypeStorage.class.equals(type)) {
 			return (T) getClobDatatypeStorageByUuid(uuid);

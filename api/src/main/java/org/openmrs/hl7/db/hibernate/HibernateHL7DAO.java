@@ -91,7 +91,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#getAllHL7Sources()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<HL7Source> getAllHL7Sources() throws DAOException {
 		return sessionFactory.getCurrentSession().createQuery("from HL7Source").list();
 	}
@@ -130,7 +130,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#getAllHL7InQueues()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<HL7InQueue> getAllHL7InQueues() throws DAOException {
 		return sessionFactory.getCurrentSession()
 		        .createQuery("from HL7InQueue where messageState = ?1 order by HL7InQueueId")
@@ -144,7 +144,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @param query string query to match against
 	 * @return a Criteria object
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes") // HL7 query builder accepts multiple entity types; raw Class needed
 	private List<Predicate> getHL7SearchCriteria(CriteriaBuilder cb, Root<?> root, Class<?> clazz, Integer messageState,
 	        String query) throws DAOException {
 		if (clazz == null) {
@@ -178,7 +178,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#getHL7Batch(Class, int, int, Integer, String)
 	 */
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked" }) // HL7 batch query uses runtime Class; raw types needed for CriteriaQuery
 	public <T> List<T> getHL7Batch(Class clazz, int start, int length, Integer messageState, String query)
 	        throws DAOException {
 		Session session = sessionFactory.getCurrentSession();
@@ -201,7 +201,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#countHL7s(Class, Integer, String)
 	 */
 	@Override
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes") // Count query uses runtime Class; raw type needed for CriteriaQuery
 	public Long countHL7s(Class clazz, Integer messageState, String query) {
 		Session session = sessionFactory.getCurrentSession();
 		CriteriaBuilder cb = session.getCriteriaBuilder();
@@ -264,7 +264,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	/**
 	 * limits results of getHL7InArchiveByState
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	private List<HL7InArchive> getHL7InArchiveByState(Integer state, Integer maxResults) throws DAOException {
 		Query q = sessionFactory.getCurrentSession().createQuery("from HL7InArchive where messageState = ?1").setParameter(1,
 		    state, StandardBasicTypes.INTEGER);
@@ -278,7 +278,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#getHL7InQueueByState(Integer stateId)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<HL7InQueue> getHL7InQueueByState(Integer state) throws DAOException {
 		return sessionFactory.getCurrentSession().createQuery("from HL7InQueue where messageState = ?1")
 		        .setParameter(1, state, StandardBasicTypes.INTEGER).list();
@@ -296,7 +296,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#getAllHL7InArchives(Integer)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<HL7InArchive> getAllHL7InArchives(Integer maxResults) {
 		Query q = sessionFactory.getCurrentSession().createQuery("from HL7InArchive order by hl7InArchiveId");
 		if (maxResults != null) {
@@ -339,7 +339,7 @@ public class HibernateHL7DAO implements HL7DAO {
 	 * @see org.openmrs.hl7.db.HL7DAO#getAllHL7InErrors()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<HL7InError> getAllHL7InErrors() throws DAOException {
 		return sessionFactory.getCurrentSession().createQuery("from HL7InError order by hl7InErrorId").list();
 	}

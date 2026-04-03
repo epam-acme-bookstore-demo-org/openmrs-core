@@ -690,7 +690,7 @@ public class HibernateConceptDAO implements ConceptDAO {
 	 * @see org.openmrs.api.db.ConceptDAO#getConceptsByAnswer(org.openmrs.Concept)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Concept> getConceptsByAnswer(Concept concept) {
 		String q = "select c from Concept c join c.answers ca where ca.answerConcept = :answer";
 		Query query = sessionFactory.getCurrentSession().createQuery(q);
@@ -751,7 +751,7 @@ public class HibernateConceptDAO implements ConceptDAO {
 	 * @see org.openmrs.api.db.ConceptDAO#getConceptsWithDrugsInFormulary()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Concept> getConceptsWithDrugsInFormulary() {
 		Query query = sessionFactory.getCurrentSession()
 		        .createQuery("select distinct concept from Drug d where d.retired = false");
@@ -883,7 +883,7 @@ public class HibernateConceptDAO implements ConceptDAO {
 	 * @return List&lt;Concept&gt;
 	 * @throws DAOException
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	private List<Concept> getParents(Concept current) throws DAOException {
 		var parents = new ArrayList<Concept>();
 		if (current != null) {
@@ -952,7 +952,7 @@ public class HibernateConceptDAO implements ConceptDAO {
 	 * @see org.openmrs.api.db.ConceptDAO#getAllConceptNameTags()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<ConceptNameTag> getAllConceptNameTags() {
 		return sessionFactory.getCurrentSession().createQuery("from ConceptNameTag cnt order by cnt.tag").list();
 	}
@@ -1209,7 +1209,7 @@ public class HibernateConceptDAO implements ConceptDAO {
 	 * @see org.openmrs.api.db.ConceptDAO#getConceptUuids()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public Map<Integer, String> getConceptUuids() {
 		var ret = new HashMap<Integer, String>();
 		Query q = sessionFactory.getCurrentSession().createQuery("select conceptId, uuid from Concept");
@@ -1985,25 +1985,32 @@ public class HibernateConceptDAO implements ConceptDAO {
 
 		if (concepts.size() == 1) {
 			return concepts.getFirst();
-		} else if (list.isEmpty()) {
+		}
+		if (list.isEmpty()) {
 			log.warn("No concept found for '" + name + "'");
-		} else {
-			log.warn("Multiple concepts found for '" + name + "'");
+			return null;
+		}
 
-			for (Concept concept : concepts) {
-				for (ConceptName conceptName : concept.getNames(locale)) {
-					if (conceptName.getName().equalsIgnoreCase(name)) {
-						return concept;
-					}
+		log.warn("Multiple concepts found for '" + name + "'");
+		return findConceptByExactName(concepts, name, locale);
+	}
+
+	/**
+	 * Finds the first concept whose name or index term matches the given name (case-insensitive).
+	 */
+	private Concept findConceptByExactName(LinkedHashSet<Concept> concepts, String name, Locale locale) {
+		for (Concept concept : concepts) {
+			for (ConceptName conceptName : concept.getNames(locale)) {
+				if (conceptName.getName().equalsIgnoreCase(name)) {
+					return concept;
 				}
-				for (ConceptName indexTerm : concept.getIndexTermsForLocale(locale)) {
-					if (indexTerm.getName().equalsIgnoreCase(name)) {
-						return concept;
-					}
+			}
+			for (ConceptName indexTerm : concept.getIndexTermsForLocale(locale)) {
+				if (indexTerm.getName().equalsIgnoreCase(name)) {
+					return concept;
 				}
 			}
 		}
-
 		return null;
 	}
 

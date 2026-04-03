@@ -60,7 +60,7 @@ public class HibernateUtil {
 	 * @param entity the entity to save or update
 	 * @since 3.0.0
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Session.merge returns Object; cast to T required
 	public static <T> T saveOrUpdate(Session session, T entity) {
 		if (session.contains(entity)) {
 			return entity;

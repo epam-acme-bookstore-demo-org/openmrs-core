@@ -418,7 +418,7 @@ public class PersonAddress extends BaseChangeableOpenmrsData implements java.io.
 	 *      that are inconsistent with equals.
 	 */
 	@Override
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	public int compareTo(PersonAddress other) {
 		int retValue = 0;
 		if (other != null) {

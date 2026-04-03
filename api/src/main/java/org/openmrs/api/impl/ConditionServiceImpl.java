@@ -186,7 +186,7 @@ public class ConditionServiceImpl extends BaseOpenmrsService implements Conditio
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (Condition.class.equals(type)) {
 			return (T) getConditionByUuid(uuid);

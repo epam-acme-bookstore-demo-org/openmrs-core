@@ -58,7 +58,7 @@ public interface DatatypeService extends OpenmrsService {
 	 * @param datatypeClass
 	 * @return all handlers suitable for the given {@link CustomDatatype} class
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes") // CustomDatatypeHandler generic bounds are complex; raw type needed for API flexibility
 	List<Class<? extends CustomDatatypeHandler>> getHandlerClasses(Class<? extends CustomDatatype<?>> datatypeClass);
 
 	/**

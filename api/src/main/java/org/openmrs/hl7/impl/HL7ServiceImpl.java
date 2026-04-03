@@ -1176,7 +1176,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (HL7InError.class.equals(type)) {
 			return (T) getHL7InErrorByUuid(uuid);

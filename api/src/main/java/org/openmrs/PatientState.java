@@ -241,7 +241,7 @@ public class PatientState extends BaseFormRecordableOpenmrsData implements java.
 	 * @see java.lang.Comparable#compareTo(java.lang.Object) Note: this comparator imposes orderings
 	 *      that are inconsistent with equals.
 	 */
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	@Override
 	public int compareTo(PatientState o) {
 		int result = OpenmrsUtil.compareWithNullAsEarliest(getStartDate(), o.getStartDate());

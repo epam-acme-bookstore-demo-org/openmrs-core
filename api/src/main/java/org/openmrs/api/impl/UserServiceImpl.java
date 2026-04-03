@@ -822,7 +822,7 @@ public class UserServiceImpl extends BaseOpenmrsService implements UserService, 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (Role.class.equals(type)) {
 			return (T) getRoleByUuid(uuid);

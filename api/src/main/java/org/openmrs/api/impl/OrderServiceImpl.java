@@ -445,33 +445,48 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		    asOfDate);
 		boolean isDrugOrderAndHasADrug = isDrugOrder(order)
 		        && (((DrugOrder) order).getDrug() != null || ((DrugOrder) order).isNonCodedDrug());
-		Order orderToBeDiscontinued = null;
-		for (Order activeOrder : orders) {
-			if (!getActualType(order).equals(getActualType(activeOrder))) {
-				continue;
-			}
-			//For drug orders, the drug must match if the order has a drug
-			if (isDrugOrderAndHasADrug) {
-				Order existing = order.hasSameOrderableAs(activeOrder) ? activeOrder : null;
-				if (existing != null) {
-					if (orderToBeDiscontinued == null) {
-						orderToBeDiscontinued = existing;
-					} else {
-						throw new AmbiguousOrderException("Order.discontinuing.ambiguous.orders");
-					}
-				}
-			} else if (activeOrder.getConcept().equals(order.getConcept())) {
-				if (orderToBeDiscontinued == null) {
-					orderToBeDiscontinued = activeOrder;
-				} else {
-					throw new AmbiguousOrderException("Order.discontinuing.ambiguous.orders");
-				}
-			}
-		}
+		Order orderToBeDiscontinued = findOrderToDiscontinue(order, orders, isDrugOrderAndHasADrug);
 		if (orderToBeDiscontinued != null) {
 			order.setPreviousOrder(orderToBeDiscontinued);
 			stopOrder(orderToBeDiscontinued, aMomentBefore(order.getDateActivated()), isRetrospective);
 		}
+	}
+
+	/**
+	 * Finds the single matching active order to discontinue, or throws if ambiguous.
+	 */
+	private Order findOrderToDiscontinue(Order order, List<? extends Order> activeOrders, boolean isDrugOrderAndHasADrug) {
+		Order orderToBeDiscontinued = null;
+		for (Order activeOrder : activeOrders) {
+			if (!getActualType(order).equals(getActualType(activeOrder))) {
+				continue;
+			}
+
+			Order matched = matchOrderForDiscontinuation(order, activeOrder, isDrugOrderAndHasADrug);
+			if (matched == null) {
+				continue;
+			}
+
+			if (orderToBeDiscontinued != null) {
+				throw new AmbiguousOrderException("Order.discontinuing.ambiguous.orders");
+			}
+			orderToBeDiscontinued = matched;
+		}
+		return orderToBeDiscontinued;
+	}
+
+	/**
+	 * Returns the active order if it matches for discontinuation, or null.
+	 */
+	private Order matchOrderForDiscontinuation(Order order, Order activeOrder, boolean isDrugOrderAndHasADrug) {
+		//For drug orders, the drug must match if the order has a drug
+		if (isDrugOrderAndHasADrug) {
+			return order.hasSameOrderableAs(activeOrder) ? activeOrder : null;
+		}
+		if (activeOrder.getConcept().equals(order.getConcept())) {
+			return activeOrder;
+		}
+		return null;
 	}
 
 	/**
@@ -1356,7 +1371,7 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (OrderType.class.equals(type)) {
 			return (T) getOrderTypeByUuid(uuid);

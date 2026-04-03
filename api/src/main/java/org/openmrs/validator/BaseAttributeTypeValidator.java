@@ -44,7 +44,7 @@ public abstract class BaseAttributeTypeValidator<T extends AttributeType<?>> imp
 	 */
 	@Override
 	public void validate(Object target, Errors errors) {
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked") // Validator target is Object; cast to generic type T is unavoidable
 		T attributeType = (T) target;
 
 		if (attributeType == null) {

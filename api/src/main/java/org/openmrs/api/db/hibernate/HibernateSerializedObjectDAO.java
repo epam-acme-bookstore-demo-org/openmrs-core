@@ -298,7 +298,7 @@ public class HibernateSerializedObjectDAO implements SerializedObjectDAO {
 	 * @see SerializedObjectDAO#convertSerializedObject(Class, SerializedObject)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Deserializer returns Object; runtime Class<T> requires unchecked cast
 	public <T extends OpenmrsObject> T convertSerializedObject(Class<T> clazz, SerializedObject serializedObject)
 	        throws DAOException {
 		if (serializedObject == null) {

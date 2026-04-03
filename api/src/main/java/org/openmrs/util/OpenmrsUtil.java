@@ -41,7 +41,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -82,7 +81,6 @@ import org.openmrs.ProgramWorkflowState;
 import org.openmrs.User;
 import org.openmrs.annotation.AddOnStartup;
 import org.openmrs.annotation.HasAddOnStartupPrivileges;
-import org.openmrs.annotation.Logging;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
@@ -91,7 +89,6 @@ import org.openmrs.api.PasswordException;
 import org.openmrs.api.ShortPasswordException;
 import org.openmrs.api.WeakPasswordException;
 import org.openmrs.api.context.Context;
-import org.openmrs.logging.OpenmrsLoggingUtil;
 import org.openmrs.module.ModuleException;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.propertyeditor.CohortEditor;
@@ -427,25 +424,7 @@ public class OpenmrsUtil {
 		// Override the default "openmrs" database name
 		val = p.getProperty("connection.database_name", null);
 		if (val == null) {
-			// the database name wasn't supplied explicitly, guess it
-			// from the connection string
-			val = p.getProperty("connection.url", null);
-
-			if (val != null) {
-				try {
-					int endIndex = val.lastIndexOf("?");
-					if (endIndex == -1) {
-						endIndex = val.length();
-					}
-					int startIndex = val.lastIndexOf("/", endIndex);
-					val = val.substring(startIndex + 1, endIndex);
-					OpenmrsConstants.DATABASE_NAME = val;
-				} catch (Exception e) {
-					log.error(MarkerFactory.getMarker("FATAL"), "Database name cannot be configured from 'connection.url' ."
-					        + "Either supply 'connection.database_name' or correct the url",
-					    e);
-				}
-			}
+			val = inferDatabaseNameFromUrl(p);
 		}
 
 		// set the business database name
@@ -457,57 +436,30 @@ public class OpenmrsUtil {
 	}
 
 	/**
-	 * Gets the in-memory log appender. This method needed to be added as it is much more difficult to
-	 * get a specific appender in the Log4J2 architecture. This method is called in places where we need
-	 * to display logging message.
-	 *
-	 * @since 2.4.0
-	 * @deprecated As of 2.4.4, 2.5.1, and 2.6.0; replaced by
-	 *             {@link OpenmrsLoggingUtil#getMemoryAppender()} instead
+	 * Attempts to extract the database name from the connection URL property.
 	 */
-	@Deprecated
-	public static MemoryAppender getMemoryAppender() {
-		return new MemoryAppender(OpenmrsLoggingUtil.getMemoryAppender());
-	}
+	private static String inferDatabaseNameFromUrl(Properties p) {
+		// the database name wasn't supplied explicitly, guess it
+		// from the connection string
+		String val = p.getProperty("connection.url", null);
+		if (val == null) {
+			return null;
+		}
 
-	/**
-	 * Set the org.openmrs log4j logger's level if global property log.level.openmrs (
-	 * OpenmrsConstants.GLOBAL_PROPERTY_LOG_LEVEL ) exists. Valid values for global property are trace,
-	 * debug, info, warn, error or fatal.
-	 *
-	 * @deprecated As of 2.4.4, 2.5.1, and 2.6.0; replaced by
-	 *             {@link OpenmrsLoggingUtil#applyLogLevels()}
-	 */
-	@Logging(ignore = true)
-	@Deprecated
-	public static void applyLogLevels() {
-		OpenmrsLoggingUtil.applyLogLevels();
-	}
-
-	/**
-	 * Setup root level log appenders.
-	 *
-	 * @since 1.9.2
-	 * @deprecated As of 2.4.4, 2.5.1, and 2.6.0; replaced by
-	 *             {@link OpenmrsLoggingUtil#reloadLoggingConfiguration()}
-	 */
-	@Deprecated
-	public static void setupLogAppenders() {
-		OpenmrsLoggingUtil.reloadLoggingConfiguration();
-	}
-
-	/**
-	 * Set the log4j log level for class <code>logClass</code> to <code>logLevel</code>.
-	 *
-	 * @param logClass optional string giving the class level to change. Defaults to
-	 *            OpenmrsConstants.LOG_CLASS_DEFAULT . Should be something like org.openmrs.___
-	 * @param logLevel one of OpenmrsConstants.LOG_LEVEL_*
-	 * @deprecated As of 2.4.4, 2.5.1, and 2.6.0; replaced by
-	 *             {@link OpenmrsLoggingUtil#applyLogLevel(String, String)}
-	 */
-	@Deprecated
-	public static void applyLogLevel(String logClass, String logLevel) {
-		OpenmrsLoggingUtil.applyLogLevel(logClass, logLevel);
+		try {
+			int endIndex = val.lastIndexOf("?");
+			if (endIndex == -1) {
+				endIndex = val.length();
+			}
+			int startIndex = val.lastIndexOf("/", endIndex);
+			val = val.substring(startIndex + 1, endIndex);
+			OpenmrsConstants.DATABASE_NAME = val;
+		} catch (Exception e) {
+			log.error(MarkerFactory.getMarker("FATAL"), "Database name cannot be configured from 'connection.url' ."
+			        + "Either supply 'connection.database_name' or correct the url",
+			    e);
+		}
+		return val;
 	}
 
 	/**
@@ -619,31 +571,6 @@ public class OpenmrsUtil {
 		}
 	}
 
-	/**
-	 * Converts a collection to a String with a specified separator between all elements
-	 *
-	 * @param c Collection to be joined
-	 * @param separator string to put between all elements
-	 * @return a String representing the toString() of all elements in c, separated by separator
-	 * @deprecated as of 2.2 use Java's {@link String#join} or Apache Commons StringUtils.join for
-	 *             iterables which do not extend {@link CharSequence}
-	 */
-	@Deprecated
-	public static <E> String join(Collection<E> c, String separator) {
-		if (c == null) {
-			return "";
-		}
-
-		var ret = new StringBuilder();
-		for (Iterator<E> i = c.iterator(); i.hasNext();) {
-			ret.append(i.next());
-			if (i.hasNext()) {
-				ret.append(separator);
-			}
-		}
-		return ret.toString();
-	}
-
 	public static Set<Concept> conceptSetHelper(String descriptor) {
 		var ret = new HashSet<Concept>();
 		if (descriptor == null || descriptor.length() == 0) {
@@ -687,33 +614,34 @@ public class OpenmrsUtil {
 	 * @since 1.10, 1.9.2, 1.8.5
 	 */
 	public static List<Concept> delimitedStringToConceptList(String delimitedString, String delimiter) {
+		if (delimitedString == null) {
+			return null;
+		}
+
 		List<Concept> ret = null;
+		String[] tokens = delimitedString.split(delimiter);
+		for (String token : tokens) {
+			Integer conceptId;
 
-		if (delimitedString != null) {
-			String[] tokens = delimitedString.split(delimiter);
-			for (String token : tokens) {
-				Integer conceptId;
+			try {
+				conceptId = Integer.valueOf(token);
+			} catch (NumberFormatException nfe) {
+				conceptId = null;
+			}
 
-				try {
-					conceptId = Integer.valueOf(token);
-				} catch (NumberFormatException nfe) {
-					conceptId = null;
+			Concept c;
+
+			if (conceptId != null) {
+				c = Context.getConceptService().getConcept(conceptId);
+			} else {
+				c = Context.getConceptService().getConceptByName(token);
+			}
+
+			if (c != null) {
+				if (ret == null) {
+					ret = new ArrayList<>();
 				}
-
-				Concept c;
-
-				if (conceptId != null) {
-					c = Context.getConceptService().getConcept(conceptId);
-				} else {
-					c = Context.getConceptService().getConceptByName(token);
-				}
-
-				if (c != null) {
-					if (ret == null) {
-						ret = new ArrayList<>();
-					}
-					ret.add(c);
-				}
+				ret.add(c);
 			}
 		}
 
@@ -721,19 +649,20 @@ public class OpenmrsUtil {
 	}
 
 	public static Map<String, Concept> delimitedStringToConceptMap(String delimitedString, String delimiter) {
+		if (delimitedString == null) {
+			return null;
+		}
+
 		Map<String, Concept> ret = null;
+		String[] tokens = delimitedString.split(delimiter);
+		for (String token : tokens) {
+			Concept c = Context.getConceptService().getConcept(token);
 
-		if (delimitedString != null) {
-			String[] tokens = delimitedString.split(delimiter);
-			for (String token : tokens) {
-				Concept c = Context.getConceptService().getConcept(token);
-
-				if (c != null) {
-					if (ret == null) {
-						ret = new HashMap<>();
-					}
-					ret.put(token, c);
+			if (c != null) {
+				if (ret == null) {
+					ret = new HashMap<>();
 				}
+				ret.put(token, c);
 			}
 		}
 
@@ -1035,24 +964,6 @@ public class OpenmrsUtil {
 	}
 
 	/**
-	 * Returns the location of the OpenMRS log file.
-	 * <p/>
-	 * <strong>Warning:</strong> as of 2.4.4, 2.5.1, and 2.6.0 which allows configuration via a
-	 * configuration file, the result of this call can return null if either the file appender uses a
-	 * name other than {@link OpenmrsConstants#LOG_OPENMRS_FILE_APPENDER} or if the appender with that
-	 * name is not one of the default file appending types.
-	 *
-	 * @return the path to the OpenMRS log file
-	 * @since 1.9.2
-	 * @deprecated As of 2.4.4, 2.5.1, and 2.6.0; replaced by
-	 *             {@link OpenmrsLoggingUtil#getOpenmrsLogLocation()}
-	 */
-	@Deprecated
-	public static String getOpenmrsLogLocation() {
-		return OpenmrsLoggingUtil.getOpenmrsLogLocation();
-	}
-
-	/**
 	 * Checks whether the current JVM version is at least Java 8.
 	 *
 	 * @throws APIException if the current JVM version is earlier than Java 8
@@ -1341,7 +1252,7 @@ public class OpenmrsUtil {
 	 * @param clazz
 	 * @return Object of type <code>clazz</code> with the data from <code>string</code>
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Reflection: method invocation on runtime-resolved Class requires raw type
 	public static Object parse(String string, Class clazz) {
 		try {
 			// If there's a valueOf(String) method, just use that (will cover at

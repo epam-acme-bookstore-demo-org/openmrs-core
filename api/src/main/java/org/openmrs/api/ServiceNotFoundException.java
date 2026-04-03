@@ -18,7 +18,7 @@ public class ServiceNotFoundException extends APIException {
 		this.serviceClass = serviceClass;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Class field stores raw type; generic cast to Class<T> requires suppression
 	public <T> Class<T> getServiceClass() {
 		return serviceClass;
 	}

@@ -31,7 +31,7 @@ import org.openmrs.util.OpenmrsUtil;
  * @param <OwningType>
  * @since 1.9
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings("rawtypes") // Comparable<Attribute> uses raw type for cross-subtype comparison
 @MappedSuperclass
 @Audited
 public abstract class BaseAttribute<AT extends AttributeType, OwningType extends Customizable<?>> extends BaseChangeableOpenmrsData implements Attribute<AT, OwningType>, Comparable<Attribute> {
@@ -146,7 +146,7 @@ public abstract class BaseAttribute<AT extends AttributeType, OwningType extends
 	 * @see java.lang.Comparable#compareTo(java.lang.Object) Note: this comparator imposes orderings
 	 *      that are inconsistent with equals.
 	 */
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	@Override
 	public int compareTo(Attribute other) {
 		if (other == null) {

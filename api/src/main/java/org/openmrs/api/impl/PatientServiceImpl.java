@@ -1000,50 +1000,55 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		String codProp = Context.getAdministrationService().getGlobalProperty("concept.reasonExitedCare");
 		Concept reasonForExit = Context.getConceptService().getConcept(codProp);
 
-		if (reasonForExit != null) {
-			List<Obs> obssExit = Context.getObsService().getObservationsByPersonAndConcept(patient, reasonForExit);
-			if (obssExit != null) {
-				if (obssExit.size() > 1) {
-					log.error("Multiple reasons for exit (" + obssExit.size() + ")?  Shouldn't be...");
-				} else {
-					Obs obsExit;
-					if (obssExit.size() == 1) {
-						// already has a reason for exit - let's edit it.
-						log.debug("Already has a reason for exit, so changing it");
-
-						obsExit = obssExit.getFirst();
-
-					} else {
-						// no reason for exit obs yet, so let's make one
-						log.debug("No reason for exit yet, let's create one.");
-
-						obsExit = new Obs();
-						obsExit.setPerson(patient);
-						obsExit.setConcept(reasonForExit);
-
-						Location loc = Context.getLocationService().getDefaultLocation();
-
-						if (loc != null) {
-							obsExit.setLocation(loc);
-						} else {
-							log.error("Could not find a suitable location for which to create this new Obs");
-						}
-					}
-
-					if (obsExit != null) {
-						// put the right concept and (maybe) text in this
-						// obs
-						obsExit.setValueCoded(cause);
-						obsExit.setValueCodedName(cause.getName()); // ABKTODO: presume current locale?
-						obsExit.setObsDatetime(exitDate);
-						Context.getObsService().saveObs(obsExit, "updated by PatientService.saveReasonForExit");
-					}
-				}
-			}
-		} else {
+		if (reasonForExit == null) {
 			log.debug("Reason for exit is null - should not have gotten here without throwing an error on the form.");
+			return;
 		}
 
+		List<Obs> obssExit = Context.getObsService().getObservationsByPersonAndConcept(patient, reasonForExit);
+		if (obssExit == null) {
+			return;
+		}
+
+		if (obssExit.size() > 1) {
+			log.error("Multiple reasons for exit (" + obssExit.size() + ")?  Shouldn't be...");
+			return;
+		}
+
+		Obs obsExit = getOrCreateReasonForExitObs(obssExit, patient, reasonForExit);
+
+		if (obsExit != null) {
+			// put the right concept and (maybe) text in this obs
+			obsExit.setValueCoded(cause);
+			obsExit.setValueCodedName(cause.getName()); // ABKTODO: presume current locale?
+			obsExit.setObsDatetime(exitDate);
+			Context.getObsService().saveObs(obsExit, "updated by PatientService.saveReasonForExit");
+		}
+	}
+
+	/**
+	 * Returns existing reason-for-exit obs or creates a new one.
+	 */
+	private Obs getOrCreateReasonForExitObs(List<Obs> obssExit, Patient patient, Concept reasonForExit) {
+		if (obssExit.size() == 1) {
+			// already has a reason for exit - let's edit it.
+			log.debug("Already has a reason for exit, so changing it");
+			return obssExit.getFirst();
+		}
+
+		// no reason for exit obs yet, so let's make one
+		log.debug("No reason for exit yet, let's create one.");
+		Obs obsExit = new Obs();
+		obsExit.setPerson(patient);
+		obsExit.setConcept(reasonForExit);
+
+		Location loc = Context.getLocationService().getDefaultLocation();
+		if (loc != null) {
+			obsExit.setLocation(loc);
+		} else {
+			log.error("Could not find a suitable location for which to create this new Obs");
+		}
+		return obsExit;
 	}
 
 	/**
@@ -1122,82 +1127,95 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 
 		Concept causeOfDeath = Context.getConceptService().getConcept(codProp);
 
-		if (causeOfDeath != null) {
-			List<Obs> obssDeath = Context.getObsService().getObservationsByPersonAndConcept(patient, causeOfDeath);
-			if (obssDeath != null) {
-				if (obssDeath.size() > 1) {
-					log.error("Multiple causes of death (" + obssDeath.size() + ")?  Shouldn't be...");
-				} else {
-					Obs obsDeath;
-					if (obssDeath.size() == 1) {
-						// already has a cause of death - let's edit it.
-						log.debug("Already has a cause of death, so changing it");
-
-						obsDeath = obssDeath.getFirst();
-
-					} else {
-						// no cause of death obs yet, so let's make one
-						log.debug("No cause of death yet, let's create one.");
-
-						obsDeath = new Obs();
-						obsDeath.setPerson(patient);
-						obsDeath.setConcept(causeOfDeath);
-						Location location = Context.getLocationService().getDefaultLocation();
-						if (location != null) {
-							obsDeath.setLocation(location);
-						} else {
-							log.error("Could not find a suitable location for which to create this new Obs");
-						}
-					}
-
-					// put the right concept and (maybe) text in this obs
-					Concept currCause = patient.getCauseOfDeath();
-					if (currCause == null) {
-						// set to NONE
-						log.debug("Current cause is null, attempting to set to NONE");
-						String noneConcept = Context.getAdministrationService().getGlobalProperty("concept.none");
-						currCause = Context.getConceptService().getConcept(noneConcept);
-					}
-
-					if (currCause != null) {
-						log.debug("Current cause is not null, setting to value_coded");
-						obsDeath.setValueCoded(currCause);
-						obsDeath.setValueCodedName(currCause.getName()); // ABKTODO: presume current locale?
-
-						Date dateDeath = patient.getDeathDate();
-						if (dateDeath == null) {
-							dateDeath = new Date();
-						}
-						obsDeath.setObsDatetime(dateDeath);
-
-						// check if this is an "other" concept - if so, then
-						// we need to add value_text
-						String otherConcept = Context.getAdministrationService().getGlobalProperty("concept.otherNonCoded");
-						Concept conceptOther = Context.getConceptService().getConcept(otherConcept);
-						if (conceptOther != null) {
-							if (conceptOther.equals(currCause)) {
-								// seems like this is an other concept -
-								// let's try to get the "other" field info
-								log.debug("Setting value_text as " + otherReason);
-								obsDeath.setValueText(otherReason);
-							} else {
-								log.debug("New concept is NOT the OTHER concept, so setting to blank");
-								obsDeath.setValueText("");
-							}
-						} else {
-							log.debug("Don't seem to know about an OTHER concept, so deleting value_text");
-							obsDeath.setValueText("");
-						}
-
-						Context.getObsService().saveObs(obsDeath, "updated by PatientService.saveCauseOfDeathObs");
-					} else {
-						log.debug("Current cause is still null - aborting mission");
-					}
-				}
-			}
-		} else {
+		if (causeOfDeath == null) {
 			log.debug("Cause of death is null - should not have gotten here without throwing an error on the form.");
+			return;
 		}
+
+		List<Obs> obssDeath = Context.getObsService().getObservationsByPersonAndConcept(patient, causeOfDeath);
+		if (obssDeath == null) {
+			return;
+		}
+
+		if (obssDeath.size() > 1) {
+			log.error("Multiple causes of death (" + obssDeath.size() + ")?  Shouldn't be...");
+			return;
+		}
+
+		Obs obsDeath = getOrCreateCauseOfDeathObs(obssDeath, patient, causeOfDeath);
+		populateCauseOfDeathObs(obsDeath, patient, otherReason);
+	}
+
+	/**
+	 * Returns existing cause-of-death obs or creates a new one.
+	 */
+	private Obs getOrCreateCauseOfDeathObs(List<Obs> obssDeath, Patient patient, Concept causeOfDeath) {
+		if (obssDeath.size() == 1) {
+			// already has a cause of death - let's edit it.
+			log.debug("Already has a cause of death, so changing it");
+			return obssDeath.getFirst();
+		}
+
+		// no cause of death obs yet, so let's make one
+		log.debug("No cause of death yet, let's create one.");
+		Obs obsDeath = new Obs();
+		obsDeath.setPerson(patient);
+		obsDeath.setConcept(causeOfDeath);
+		Location location = Context.getLocationService().getDefaultLocation();
+		if (location != null) {
+			obsDeath.setLocation(location);
+		} else {
+			log.error("Could not find a suitable location for which to create this new Obs");
+		}
+		return obsDeath;
+	}
+
+	/**
+	 * Populates the cause-of-death obs with the patient's current cause and optional other reason text.
+	 */
+	private void populateCauseOfDeathObs(Obs obsDeath, Patient patient, String otherReason) {
+		// put the right concept and (maybe) text in this obs
+		Concept currCause = patient.getCauseOfDeath();
+		if (currCause == null) {
+			// set to NONE
+			log.debug("Current cause is null, attempting to set to NONE");
+			String noneConcept = Context.getAdministrationService().getGlobalProperty("concept.none");
+			currCause = Context.getConceptService().getConcept(noneConcept);
+		}
+
+		if (currCause == null) {
+			log.debug("Current cause is still null - aborting mission");
+			return;
+		}
+
+		log.debug("Current cause is not null, setting to value_coded");
+		obsDeath.setValueCoded(currCause);
+		obsDeath.setValueCodedName(currCause.getName()); // ABKTODO: presume current locale?
+
+		Date dateDeath = patient.getDeathDate();
+		if (dateDeath == null) {
+			dateDeath = new Date();
+		}
+		obsDeath.setObsDatetime(dateDeath);
+
+		// check if this is an "other" concept - if so, then
+		// we need to add value_text
+		String otherConcept = Context.getAdministrationService().getGlobalProperty("concept.otherNonCoded");
+		Concept conceptOther = Context.getConceptService().getConcept(otherConcept);
+		if (conceptOther != null && conceptOther.equals(currCause)) {
+			// seems like this is an other concept -
+			// let's try to get the "other" field info
+			log.debug("Setting value_text as " + otherReason);
+			obsDeath.setValueText(otherReason);
+		} else if (conceptOther != null) {
+			log.debug("New concept is NOT the OTHER concept, so setting to blank");
+			obsDeath.setValueText("");
+		} else {
+			log.debug("Don't seem to know about an OTHER concept, so deleting value_text");
+			obsDeath.setValueText("");
+		}
+
+		Context.getObsService().saveObs(obsDeath, "updated by PatientService.saveCauseOfDeathObs");
 	}
 
 	/**
@@ -1286,7 +1304,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 * @see org.openmrs.api.PatientService#getIdentifierValidator(java.lang.String)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	@Transactional(readOnly = true)
 	public IdentifierValidator getIdentifierValidator(String pivClassName) {
 		if (StringUtils.isBlank(pivClassName)) {
@@ -1612,7 +1630,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (PatientIdentifier.class.equals(type)) {
 			return (T) getPatientIdentifierByUuid(uuid);

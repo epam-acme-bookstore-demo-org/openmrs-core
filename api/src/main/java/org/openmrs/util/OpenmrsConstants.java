@@ -13,10 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -191,22 +189,6 @@ public final class OpenmrsConstants {
 		stopWords.add("TO");
 
 		return stopWords;
-	}
-
-	/**
-	 * A gender character to gender name map<br>
-	 * TODO issues with localization. How should this be handled?
-	 *
-	 * @deprecated As of 2.2, replaced by {@link #GENDERS}
-	 * @return Map&lt;String, String&gt; of gender character to gender name
-	 */
-	@Deprecated
-	@SuppressWarnings("squid:S00100")
-	public static final Map<String, String> GENDER() {
-		var genders = new LinkedHashMap<String, String>();
-		genders.put("M", "Male");
-		genders.put("F", "Female");
-		return genders;
 	}
 
 	/**

@@ -216,7 +216,6 @@ public class HibernateFormDAO implements FormDAO {
 	 *      java.util.Collection, boolean)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public FormField getFormField(Form form, Concept concept, Collection<FormField> ignoreFormFields, boolean force)
 	        throws DAOException {
 		if (form == null) {
@@ -285,7 +284,7 @@ public class HibernateFormDAO implements FormDAO {
 	 * @see org.openmrs.api.db.FormDAO#getFormsContainingConcept(org.openmrs.Concept)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Form> getFormsContainingConcept(Concept c) throws DAOException {
 		String q = "select distinct ff.form from FormField ff where ff.field.concept = :concept";
 		Query query = sessionFactory.getCurrentSession().createQuery(q);

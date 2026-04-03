@@ -65,7 +65,7 @@ public class MemoryAppender extends AbstractAppender {
 	}
 
 	@PluginFactory
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") // Log4j2 plugin factory method; invoked by framework via reflection
 	protected static MemoryAppender createAppender(@PluginAttribute("name") final String name,
 	        @PluginAttribute("bufferSize") final int bufferSize,
 	        @PluginAttribute(value = "ignoreExceptions", defaultBoolean = true) final boolean ignoreExceptions,

@@ -33,7 +33,7 @@ public class HibernateTemplateDAO implements TemplateDAO {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Template> getTemplates() {
 		log.info("Getting all templates from the database");
 		return sessionFactory.getCurrentSession().createQuery("from Template").list();
@@ -46,7 +46,7 @@ public class HibernateTemplateDAO implements TemplateDAO {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Template> getTemplatesByName(String name) {
 		log.info("Get template " + name);
 		return sessionFactory.getCurrentSession().createQuery("from Template as template where template.name = ?")

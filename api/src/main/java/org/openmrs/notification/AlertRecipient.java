@@ -156,7 +156,7 @@ public class AlertRecipient extends BaseOpenmrsObject {
 	/**
 	 * @return Returns the recipientId.
 	 */
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") // Private getter used by Hibernate for persistence mapping
 	private Integer getRecipientId() {
 		return recipientId;
 	}

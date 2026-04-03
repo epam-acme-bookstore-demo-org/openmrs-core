@@ -39,7 +39,7 @@ import org.openmrs.util.OpenmrsUtil;
  * Care should be taken in exposing information through this class to ensure that no
  */
 @Plugin(name = OpenmrsPropertyLookup.NAME, category = StrLookup.CATEGORY)
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Log4j2 plugin class; instantiated by framework via reflection
 public class OpenmrsPropertyLookup extends AbstractLookup {
 
 	public static final String NAME = "openmrs";

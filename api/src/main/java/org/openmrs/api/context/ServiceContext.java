@@ -623,7 +623,7 @@ public class ServiceContext implements ApplicationContextAware {
 	 * @param cls the class of the cached service
 	 * @return the set of advisors or an empty set
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Service registry uses raw Class keys; cast from Map<Class, Set> required
 	private Set<Advisor> getAddedAdvisors(Class cls) {
 		Set<Advisor> result = addedAdvisors.get(cls);
 		return (Set<Advisor>) (result == null ? Set.of() : result);
@@ -650,7 +650,7 @@ public class ServiceContext implements ApplicationContextAware {
 	 * @param cls the class of the cached service
 	 * @return the set of advice or an empty set
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Service registry uses raw Class keys; cast from Map<Class, Set> required
 	private Set<Advice> getAddedAdvice(Class cls) {
 		Set<Advice> result = addedAdvice.get(cls);
 		return (Set<Advice>) (result == null ? Set.of() : result);
@@ -662,7 +662,7 @@ public class ServiceContext implements ApplicationContextAware {
 	 * @param cls
 	 * @return Object that is a proxy for the <code>cls</code> class
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Service registry returns Object; cast to T for typed service access
 	public <T> T getService(Class<? extends T> cls) {
 		if (log.isTraceEnabled()) {
 			log.trace("Getting service: " + cls);

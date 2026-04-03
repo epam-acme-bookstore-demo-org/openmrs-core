@@ -204,7 +204,7 @@ public class PersonAttributeType extends BaseChangeableOpenmrsMetadata implement
 	 *             that are inconsistent with equals.
 	 */
 	@Override
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	public int compareTo(PersonAttributeType other) {
 		DefaultComparator patDefaultComparator = new DefaultComparator();
 		return patDefaultComparator.compare(this, other);

@@ -21,7 +21,7 @@ import org.openmrs.attribute.Attribute;
  * @param <A> the type of attribute held
  * @since 1.9
  */
-@SuppressWarnings("rawtypes")
+@SuppressWarnings("rawtypes") // Attribute generic bounds are complex; raw type needed for interface flexibility
 public interface Customizable<A extends Attribute> {
 
 	/**

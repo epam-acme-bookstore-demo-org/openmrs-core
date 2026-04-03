@@ -115,7 +115,7 @@ public class LocalStorageService extends BaseStorageService implements StorageSe
 			return Stream.empty();
 		}
 
-		@SuppressWarnings("resource")
+		@SuppressWarnings("resource") // Stream returned to caller; closing responsibility is on the consumer
 		Stream<Path> stream = Files.list(searchDir);
 		// Filter out files that start with dot (hidden files)
 		return stream.filter(path -> !path.getFileName().toString().startsWith(".")).map(path -> {

@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  */
 @Plugin(name = "OpenmrsConfigurationFactory", category = ConfigurationFactory.CATEGORY)
 @Order(10)
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Log4j2 plugin class; instantiated by framework via reflection
 public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(OpenmrsConfigurationFactory.class);

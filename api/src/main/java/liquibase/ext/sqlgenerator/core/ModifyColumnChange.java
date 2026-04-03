@@ -31,7 +31,7 @@ import liquibase.util.StringUtil;
  * @since 2.4
  */
 @DatabaseChange(name = "modifyColumn", description = "Modifies an existing column on an existing table", priority = ChangeMetaData.PRIORITY_DEFAULT, appliesTo = "column")
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Liquibase plugin class; instantiated by framework via reflection
 public class ModifyColumnChange extends AbstractChange implements ChangeWithColumns<ColumnConfig> {
 
 	private static final Logger log = LoggerFactory.getLogger(ModifyColumnChange.class);

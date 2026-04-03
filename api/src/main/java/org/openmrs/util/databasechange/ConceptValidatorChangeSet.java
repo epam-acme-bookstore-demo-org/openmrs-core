@@ -494,7 +494,7 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 	 * @param connection The database connection
 	 * @return A list of allowed locales
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // ListOrderedSet is raw; asList() returns unparameterized List
 	private List<Locale> getAllowedLocalesList(JdbcConnection connection) {
 		Statement stmt = null;
 		ListOrderedSet allowedLocales = new ListOrderedSet();

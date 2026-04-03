@@ -41,7 +41,7 @@ import liquibase.sqlgenerator.core.AbstractSqlGenerator;
  *
  * @since 2.4
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Liquibase plugin class; instantiated by framework via reflection
 public class ModifyColumnGenerator extends AbstractSqlGenerator<ModifyColumnStatement> {
 
 	private static final Logger log = LoggerFactory.getLogger(ModifyColumnGenerator.class);

@@ -142,7 +142,7 @@ public class CustomDatatypeUtil {
 	 * @param serializedConfig
 	 * @return deserialized configuration
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Deserializer returns Object; unchecked cast to Map<String, String> needed
 	public static Map<String, String> deserializeSimpleConfiguration(String serializedConfig) {
 		if (StringUtils.isBlank(serializedConfig)) {
 			return Map.of();
@@ -258,7 +258,7 @@ public class CustomDatatypeUtil {
 	 * @param value
 	 * @return true is value is valid, according to its configured datatype
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // CustomDatatype erasure: runtime type not available for generic validation
 	public static <T, D extends CustomValueDescriptor> boolean validate(SingleCustomValue<D> value) {
 		try {
 			CustomDatatype<T> datatype = (CustomDatatype<T>) getDatatype(value.getDescriptor());

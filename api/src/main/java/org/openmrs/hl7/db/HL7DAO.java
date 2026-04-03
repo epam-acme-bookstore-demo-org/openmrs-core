@@ -95,7 +95,7 @@ public interface HL7DAO {
 	 * @param query
 	 * @return list of hl7s
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes") // HL7 batch query accepts multiple entity classes; raw Class needed for API flexibility
 	public <T> List<T> getHL7Batch(Class clazz, int start, int length, Integer messageState, String query);
 
 	/**
@@ -106,7 +106,7 @@ public interface HL7DAO {
 	 * @param query
 	 * @return count of HL7 items
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes") // HL7 count query accepts multiple entity classes; raw Class needed for API flexibility
 	public Long countHL7s(Class clazz, Integer messageState, String query);
 
 	/* HL7InArchive */

@@ -573,7 +573,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 *
 	 * @see org.springframework.web.context.ContextLoaderListener#contextDestroyed(jakarta.servlet.ServletContextEvent)
 	 */
-	@SuppressWarnings("squid:S1215")
+	@SuppressWarnings("squid:S1215") // Intentional: System.gc() called during shutdown to release resources
 	@Override
 	public void contextDestroyed(ServletContextEvent event) {
 
