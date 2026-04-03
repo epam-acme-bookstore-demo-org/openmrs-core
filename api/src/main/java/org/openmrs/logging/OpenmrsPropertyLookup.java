@@ -78,7 +78,7 @@ public class OpenmrsPropertyLookup extends AbstractLookup {
 		if (value == null) {
 			return null;
 		} else {
-			value = value.trim();
+			value = value.strip();
 		}
 
 		if (value.isEmpty()) {

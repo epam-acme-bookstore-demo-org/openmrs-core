@@ -25,7 +25,7 @@ public class LuhnIdentifierValidator extends BaseHyphenatedIdentifierValidator {
 	@Override
 	protected int getCheckDigit(String undecoratedIdentifier) {
 		//		 remove leading or trailing whitespace, convert to uppercase
-		String trimmedUppercaseUndecoratedIdentifier = undecoratedIdentifier.trim().toUpperCase();
+		String trimmedUppercaseUndecoratedIdentifier = undecoratedIdentifier.strip().toUpperCase();
 
 		// this will privatebe a running total
 		int sum = 0;

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.openmrs.messagesource.MutableMessageSource;
 import org.openmrs.messagesource.PresentationMessage;
@@ -84,7 +83,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	 * @see #findPropertiesFiles()
 	 */
 	private Collection<Locale> findLocales() {
-		Collection<Locale> foundLocales = new HashSet<>();
+		var foundLocales = new HashSet<Locale>();
 
 		for (Resource propertiesFile : findPropertiesFiles()) {
 			String filename = propertiesFile.getFilename();
@@ -134,11 +133,11 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	 */
 	@Override
 	public Collection<PresentationMessage> getPresentations() {
-		Collection<PresentationMessage> presentations = new ArrayList<>();
+		var presentations = new ArrayList<PresentationMessage>();
 
 		for (Resource propertiesFile : findPropertiesFiles()) {
 			Locale currentLocale = parseLocaleFrom(propertiesFile.getFilename());
-			Properties props = new Properties();
+			var props = new Properties();
 			try {
 				OpenmrsUtil.loadProperties(props, propertiesFile.getInputStream());
 				for (Map.Entry<Object, Object> property : props.entrySet()) {
@@ -201,7 +200,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	public void addPresentation(PresentationMessage message) {
 		Resource propertyFile = findPropertiesFileFor(message.getCode());
 		if (propertyFile != null) {
-			Properties props = new Properties();
+			var props = new Properties();
 			try {
 				OpenmrsUtil.loadProperties(props, propertyFile.getInputStream());
 				props.setProperty(message.getCode(), message.getMessage());
@@ -222,7 +221,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	public void removePresentation(PresentationMessage message) {
 		Resource propertyFile = findPropertiesFileFor(message.getCode());
 		if (propertyFile != null) {
-			Properties props = new Properties();
+			var props = new Properties();
 			try {
 				OpenmrsUtil.loadProperties(props, propertyFile.getInputStream());
 				props.remove(message.getCode());
@@ -244,7 +243,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	 * @return the file which defines the code, or null if not found
 	 */
 	private Resource findPropertiesFileFor(String code) {
-		Properties props = new Properties();
+		var props = new Properties();
 		Resource foundFile = null;
 
 		for (Resource propertiesFile : findPropertiesFiles()) {
@@ -269,7 +268,7 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 	 * @return an array of property file names
 	 */
 	private Resource[] findPropertiesFiles() {
-		Set<Resource> resourceSet = new HashSet<>();
+		var resourceSet = new HashSet<Resource>();
 		try {
 			String pattern = "classpath*:messages*.properties";
 			ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver(
@@ -300,10 +299,10 @@ public class MutableResourceBundleMessageSource extends ReloadableResourceBundle
 		// collect all existing properties
 		Resource[] propertiesFiles = findPropertiesFiles();
 		Map<Locale, List<Resource>> localeToFilesMap = new HashMap<>();
-		Map<Resource, Properties> fileToPropertiesMap = new HashMap<>();
+		var fileToPropertiesMap = new HashMap<Resource, Properties>();
 
 		for (Resource propertiesFile : propertiesFiles) {
-			Properties props = new Properties();
+			var props = new Properties();
 			Locale propsLocale = parseLocaleFrom(propertiesFile.getFilename());
 			List<Resource> propList = localeToFilesMap.computeIfAbsent(propsLocale, k -> new ArrayList<>());
 			propList.add(propertiesFile);

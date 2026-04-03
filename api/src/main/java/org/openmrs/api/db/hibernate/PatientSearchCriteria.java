@@ -73,10 +73,10 @@ public class PatientSearchCriteria {
 	        String identifier, List<PatientIdentifierType> identifierTypes, boolean matchIdentifierExactly,
 	        boolean orderByNames, boolean searchOnNamesOrIdentifiers) {
 
-		QueryResult queryResult = new QueryResult();
+		var queryResult = new QueryResult();
 		PatientSearchMode patientSearchMode = getSearchMode(name, identifier, identifierTypes, searchOnNamesOrIdentifiers);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		Join<Patient, PersonName> nameJoin;
 		switch (patientSearchMode) {
 			case PATIENT_SEARCH_BY_NAME:
@@ -139,8 +139,8 @@ public class PatientSearchCriteria {
 	 */
 	QueryResult prepareCriteria(CriteriaBuilder cb, Join<Encounter, Patient> patientJoin, String query,
 	        boolean includeVoided) {
-		QueryResult queryResult = new QueryResult();
-		List<Predicate> predicates = new ArrayList<>();
+		var queryResult = new QueryResult();
+		var predicates = new ArrayList<Predicate>();
 
 		Join<Patient, PersonName> nameJoin = addAliasForName(cb, patientJoin, true, queryResult);
 		Join<Patient, Attribute> attributeJoin = personSearchCriteria.addAliasForAttribute(patientJoin);
@@ -184,8 +184,8 @@ public class PatientSearchCriteria {
 	 */
 	QueryResult prepareCriteria(CriteriaBuilder cb, Join<Encounter, Patient> patientJoin, String query, Boolean matchExactly,
 	        boolean orderByNames, boolean includeVoided) {
-		QueryResult queryResult = new QueryResult();
-		List<Predicate> predicates = new ArrayList<>();
+		var queryResult = new QueryResult();
+		var predicates = new ArrayList<Predicate>();
 
 		Join<Patient, PersonName> nameJoin = addAliasForName(cb, patientJoin, orderByNames, queryResult);
 
@@ -283,7 +283,7 @@ public class PatientSearchCriteria {
 	        boolean includeVoided) {
 
 		identifier = HibernateUtil.escapeSqlWildcards(identifier, sessionFactory);
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (!includeVoided) {
 			predicates.add(cb.isFalse(idsJoin.get("voided")));
@@ -408,11 +408,11 @@ public class PatientSearchCriteria {
 	private Predicate preparePredicateForName(CriteriaBuilder cb, Join<Patient, PersonName> nameJoin, String name,
 	        Boolean matchExactly, boolean includeVoided) {
 		name = HibernateUtil.escapeSqlWildcards(name, sessionFactory);
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		String[] nameParts = getQueryParts(name);
 		if (nameParts.length > 0) {
-			StringBuilder multiName = new StringBuilder(nameParts[0]);
+			var multiName = new StringBuilder(nameParts[0]);
 
 			for (int i = 0; i < nameParts.length; i++) {
 				String singleName = nameParts[i];
@@ -463,9 +463,9 @@ public class PatientSearchCriteria {
 		query = query.replace(",", " ");
 		String[] queryPartArray = query.split(" ");
 
-		List<String> queryPartList = new ArrayList<>();
+		var queryPartList = new ArrayList<String>();
 		for (String queryPart : queryPartArray) {
-			if (queryPart.trim().length() > 0) {
+			if (!queryPart.isBlank()) {
 				queryPartList.add(queryPart);
 			}
 		}
@@ -647,7 +647,7 @@ public class PatientSearchCriteria {
 		query = HibernateUtil.escapeSqlWildcards(query, sessionFactory);
 
 		MatchMode matchMode = personSearchCriteria.getAttributeMatchMode();
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		String[] queryParts = getQueryParts(query);
 		for (String queryPart : queryParts) {

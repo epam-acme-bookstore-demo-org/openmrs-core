@@ -89,7 +89,7 @@ public class HibernatePersonDAO implements PersonDAO {
 	 */
 	private Set<Person> executeSoundexOnePersonNameQuery(String name, Integer birthyear, boolean includeVoided,
 	        String gender) {
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		List<Person> results = SearchQueryUnique.search(searchSessionFactory,
 		    SearchQueryUnique.newQuery(PersonName.class,
@@ -114,7 +114,7 @@ public class HibernatePersonDAO implements PersonDAO {
 	 */
 	private Set<Person> executeSoundexThreePersonNamesQuery(String name1, String name2, String name3, Integer birthyear,
 	        boolean includeVoided, String gender) {
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		List<Person> results = SearchQueryUnique
 		        .search(searchSessionFactory,
@@ -140,7 +140,7 @@ public class HibernatePersonDAO implements PersonDAO {
 	 */
 	private Set<Person> executeSoundexTwoPersonNamesQuery(String searchName1, String searchName2, Integer birthyear,
 	        boolean includeVoided, String gender) {
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		List<Person> results = SearchQueryUnique
 		        .search(searchSessionFactory,
@@ -165,7 +165,7 @@ public class HibernatePersonDAO implements PersonDAO {
 	 */
 	private Set<Person> executeSoundexNPersonNamesQuery(String[] searchNames, Integer birthyear, boolean includeVoided,
 	        String gender) {
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		List<Person> results = SearchQueryUnique.search(searchSessionFactory,
 		    SearchQueryUnique.newQuery(PersonName.class,
@@ -264,7 +264,7 @@ public class HibernatePersonDAO implements PersonDAO {
 			CriteriaQuery<Person> cq = cb.createQuery(Person.class);
 			Root<Person> root = cq.from(Person.class);
 
-			List<Predicate> predicates = new ArrayList<>();
+			var predicates = new ArrayList<Predicate>();
 			if (dead != null) {
 				predicates.add(cb.equal(root.get("dead"), dead));
 			}
@@ -278,7 +278,7 @@ public class HibernatePersonDAO implements PersonDAO {
 			return session.createQuery(cq).setMaxResults(maxResults).getResultList();
 		}
 
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		return SearchQueryUnique.search(searchSessionFactory,
 		    SearchQueryUnique
@@ -393,7 +393,7 @@ public class HibernatePersonDAO implements PersonDAO {
 		CriteriaQuery<PersonAttributeType> cq = cb.createQuery(PersonAttributeType.class);
 		Root<PersonAttributeType> root = cq.from(PersonAttributeType.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (exactName != null) {
 			predicates.add(cb.equal(root.get("name"), exactName));
 		}
@@ -456,7 +456,7 @@ public class HibernatePersonDAO implements PersonDAO {
 		CriteriaQuery<Relationship> cq = cb.createQuery(Relationship.class);
 		Root<Relationship> root = cq.from(Relationship.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (fromPerson != null) {
 			predicates.add(cb.equal(root.get("personA"), fromPerson));
 		}
@@ -488,7 +488,7 @@ public class HibernatePersonDAO implements PersonDAO {
 		CriteriaQuery<Relationship> cq = cb.createQuery(Relationship.class);
 		Root<Relationship> root = cq.from(Relationship.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (fromPerson != null) {
 			predicates.add(cb.equal(root.get("personA"), fromPerson));
 		}
@@ -544,7 +544,7 @@ public class HibernatePersonDAO implements PersonDAO {
 		CriteriaQuery<RelationshipType> cq = cb.createQuery(RelationshipType.class);
 		Root<RelationshipType> root = cq.from(RelationshipType.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (StringUtils.isNotEmpty(relationshipTypeName)) {
 			Expression<String> concatenatedFields = cb.concat(root.get("aIsToB"), cb.concat("/", root.get("bIsToA")));
 			predicates.add(cb.like(concatenatedFields, relationshipTypeName));

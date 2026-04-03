@@ -100,7 +100,7 @@ public class OpenmrsObjectSaveHandler implements SaveHandler<OpenmrsObject> {
 
 				Object valueBeforeTrim = value;
 				if (property.getWriteMethod().getAnnotation(AllowLeadingOrTrailingWhitespace.class) == null) {
-					value = ((String) value).trim();
+					value = ((String) value).strip();
 
 					//If we have actually trimmed any space, set the trimmed value.
 					if (!valueBeforeTrim.equals(value)) {

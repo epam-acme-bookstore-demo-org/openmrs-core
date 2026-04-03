@@ -11,16 +11,13 @@ package org.openmrs.migration;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -87,7 +84,7 @@ public class MigrationHelper {
 			if (s.length() == 10) {
 				s += " 00:00:00";
 			}
-			DateFormat df = new SimpleDateFormat(DATE_TIME_PATTERN);
+			var df = new SimpleDateFormat(DATE_TIME_PATTERN);
 			return df.parse(s);
 		}
 	}
@@ -126,10 +123,10 @@ public class MigrationHelper {
 	@Deprecated
 	public static int importUsers(Document document) throws ParseException {
 		int ret = 0;
-		Random rand = new Random();
+		var rand = new Random();
 		UserService us = Context.getUserService();
 
-		List<Node> toAdd = new ArrayList<>();
+		var toAdd = new ArrayList<Node>();
 		findNodesNamed(document, "user", toAdd);
 		for (Node node : toAdd) {
 			Element e = (Element) node;
@@ -140,7 +137,7 @@ public class MigrationHelper {
 			if (us.getUserByUsername(username) != null) {
 				continue;
 			}
-			User user = new User();
+			var user = new User();
 			user.setPerson(new Person());
 			PersonName pn = new PersonName(e.getAttribute("first_name"), "", e.getAttribute("last_name"));
 			user.addName(pn);
@@ -175,7 +172,7 @@ public class MigrationHelper {
 	public static int importLocations(Document document) {
 		int ret = 0;
 		LocationService ls = Context.getLocationService();
-		List<Node> toAdd = new ArrayList<>();
+		var toAdd = new ArrayList<Node>();
 		findNodesNamed(document, "location", toAdd);
 		for (Node node : toAdd) {
 			Element e = (Element) node;
@@ -186,7 +183,7 @@ public class MigrationHelper {
 			if (ls.getLocation(name) != null) {
 				continue;
 			}
-			Location location = new Location();
+			var location = new Location();
 			location.setName(name);
 
 			ls.saveLocation(location);
@@ -212,8 +209,8 @@ public class MigrationHelper {
 		PatientService ps = Context.getPatientService();
 		UserService us = Context.getUserService();
 		PersonService personService = Context.getPersonService();
-		List<Relationship> relsToAdd = new ArrayList<>();
-		Random rand = new Random();
+		var relsToAdd = new ArrayList<Relationship>();
+		var rand = new Random();
 		for (String s : relationships) {
 			if (s.contains(":")) {
 				s = s.substring(s.indexOf(":") + 1);
@@ -251,7 +248,7 @@ public class MigrationHelper {
 			if (user == null && autoCreateUsers) {
 				user = new User();
 				user.setPerson(new Person());
-				PersonName pn = new PersonName(userFirstName, "", userLastName);
+				var pn = new PersonName(userFirstName, "", userLastName);
 				user.addName(pn);
 				user.setUsername(username);
 				// Generate a temporary password: 8-12 random characters
@@ -280,14 +277,13 @@ public class MigrationHelper {
 
 			RelationshipType relationship = personService.getRelationshipTypeByName(relationshipType);
 			PatientIdentifierType pit = ps.getPatientIdentifierTypeByName(identifierType);
-			List<PatientIdentifier> found = ps.getPatientIdentifiers(identifier, Collections.singletonList(pit), null, null,
-			    null);
+			List<PatientIdentifier> found = ps.getPatientIdentifiers(identifier, List.of(pit), null, null, null);
 			if (found.size() != 1) {
 				throw new IllegalArgumentException("Found " + found.size() + " patients with identifier '" + identifier
 				        + "' of type " + identifierType);
 			}
 			Person relative = personService.getPerson(found.getFirst().getPatient().getPatientId());
-			Relationship rel = new Relationship();
+			var rel = new Relationship();
 			rel.setPersonA(person);
 			rel.setRelationshipType(relationship);
 			rel.setPersonB(relative);
@@ -308,9 +304,9 @@ public class MigrationHelper {
 	public static int importProgramsAndStatuses(List<String> programWorkflow) throws ParseException {
 		ProgramWorkflowService pws = Context.getProgramWorkflowService();
 		PatientService ps = Context.getPatientService();
-		List<PatientProgram> patientPrograms = new ArrayList<>();
-		Map<String, PatientProgram> knownPatientPrograms = new HashMap<>();
-		Map<String, Program> programsByName = new HashMap<>();
+		var patientPrograms = new ArrayList<PatientProgram>();
+		var knownPatientPrograms = new HashMap<String, PatientProgram>();
+		var programsByName = new HashMap<String, Program>();
 		for (Program program : pws.getAllPrograms()) {
 			programsByName.put(program.getConcept().getName(Context.getLocale(), false).getName(), program);
 		}
@@ -322,8 +318,7 @@ public class MigrationHelper {
 				String[] temp = s.split(",");
 				PatientIdentifierType pit = ps.getPatientIdentifierTypeByName(temp[0]);
 				String identifier = temp[1];
-				List<PatientIdentifier> pis = ps.getPatientIdentifiers(identifier, Collections.singletonList(pit), null,
-				    null, null);
+				List<PatientIdentifier> pis = ps.getPatientIdentifiers(identifier, List.of(pit), null, null, null);
 				if (pis.size() != 1) {
 					throw new IllegalArgumentException(
 					        "Found " + pis.size() + " instances of identifier " + identifier + " of type " + pit);
@@ -335,7 +330,7 @@ public class MigrationHelper {
 				}
 				Date enrollmentDate = temp.length < 4 ? null : parseDate(temp[3]);
 				Date completionDate = temp.length < 5 ? null : parseDate(temp[4]);
-				PatientProgram pp = new PatientProgram();
+				var pp = new PatientProgram();
 				pp.setPatient(p);
 				pp.setProgram(program);
 				pp.setDateEnrolled(enrollmentDate);
@@ -362,7 +357,7 @@ public class MigrationHelper {
 				}
 				Date startDate = temp.length < 6 ? null : parseDate(temp[5]);
 				Date endDate = temp.length < 7 ? null : parseDate(temp[6]);
-				PatientState state = new PatientState();
+				var state = new PatientState();
 				PatientProgram pp = knownPatientPrograms.get(temp[0] + "," + temp[1] + "," + temp[2]);
 				state.setPatientProgram(pp);
 				state.setState(st);

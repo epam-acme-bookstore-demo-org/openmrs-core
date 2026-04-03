@@ -844,7 +844,7 @@ public class UserServiceTest extends BaseContextSensitiveTest {
 	public void getUsers_shouldFetchUsersWithAtLeastOneOfTheGivenRoleObjects() {
 		executeDataSet(XML_FILENAME);
 
-		List<Role> roles = Collections.singletonList(new Role("Some Role"));
+		List<Role> roles = List.of(new Role("Some Role"));
 		assertEquals(1, userService.getUsers("Susy Kingman", roles, false).size());
 	}
 

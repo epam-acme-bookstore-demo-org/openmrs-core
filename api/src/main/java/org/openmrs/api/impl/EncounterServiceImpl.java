@@ -190,8 +190,8 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 		// save the Obs
 		String changeMessage = Context.getMessageSourceService().getMessage("Obs.void.reason.default");
 		ObsService os = Context.getObsService();
-		List<Obs> obsToRemove = new ArrayList<>();
-		List<Obs> obsToAdd = new ArrayList<>();
+		var obsToRemove = new ArrayList<Obs>();
+		var obsToAdd = new ArrayList<Obs>();
 		for (Obs o : encounter.getObsAtTopLevel(true)) {
 			if (o.getId() == null) {
 				os.saveObs(o, null);
@@ -374,7 +374,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 			throw new IllegalArgumentException("The 'identifier' parameter is required and cannot be null");
 		}
 
-		List<Encounter> encs = new ArrayList<>();
+		var encs = new ArrayList<Encounter>();
 		for (Patient p : Context.getPatientService().getPatients(identifier, null, null, false)) {
 			encs.addAll(Context.getEncounterService().getEncountersByPatientId(p.getPatientId()));
 		}
@@ -519,7 +519,7 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 
 		if (cascade) {
 			ObsService obsService = Context.getObsService();
-			List<Encounter> justThisEncounter = new ArrayList<>();
+			var justThisEncounter = new ArrayList<Encounter>();
 			justThisEncounter.add(encounter);
 			List<Obs> observations = new ArrayList<>(obsService.getObservations(null, justThisEncounter, null, null, null,
 			    null, null, null, null, null, null, true));

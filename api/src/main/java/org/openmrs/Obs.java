@@ -9,7 +9,6 @@
  */
 package org.openmrs;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -238,7 +237,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 		newObs.setFormField(obsToCopy.getFormFieldNamespace(), obsToCopy.getFormFieldPath());
 
 		if (obsToCopy.getReferenceRange() != null) {
-			ObsReferenceRange newRange = new ObsReferenceRange();
+			var newRange = new ObsReferenceRange();
 			ObsReferenceRange srcRange = obsToCopy.getReferenceRange();
 			newRange.setHiAbsolute(srcRange.getHiAbsolute());
 			newRange.setHiCritical(srcRange.getHiCritical());
@@ -466,7 +465,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 			//Empty set so return null
 			return null;
 		}
-		Set<Obs> nonVoided = new LinkedHashSet<>(groupMembers);
+		var nonVoided = new LinkedHashSet<Obs>(groupMembers);
 		nonVoided.removeIf(BaseOpenmrsData::getVoided);
 		return nonVoided;
 	}
@@ -558,7 +557,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 	 * @return Set&lt;Obs&gt;
 	 */
 	public Set<Obs> getRelatedObservations() {
-		Set<Obs> ret = new HashSet<>();
+		var ret = new HashSet<Obs>();
 		if (this.isObsGrouping()) {
 			ret.addAll(this.getGroupMembers());
 			Obs parentObs = this;
@@ -1035,7 +1034,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 					}
 				}
 			} else if ("DT".equals(abbrev)) {
-				DateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+				var dateFormat = new SimpleDateFormat(DATE_PATTERN);
 				return (getValueDatetime() == null ? "" : dateFormat.format(getValueDatetime()));
 			} else if ("TM".equals(abbrev)) {
 				return (getValueDatetime() == null ? "" : Format.format(getValueDatetime(), locale, FORMAT_TYPE.TIME));
@@ -1047,7 +1046,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 				String[] valuesComplex = getValueComplex().split("\\|");
 				for (String value : valuesComplex) {
 					if (StringUtils.isNotEmpty(value)) {
-						return value.trim();
+						return value.strip();
 					}
 				}
 			}
@@ -1076,7 +1075,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 			// over the members and just do a getValueAsString on those
 			// this could potentially cause an infinite loop if an obs group
 			// is a member of its own group at some point in the hierarchy
-			StringBuilder sb = new StringBuilder();
+			var sb = new StringBuilder();
 			for (Obs groupMember : getGroupMembers()) {
 				if (sb.length() > 0) {
 					sb.append(", ");
@@ -1092,7 +1091,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 			String[] valuesComplex = getValueComplex().split("\\|");
 			for (String value : valuesComplex) {
 				if (StringUtils.isNotEmpty(value)) {
-					return value.trim();
+					return value.strip();
 				}
 			}
 		}
@@ -1123,7 +1122,7 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 					        "Cannot set value to a empty string for concept: " + getConcept().getDisplayString());
 				}
 			} else if (!StringUtils.isBlank(s)) {
-				s = s.trim();
+				s = s.strip();
 				if ("BIT".equals(abbrev)) {
 					setValueBoolean(Boolean.valueOf(s));
 				} else if ("CWE".equals(abbrev)) {
@@ -1131,13 +1130,13 @@ public class Obs extends BaseFormRecordableOpenmrsData {
 				} else if ("NM".equals(abbrev) || "SN".equals(abbrev)) {
 					setValueNumeric(Double.valueOf(s));
 				} else if ("DT".equals(abbrev)) {
-					DateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
+					var dateFormat = new SimpleDateFormat(DATE_PATTERN);
 					setValueDatetime(dateFormat.parse(s));
 				} else if ("TM".equals(abbrev)) {
-					DateFormat timeFormat = new SimpleDateFormat(TIME_PATTERN);
+					var timeFormat = new SimpleDateFormat(TIME_PATTERN);
 					setValueDatetime(timeFormat.parse(s));
 				} else if ("TS".equals(abbrev)) {
-					DateFormat datetimeFormat = new SimpleDateFormat(DATE_TIME_PATTERN);
+					var datetimeFormat = new SimpleDateFormat(DATE_TIME_PATTERN);
 					setValueDatetime(datetimeFormat.parse(s));
 				} else {
 					throw new RuntimeException(

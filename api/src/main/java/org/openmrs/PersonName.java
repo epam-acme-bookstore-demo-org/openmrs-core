@@ -474,7 +474,7 @@ public class PersonName extends BaseChangeableOpenmrsData implements java.io.Ser
 
 		String nameString = StringUtils.collectionToDelimitedString(temp, " ");
 
-		return nameString.trim();
+		return nameString.strip();
 	}
 
 	/**

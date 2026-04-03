@@ -17,7 +17,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-import javax.xml.parsers.DocumentBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,19 +51,12 @@ public class SqlDiffFileParser {
 			throw new ModuleException("Module cannot be null");
 		}
 
-		SortedMap<String, String> map = new TreeMap<>(new VersionComparator());
+		var map = new TreeMap<String, String>(new VersionComparator());
 
 		InputStream diffStream;
 
 		// get the diff stream
-		JarFile jarfile = null;
-		try {
-			try {
-				jarfile = new JarFile(module.getFile());
-			} catch (IOException e) {
-				throw new ModuleException("Unable to get jar file", module.getName(), e);
-			}
-
+		try (var jarfile = new JarFile(module.getFile())) {
 			diffStream = ModuleUtil.getResourceFromApi(jarfile, module.getModuleId(), module.getVersion(),
 			    SQLDIFF_CHANGELOG_FILENAME);
 			if (diffStream == null) {
@@ -86,28 +78,28 @@ public class SqlDiffFileParser {
 				// turn the diff stream into an xml document
 				Document diffDoc;
 				try {
-					DocumentBuilder db = createDocumentBuilder();
+					var db = createDocumentBuilder();
 					diffDoc = db.parse(diffStream);
 				} catch (Exception e) {
 					throw new ModuleException("Error parsing diff sqldiff.xml file", module.getName(), e);
 				}
 
-				Element rootNode = diffDoc.getDocumentElement();
+				var rootNode = diffDoc.getDocumentElement();
 
-				String diffVersion = rootNode.getAttribute("version");
+				var diffVersion = rootNode.getAttribute("version");
 
 				if (!validConfigVersions().contains(diffVersion)) {
 					throw new ModuleException("Invalid config version: " + diffVersion, module.getModuleId());
 				}
 
-				NodeList diffNodes = getDiffNodes(rootNode, diffVersion);
+				var diffNodes = getDiffNodes(rootNode, diffVersion);
 
 				if (diffNodes != null && diffNodes.getLength() > 0) {
 					int i = 0;
 					while (i < diffNodes.getLength()) {
-						Element el = (Element) diffNodes.item(i++);
-						String version = getElement(el, diffVersion, "version");
-						String sql = getElement(el, diffVersion, "sql");
+						var el = (Element) diffNodes.item(i++);
+						var version = getElement(el, diffVersion, "version");
+						var sql = getElement(el, diffVersion, "sql");
 						map.put(version, sql);
 					}
 				}
@@ -124,14 +116,8 @@ public class SqlDiffFileParser {
 				throw e;
 			}
 
-		} finally {
-			try {
-				if (jarfile != null) {
-					jarfile.close();
-				}
-			} catch (IOException e) {
-				log.warn("Unable to close jarfile: " + jarfile.getName());
-			}
+		} catch (IOException e) {
+			throw new ModuleException("Unable to get jar file", module.getName(), e);
 		}
 		return map;
 	}
@@ -157,7 +143,7 @@ public class SqlDiffFileParser {
 	 * @return
 	 */
 	private static List<String> validConfigVersions() {
-		List<String> versions = new ArrayList<>();
+		var versions = new ArrayList<String>();
 		versions.add("1.0");
 		return versions;
 	}

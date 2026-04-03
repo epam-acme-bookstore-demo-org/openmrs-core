@@ -11,7 +11,6 @@ package org.openmrs.api.impl;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -628,7 +627,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 		String uuid = "0cbe2ed3-cd5f-4f46-9459-26127c9265ab";
 		Concept concept = conceptService.getConceptByUuid(uuid);
 		List<ConceptSet> conceptSets = conceptService.getSetsContainingConcept(concept);
-		assertEquals(conceptSets, Collections.emptyList());
+		assertEquals(conceptSets, List.of());
 	}
 
 	/**
@@ -637,7 +636,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	@Test
 	public void getSetsContainingConcept_shouldGiveAnEmptyListIfConceptIdIsNull() {
 		List<ConceptSet> conceptSets = conceptService.getSetsContainingConcept(new Concept());
-		assertEquals(conceptSets, Collections.emptyList());
+		assertEquals(conceptSets, List.of());
 	}
 
 	/**
@@ -729,7 +728,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 	@Test
 	public void getConceptsByAnswer_shouldReturnAnEmptyListIfConceptIdIsNull() {
 		List<Concept> concepts = conceptService.getConceptsByAnswer(new Concept());
-		assertEquals(concepts, Collections.emptyList());
+		assertEquals(concepts, List.of());
 	}
 
 	/**
@@ -856,7 +855,7 @@ public class ConceptServiceImplTest extends BaseContextSensitiveTest {
 		Integer someEndLength = 10;
 		List<ConceptSearchResult> result = conceptService.getOrderableConcepts("some phrase", null, true, someStartLength,
 		    someEndLength);
-		assertEquals(result, Collections.emptyList());
+		assertEquals(result, List.of());
 	}
 
 	/**

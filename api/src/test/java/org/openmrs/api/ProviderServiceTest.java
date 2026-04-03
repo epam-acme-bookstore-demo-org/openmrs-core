@@ -13,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -635,7 +634,7 @@ public class ProviderServiceTest extends BaseContextSensitiveTest {
 	public void purgeProviderRole_shouldNotAllowPurgingAProviderRoleThatIsInUse() {
 		final ProviderRole providerRole = service.getProviderRole(1001);
 		assertNotNull(providerRole);
-		List<Provider> providers = service.getProvidersByRoles(Collections.singletonList(providerRole));
+		List<Provider> providers = service.getProvidersByRoles(List.of(providerRole));
 		assertThat(providers.size(), greaterThan(0));
 		assertThrows(APIException.class, () -> service.purgeProviderRole(providerRole));
 		ProviderRole fetchedProviderRole = service.getProviderRole(1001);

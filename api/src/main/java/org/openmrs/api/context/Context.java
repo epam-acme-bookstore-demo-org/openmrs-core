@@ -384,7 +384,7 @@ public class Context {
 	 * @return copy of the runtime properties
 	 */
 	public static Properties getRuntimeProperties() {
-		Properties props = new Properties();
+		var props = new Properties();
 		if (runtimeProperties != null) {
 			props.putAll(runtimeProperties);
 		}
@@ -587,7 +587,7 @@ public class Context {
 	 *         properties overriding global properties.
 	 */
 	public static Properties getMailProperties() {
-		Properties p = new Properties();
+		var p = new Properties();
 		String prefix = "mail.";
 		for (GlobalProperty gp : getAdministrationService().getGlobalPropertiesByPrefix(prefix)) {
 			// Historically, some mail properties defined with underscores, support these for legacy compatibility
@@ -1162,7 +1162,7 @@ public class Context {
 		// setting core roles
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.MANAGE_ROLES);
-			Set<String> currentRoleNames = new HashSet<>();
+			var currentRoleNames = new HashSet<String>();
 			for (Role role : Context.getUserService().getAllRoles()) {
 				currentRoleNames.add(role.getRole().toUpperCase());
 			}
@@ -1170,7 +1170,7 @@ public class Context {
 			for (Map.Entry<String, String> entry : map.entrySet()) {
 				String roleName = entry.getKey();
 				if (!currentRoleNames.contains(roleName.toUpperCase())) {
-					Role role = new Role();
+					var role = new Role();
 					role.setRole(roleName);
 					role.setDescription(entry.getValue());
 					Context.getUserService().saveRole(role);
@@ -1185,7 +1185,7 @@ public class Context {
 		// setting core privileges
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.MANAGE_PRIVILEGES);
-			Set<String> currentPrivilegeNames = new HashSet<>();
+			var currentPrivilegeNames = new HashSet<String>();
 			for (Privilege privilege : Context.getUserService().getAllPrivileges()) {
 				currentPrivilegeNames.add(privilege.getPrivilege().toUpperCase());
 			}
@@ -1193,7 +1193,7 @@ public class Context {
 			for (Map.Entry<String, String> entry : map.entrySet()) {
 				String privilegeName = entry.getKey();
 				if (!currentPrivilegeNames.contains(privilegeName.toUpperCase())) {
-					Privilege p = new Privilege();
+					var p = new Privilege();
 					p.setPrivilege(privilegeName);
 					p.setDescription(entry.getValue());
 					Context.getUserService().savePrivilege(p);
@@ -1209,9 +1209,9 @@ public class Context {
 		try {
 			Context.addProxyPrivilege(PrivilegeConstants.MANAGE_GLOBAL_PROPERTIES);
 			Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
-			Set<String> currentPropNames = new HashSet<>();
-			Map<String, GlobalProperty> propsMissingDescription = new HashMap<>();
-			Map<String, GlobalProperty> propsMissingDatatype = new HashMap<>();
+			var currentPropNames = new HashSet<String>();
+			var propsMissingDescription = new HashMap<String, GlobalProperty>();
+			var propsMissingDatatype = new HashMap<String, GlobalProperty>();
 			for (GlobalProperty prop : Context.getAdministrationService().getAllGlobalProperties()) {
 				currentPropNames.add(prop.getProperty().toUpperCase());
 				if (prop.getDescription() == null) {
@@ -1404,7 +1404,7 @@ public class Context {
 	 * @since 1.9
 	 */
 	public static Properties getConfigProperties() {
-		Properties props = new Properties();
+		var props = new Properties();
 		props.putAll(configProperties);
 		return props;
 	}

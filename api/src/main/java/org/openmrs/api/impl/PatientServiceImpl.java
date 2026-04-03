@@ -12,7 +12,6 @@ package org.openmrs.api.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -563,7 +562,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 			throw new APIException("Patient.merge.cancelled", new Object[] { preferred.getPatientId() });
 		}
 		requireNoActiveOrderOfSameType(preferred, notPreferred);
-		PersonMergeLogData mergedData = new PersonMergeLogData();
+		var mergedData = new PersonMergeLogData();
 		mergeVisits(preferred, notPreferred, mergedData);
 		mergeEncounters(preferred, notPreferred, mergedData);
 		mergeProgramEnrolments(preferred, notPreferred, mergedData);
@@ -594,7 +593,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		preferred = savePatient(preferred);
 
 		//save the person merge log
-		PersonMergeLog personMergeLog = new PersonMergeLog();
+		var personMergeLog = new PersonMergeLog();
 		personMergeLog.setWinner(preferred);
 		personMergeLog.setLoser(notPreferred);
 		personMergeLog.setPersonMergeLogData(mergedData);
@@ -660,7 +659,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	private void mergeRelationships(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
 		// copy all relationships
 		PersonService personService = Context.getPersonService();
-		Set<String> existingRelationships = new HashSet<>();
+		var existingRelationships = new HashSet<String>();
 		// fill in the existing relationships with hashes
 		for (Relationship rel : personService.getRelationshipsByPerson(preferred)) {
 			existingRelationships.add(relationshipHash(rel, preferred));
@@ -723,7 +722,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		// move all identifiers
 		// (must be done after all calls to services above so hbm doesn't try to save things prematurely (hacky)
 		for (PatientIdentifier pi : notPreferred.getActiveIdentifiers()) {
-			PatientIdentifier tmpIdentifier = new PatientIdentifier();
+			var tmpIdentifier = new PatientIdentifier();
 			tmpIdentifier.setIdentifier(pi.getIdentifier());
 			tmpIdentifier.setIdentifierType(pi.getIdentifierType());
 			tmpIdentifier.setLocation(pi.getLocation());
@@ -914,7 +913,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 		preferred = savePatient(preferred);
 
 		//save the person merge log
-		PersonMergeLog personMergeLog = new PersonMergeLog();
+		var personMergeLog = new PersonMergeLog();
 		personMergeLog.setWinner(preferred);
 		personMergeLog.setLoser(notPreferred);
 		personMergeLog.setPersonMergeLogData(mergedData);
@@ -1390,7 +1389,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 			throw new IllegalArgumentException("An existing (NOT NULL) patient is required to get allergies");
 		}
 
-		Allergies allergies = new Allergies();
+		var allergies = new Allergies();
 		List<Allergy> allergyList = dao.getAllergies(patient);
 		if (!allergyList.isEmpty()) {
 			allergies.addAll(allergyList);
@@ -1421,7 +1420,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 				Allergy potentiallyEditedAllergy = allergies.getAllergy(originalAllergy.getAllergyId());
 				if (!potentiallyEditedAllergy.hasSameValues(originalAllergy)) {
 					//allergy has been edited, so void it and create a new one with the current values
-					Allergy newAllergy = new Allergy();
+					var newAllergy = new Allergy();
 					try {
 						//remove the edited allergy from our current list, and void id
 						allergies.remove(potentiallyEditedAllergy);
@@ -1555,7 +1554,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	@Override
 	@Transactional(readOnly = true)
 	public List<Patient> getPatients(String query, Integer start, Integer length) throws APIException {
-		List<Patient> patients = new ArrayList<>();
+		var patients = new ArrayList<Patient>();
 		if (StringUtils.isBlank(query)) {
 			return patients;
 		}
@@ -1571,7 +1570,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	public List<Patient> getPatients(String query, boolean includeVoided, Integer start, Integer length)
 	        throws APIException {
 		if (StringUtils.isBlank(query)) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		return dao.getPatients(query, includeVoided, start, length);

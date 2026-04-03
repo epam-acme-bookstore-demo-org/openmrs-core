@@ -2119,8 +2119,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getConcepts_shouldReturnConceptSearchResultsThatMatchUniqueConcepts() {
 		executeDataSet("org/openmrs/api/include/ConceptServiceTest-names.xml");
-		List<ConceptSearchResult> searchResults = conceptService.getConcepts("trust",
-		    Collections.singletonList(Locale.ENGLISH), false, null, null, null, null, null, null, null);
+		List<ConceptSearchResult> searchResults = conceptService.getConcepts("trust", List.of(Locale.ENGLISH), false, null,
+		    null, null, null, null, null, null);
 		//trust is included in 2 names for conceptid=3000 and in one name for conceptid=4000.
 		//So we should see 2 results only
 		assertEquals(2, searchResults.size());
@@ -2133,8 +2133,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getConcepts_shouldReturnConceptSearchResultsThatMatchUniqueConceptsEvenIfDifferentMatchingWords() {
 		executeDataSet("org/openmrs/api/include/ConceptServiceTest-names.xml");
-		List<ConceptSearchResult> searchResults = conceptService.getConcepts("now",
-		    Collections.singletonList(Locale.ENGLISH), false, null, null, null, null, null, null, null);
+		List<ConceptSearchResult> searchResults = conceptService.getConcepts("now", List.of(Locale.ENGLISH), false, null,
+		    null, null, null, null, null, null);
 		// "now matches both concept names "TRUST NOW" and "TRUST NOWHERE", but these are for the same concept (4000), so there should only be one item in the result set
 		assertEquals(1, searchResults.size());
 		assertEquals(Integer.valueOf(4000), searchResults.getFirst().getConcept().getId());
@@ -2147,8 +2147,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getConcepts_shouldReturnConceptSearchResultsThatContainAllSearchWordsAsFirst() {
 		executeDataSet("org/openmrs/api/include/ConceptServiceTest-names.xml");
-		List<ConceptSearchResult> searchResults = conceptService.getConcepts("trust now",
-		    Collections.singletonList(Locale.ENGLISH), false, null, null, null, null, null, null, null);
+		List<ConceptSearchResult> searchResults = conceptService.getConcepts("trust now", List.of(Locale.ENGLISH), false,
+		    null, null, null, null, null, null, null);
 		//"trust now" must be first hit
 		assertThat(searchResults.getFirst().getWord(), is("trust now"));
 	}
@@ -2540,8 +2540,7 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	public void getCountOfConcepts_shouldReturnACountOfUniqueConcepts() {
 		executeDataSet("org/openmrs/api/include/ConceptServiceTest-names.xml");
 		assertEquals(2, conceptService
-		        .getCountOfConcepts("trust", Collections.singletonList(Locale.ENGLISH), false, null, null, null, null, null)
-		        .intValue());
+		        .getCountOfConcepts("trust", List.of(Locale.ENGLISH), false, null, null, null, null, null).intValue());
 	}
 
 	/**
@@ -2960,7 +2959,7 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		executeDataSet("org/openmrs/api/include/ConceptServiceTest-names.xml");
 
 		List<ConceptSearchResult> searchResults = conceptService.getConcepts("SALBUTAMOL INHALER",
-		    Collections.singletonList(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
+		    List.of(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
 
 		assertThat(searchResults.getFirst().getWord(), is("SALBUTAMOL INHALER"));
 	}
@@ -2975,7 +2974,7 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		conceptService.saveConceptStopWord(new ConceptStopWord("OF", Locale.US));
 
 		List<ConceptSearchResult> searchResults = conceptService.getConcepts("tuberculosis of knee",
-		    Collections.singletonList(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
+		    List.of(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
 
 		assertEquals(1, searchResults.size());
 		assertEquals("Tuberculosis of Knee", searchResults.getFirst().getConceptName().getName());
@@ -3049,8 +3048,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	public void getConcepts_shouldNotReturnConceptsWithMatchingNamesThatAreVoided() {
 		Concept concept = conceptService.getConcept(7);
 
-		List<ConceptSearchResult> results = conceptService.getConcepts("VOIDED", Collections.singletonList(Locale.ENGLISH),
-		    false, null, null, null, null, null, null, null);
+		List<ConceptSearchResult> results = conceptService.getConcepts("VOIDED", List.of(Locale.ENGLISH), false, null, null,
+		    null, null, null, null, null);
 
 		for (ConceptSearchResult result : results) {
 			assertThat(result.getConcept(), not(concept));
@@ -3066,8 +3065,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getConcepts_shouldNotFailWithNullClassesAndDatatypes() {
 		ConceptService conceptService = Context.getConceptService();
-		assertNotNull(conceptService.getConcepts("VOIDED", Collections.singletonList(Locale.ENGLISH), false, null, null,
-		    null, null, null, null, null));
+		assertNotNull(
+		    conceptService.getConcepts("VOIDED", List.of(Locale.ENGLISH), false, null, null, null, null, null, null, null));
 	}
 
 	/**
@@ -3079,8 +3078,8 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getCountOfConcepts_shouldNotFailWithNullClassesAndDatatypes() {
 		ConceptService conceptService = Context.getConceptService();
-		assertNotNull(conceptService.getCountOfConcepts("VOIDED", Collections.singletonList(Locale.ENGLISH), false, null,
-		    null, null, null, null));
+		assertNotNull(
+		    conceptService.getCountOfConcepts("VOIDED", List.of(Locale.ENGLISH), false, null, null, null, null, null));
 	}
 
 	/**
@@ -3635,7 +3634,7 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		updateSearchIndex();
 
 		List<ConceptSearchResult> conceptSearchResultList = Context.getConceptService().getOrderableConcepts("one",
-		    Collections.singletonList(locale), true, null, null);
+		    List.of(locale), true, null, null);
 		assertEquals(2, conceptSearchResultList.size());
 	}
 
@@ -3674,10 +3673,10 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 		Concept concept = conceptService.getConceptByMapping(code2, "SNOMED CT");
 
 		//when
-		List<ConceptSearchResult> concepts1 = conceptService.getConcepts(code1,
-		    Collections.singletonList(Context.getLocale()), false, null, null, null, null, null, null, null);
-		List<ConceptSearchResult> concepts2 = conceptService.getConcepts(code2,
-		    Collections.singletonList(Context.getLocale()), false, null, null, null, null, null, null, null);
+		List<ConceptSearchResult> concepts1 = conceptService.getConcepts(code1, List.of(Context.getLocale()), false, null,
+		    null, null, null, null, null, null);
+		List<ConceptSearchResult> concepts2 = conceptService.getConcepts(code2, List.of(Context.getLocale()), false, null,
+		    null, null, null, null, null, null);
 
 		//then
 		assertThat(concepts1, contains(hasConcept(is(concept))));
@@ -3871,21 +3870,21 @@ public class ConceptServiceTest extends BaseContextSensitiveTest {
 
 		//search phrase with AND
 		List<ConceptSearchResult> searchResults = conceptService.getConcepts("AND SALBUTAMOL INHALER",
-		    Collections.singletonList(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
+		    List.of(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
 
 		assertEquals(1, searchResults.size());
 		assertThat(searchResults.getFirst().getWord(), is("AND SALBUTAMOL INHALER"));
 
 		//search phrase with OR
-		searchResults = conceptService.getConcepts("SALBUTAMOL OR INHALER", Collections.singletonList(Locale.of("en", "US")),
-		    false, null, null, null, null, null, null, null);
+		searchResults = conceptService.getConcepts("SALBUTAMOL OR INHALER", List.of(Locale.of("en", "US")), false, null,
+		    null, null, null, null, null, null);
 
 		assertEquals(1, searchResults.size());
 		assertThat(searchResults.getFirst().getWord(), is("SALBUTAMOL OR INHALER"));
 
 		//search phrase with NOT
-		searchResults = conceptService.getConcepts("SALBUTAMOL INHALER NOT",
-		    Collections.singletonList(Locale.of("en", "US")), false, null, null, null, null, null, null, null);
+		searchResults = conceptService.getConcepts("SALBUTAMOL INHALER NOT", List.of(Locale.of("en", "US")), false, null,
+		    null, null, null, null, null, null);
 
 		assertEquals(1, searchResults.size());
 		assertThat(searchResults.getFirst().getWord(), is("SALBUTAMOL INHALER NOT"));

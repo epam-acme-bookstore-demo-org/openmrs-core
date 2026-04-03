@@ -9,7 +9,6 @@
  */
 package org.openmrs.api.impl;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
@@ -48,10 +47,10 @@ public class SerializationServiceImplTest {
 		SerializationServiceImpl ssi = new SerializationServiceImpl();
 		assertEquals(0, ssi.getSerializers().size());
 
-		ssi.setSerializers(Collections.singletonList(new MockSerializer1()));
+		ssi.setSerializers(List.of(new MockSerializer1()));
 		assertEquals(1, ssi.getSerializers().size());
 
-		ssi.setSerializers(Collections.singletonList(new MockSerializer2()));
+		ssi.setSerializers(List.of(new MockSerializer2()));
 		assertEquals(2, ssi.getSerializers().size());
 	}
 

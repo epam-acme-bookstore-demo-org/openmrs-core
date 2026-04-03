@@ -10,7 +10,6 @@
 package org.openmrs.notification.db.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -100,7 +99,7 @@ public class HibernateAlertDAO implements AlertDAO {
 		CriteriaQuery<Alert> cq = cb.createQuery(Alert.class);
 		Root<Alert> root = cq.from(Alert.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (user != null && user.getUserId() != null) {
 			predicates.add(cb.equal(root.join("recipients").get("recipientId"), user.getUserId()));
@@ -110,7 +109,7 @@ public class HibernateAlertDAO implements AlertDAO {
 
 			// returning an empty list for now because the above throws an error.
 			// we may need to remodel how recipients are handled to get anonymous users alerts
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		// exclude the expired alerts unless requested

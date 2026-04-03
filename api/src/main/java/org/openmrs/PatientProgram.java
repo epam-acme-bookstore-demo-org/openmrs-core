@@ -123,7 +123,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 		target.setLocation(this.getLocation());
 		target.setDateEnrolled(this.getDateEnrolled());
 		target.setDateCompleted(target.getDateCompleted());
-		Set<PatientState> statesCopy = new HashSet<>();
+		var statesCopy = new HashSet<PatientState>();
 		if (this.getStates() != null) {
 			for (PatientState s : this.getStates()) {
 				PatientState stateCopy = s.copy();
@@ -221,7 +221,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 			lastState.setEndDate(onDate);
 		}
 
-		PatientState newState = new PatientState();
+		var newState = new PatientState();
 		newState.setPatientProgram(this);
 		newState.setState(programWorkflowState);
 		newState.setStartDate(onDate);
@@ -288,7 +288,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 	 *         within this {@link PatientProgram}
 	 */
 	public PatientState getCurrentState(ProgramWorkflow programWorkflow) {
-		Date now = new Date();
+		var now = new Date();
 		PatientState currentState = null;
 
 		for (PatientState state : getSortedStates()) {
@@ -309,8 +309,8 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 	 *         {@link PatientProgram}
 	 */
 	public Set<PatientState> getCurrentStates() {
-		Set<PatientState> ret = new HashSet<>();
-		Date now = new Date();
+		var ret = new HashSet<PatientState>();
+		var now = new Date();
 		for (PatientState state : getStates()) {
 			if (state.getActive(now)) {
 				ret.add(state);
@@ -327,7 +327,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 	 *         {@link PatientProgram}
 	 */
 	public Set<PatientState> getMostRecentStateInEachWorkflow() {
-		HashMap<ProgramWorkflow, PatientState> map = new HashMap<>();
+		var map = new HashMap<ProgramWorkflow, PatientState>();
 
 		for (PatientState state : getSortedStates()) {
 			if (!state.isVoided()) {
@@ -336,7 +336,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 			}
 		}
 
-		Set<PatientState> ret = new HashSet<>();
+		var ret = new HashSet<PatientState>();
 		for (Map.Entry<ProgramWorkflow, PatientState> entry : map.entrySet()) {
 			ret.add(entry.getValue());
 		}
@@ -354,7 +354,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 	 *         {@link ProgramWorkflow} for the {@link PatientProgram}
 	 */
 	public List<PatientState> statesInWorkflow(ProgramWorkflow programWorkflow, boolean includeVoided) {
-		List<PatientState> ret = new ArrayList<>();
+		var ret = new ArrayList<PatientState>();
 		for (PatientState st : getSortedStates()) {
 			if (st.getState().getProgramWorkflow().equals(programWorkflow) && (includeVoided || !st.getVoided())) {
 				ret.add(st);
@@ -480,7 +480,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 
 	@Override
 	public Collection<PatientProgramAttribute> getActiveAttributes() {
-		ArrayList<PatientProgramAttribute> ret = new ArrayList<>();
+		var ret = new ArrayList<PatientProgramAttribute>();
 
 		if (this.getAttributes() != null) {
 			for (PatientProgramAttribute attr : this.getAttributes()) {
@@ -495,7 +495,7 @@ public class PatientProgram extends BaseChangeableOpenmrsData implements Customi
 
 	@Override
 	public List<PatientProgramAttribute> getActiveAttributes(CustomValueDescriptor ofType) {
-		ArrayList<PatientProgramAttribute> ret = new ArrayList<>();
+		var ret = new ArrayList<PatientProgramAttribute>();
 
 		if (this.getAttributes() != null) {
 			for (PatientProgramAttribute attr : this.getAttributes()) {

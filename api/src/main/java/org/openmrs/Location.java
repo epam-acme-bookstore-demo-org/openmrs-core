@@ -9,7 +9,6 @@
  */
 package org.openmrs;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -353,7 +352,7 @@ public class Location extends BaseCustomizableMetadata<LocationAttribute> implem
 		try {
 			return Context.getLocationService().getLocations(searchText);
 		} catch (Exception e) {
-			return Collections.emptyList();
+			return List.of();
 		}
 	}
 
@@ -366,7 +365,7 @@ public class Location extends BaseCustomizableMetadata<LocationAttribute> implem
 		try {
 			return Context.getLocationService().getAllLocations();
 		} catch (Exception e) {
-			return Collections.emptyList();
+			return List.of();
 		}
 	}
 
@@ -457,7 +456,7 @@ public class Location extends BaseCustomizableMetadata<LocationAttribute> implem
 	 * @since 1.10
 	 */
 	public Set<Location> getDescendantLocations(boolean includeRetired) {
-		Set<Location> result = new HashSet<>();
+		var result = new HashSet<Location>();
 
 		for (Location childLocation : getChildLocations()) {
 			if (!childLocation.getRetired() || includeRetired) {

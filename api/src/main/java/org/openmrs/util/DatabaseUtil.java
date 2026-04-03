@@ -10,10 +10,6 @@
 package org.openmrs.util;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -116,7 +112,7 @@ public class DatabaseUtil {
 	 * Executes the passed SQL query, enforcing select only if that parameter is set for given Session
 	 */
 	public static List<List<Object>> executeSQL(Session session, String sql, boolean selectOnly) throws DAOException {
-		sql = sql.trim();
+		sql = sql.strip();
 		boolean dataManipulation = checkQueryForManipulationCommands(sql, selectOnly);
 
 		final List<List<Object>> result = new ArrayList<>();
@@ -133,7 +129,7 @@ public class DatabaseUtil {
 	 * Connection
 	 */
 	public static List<List<Object>> executeSQL(Connection conn, String sql, boolean selectOnly) throws DAOException {
-		sql = sql.trim();
+		sql = sql.strip();
 		boolean dataManipulation = checkQueryForManipulationCommands(sql, selectOnly);
 		List<List<Object>> result = new ArrayList<>();
 		populateResultsFromSQLQuery(conn, sql, dataManipulation, result);
@@ -158,22 +154,20 @@ public class DatabaseUtil {
 
 	private static void populateResultsFromSQLQuery(Connection conn, String sql, boolean dataManipulation,
 	        List<List<Object>> results) {
-		PreparedStatement ps = null;
-		try {
-			ps = conn.prepareStatement(sql);
+		try (var ps = conn.prepareStatement(sql)) {
 			if (dataManipulation) {
 				Integer i = ps.executeUpdate();
-				List<Object> row = new ArrayList<>();
+				var row = new ArrayList<Object>();
 				row.add(i);
 				results.add(row);
 			} else {
-				ResultSet resultSet = ps.executeQuery();
+				var resultSet = ps.executeQuery();
 
-				ResultSetMetaData rmd = resultSet.getMetaData();
+				var rmd = resultSet.getMetaData();
 				int columnCount = rmd.getColumnCount();
 
 				while (resultSet.next()) {
-					List<Object> rowObjects = new ArrayList<>();
+					var rowObjects = new ArrayList<Object>();
 					for (int x = 1; x <= columnCount; x++) {
 						rowObjects.add(resultSet.getObject(x));
 					}
@@ -183,14 +177,6 @@ public class DatabaseUtil {
 		} catch (Exception e) {
 			log.debug("Error while running sql: " + sql, e);
 			throw new DAOException("Error while running sql: " + sql + " . Message: " + e.getMessage(), e);
-		} finally {
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					log.error("Error generated while closing statement", e);
-				}
-			}
 		}
 	}
 

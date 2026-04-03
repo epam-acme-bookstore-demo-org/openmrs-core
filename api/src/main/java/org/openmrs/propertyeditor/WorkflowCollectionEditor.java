@@ -71,11 +71,11 @@ public class WorkflowCollectionEditor extends PropertyEditorSupport {
 			Set<Integer> newConceptIds = new HashSet<>();
 
 			for (String id : conceptIds) {
-				if (id.trim().length() == 0) {
+				if (id.isBlank()) {
 					continue;
 				}
 				log.debug("trying " + id);
-				newConceptIds.add(Integer.valueOf(id.trim()));
+				newConceptIds.add(Integer.valueOf(id.strip()));
 			}
 
 			// go through oldSet and see what we need to keep and what we need to unvoid
@@ -131,7 +131,7 @@ public class WorkflowCollectionEditor extends PropertyEditorSupport {
 			for (ProgramWorkflow pw : pws) {
 				ret.append(pw.getConcept().getConceptId()).append(" ");
 			}
-			return ret.toString().trim();
+			return ret.toString().strip();
 		}
 	}
 

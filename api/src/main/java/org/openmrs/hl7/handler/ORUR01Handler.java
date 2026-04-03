@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.openmrs.Concept;
@@ -221,13 +220,13 @@ public class ORUR01Handler implements Application {
 		// list of concepts proposed in the obs of this encounter.
 		// these proposals need to be created after the encounter
 		// has been created
-		List<ConceptProposal> conceptProposals = new ArrayList<>();
+		var conceptProposals = new ArrayList<ConceptProposal>();
 
 		// create observations
 		log.debug("Creating observations for message {}...", messageControlId);
 		// we ignore all MEDICAL_RECORD_OBSERVATIONS that are OBRs.  We do not
 		// create obs_groups for them
-		List<Integer> ignoredConceptIds = new ArrayList<>();
+		var ignoredConceptIds = new ArrayList<Integer>();
 
 		String obrConceptId = Context.getAdministrationService()
 		        .getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_MEDICAL_RECORD_OBSERVATIONS, "1238");
@@ -277,7 +276,7 @@ public class ORUR01Handler implements Application {
 				obsGrouper.setCreator(encounter.getCreator());
 
 				// set comments if there are any
-				StringBuilder comments = new StringBuilder();
+				var comments = new StringBuilder();
 				ORU_R01_ORDER_OBSERVATION parent = (ORU_R01_ORDER_OBSERVATION) obr.getParent();
 				int totalNTEs = parent.getNTEReps();
 				for (int iNTE = 0; iNTE < totalNTEs; iNTE++) {
@@ -433,7 +432,7 @@ public class ORUR01Handler implements Application {
 		boolean patientCanBeEitherPerson = relType.getbIsToA().equals(relType.getaIsToB());
 
 		// look at existing relationships to determine if a new one is needed
-		Set<Relationship> rels = new HashSet<>();
+		var rels = new HashSet<Relationship>();
 		if (relative != null) {
 			if (patientCanBeEitherPerson || patientIsPersonA) {
 				rels.addAll(Context.getPersonService().getRelationships(patient, relative, relType));
@@ -456,7 +455,7 @@ public class ORUR01Handler implements Application {
 			}
 
 			// create the relationship
-			Relationship relation = new Relationship();
+			var relation = new Relationship();
 			if (patientCanBeEitherPerson || patientIsPersonA) {
 				relation.setPersonA(patient);
 				relation.setPersonB(relative);
@@ -497,7 +496,7 @@ public class ORUR01Handler implements Application {
 	 * @throws HL7Exception
 	 */
 	public List<NK1> getNK1List(ORU_R01 oru) throws HL7Exception {
-		List<NK1> res = new ArrayList<>();
+		var res = new ArrayList<NK1>();
 		// there will always be at least one NK1, even if the original message does not contain one
 		for (int i = 0; i < oru.getPATIENT_RESULT().getPATIENT().getNK1Reps(); i++) {
 			// if the setIDNK1 value is null, this NK1 is blank
@@ -624,7 +623,7 @@ public class ORUR01Handler implements Application {
 			datetime = encounter.getEncounterDatetime();
 		}
 
-		Obs obs = new Obs();
+		var obs = new Obs();
 		obs.setPerson(encounter.getPatient());
 		obs.setConcept(concept);
 		obs.setEncounter(encounter);
@@ -634,7 +633,7 @@ public class ORUR01Handler implements Application {
 		obs.setDateCreated(encounter.getDateCreated());
 
 		// set comments if there are any
-		StringBuilder comments = new StringBuilder();
+		var comments = new StringBuilder();
 		ORU_R01_OBSERVATION parent = (ORU_R01_OBSERVATION) obx.getParent();
 		// iterate over all OBX NTEs
 		for (int i = 0; i < parent.getNTEReps(); i++) {
@@ -718,7 +717,7 @@ public class ORUR01Handler implements Application {
 					Concept valueConcept = getConcept(value, uid);
 					obs.setValueCoded(valueConcept);
 					if (HL7Constants.HL7_LOCAL_DRUG.equals(value.getNameOfAlternateCodingSystem().getValue())) {
-						Drug valueDrug = new Drug();
+						var valueDrug = new Drug();
 						valueDrug.setDrugId(Integer.valueOf(value.getAlternateIdentifier().getValue()));
 						obs.setValueDrug(valueDrug);
 					} else {
@@ -785,7 +784,7 @@ public class ORUR01Handler implements Application {
 			}
 		} else if ("ST".equals(hl7Datatype)) {
 			ST value = (ST) obx5;
-			if (value == null || value.getValue() == null || value.getValue().trim().length() == 0) {
+			if (value == null || value.getValue() == null || value.getValue().isBlank()) {
 				log.warn("Not creating null valued obs for concept " + concept);
 				return null;
 			}
@@ -1166,7 +1165,7 @@ public class ORUR01Handler implements Application {
 		if (entererId == null) {
 			throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.UnresolvedEnterer"));
 		}
-		User enterer = new User();
+		var enterer = new User();
 		enterer.setUserId(entererId);
 		return enterer;
 	}
@@ -1200,7 +1199,7 @@ public class ORUR01Handler implements Application {
 		// instead of an Obs for this observation
 		// TODO: at this point if componentSeparator (^) is in text,
 		// we'll only use the text before that delimiter!
-		ConceptProposal conceptProposal = new ConceptProposal();
+		var conceptProposal = new ConceptProposal();
 		conceptProposal.setOriginalText(originalText);
 		conceptProposal.setState(OpenmrsConstants.CONCEPT_PROPOSAL_UNMAPPED);
 		conceptProposal.setEncounter(encounter);

@@ -143,7 +143,7 @@ public class Cohort extends BaseChangeableOpenmrsData {
 	public Cohort(String commaSeparatedIds) {
 		this();
 		String[] ids = StringUtils.split(commaSeparatedIds, ',');
-		Arrays.stream(ids).forEach(id -> addMembership(new CohortMembership(Integer.valueOf(id.trim()))));
+		Arrays.stream(ids).forEach(id -> addMembership(new CohortMembership(Integer.valueOf(id.strip()))));
 	}
 
 	/**

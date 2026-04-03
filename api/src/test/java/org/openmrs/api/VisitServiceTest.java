@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -472,8 +471,8 @@ public class VisitServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void getVisits_shouldGetVisitsByIndications() {
-		assertEquals(1, visitService.getVisits(null, null, null, Collections.singletonList(new Concept(5497)), null, null,
-		    null, null, null, true, false).size());
+		assertEquals(1, visitService
+		        .getVisits(null, null, null, List.of(new Concept(5497)), null, null, null, null, null, true, false).size());
 	}
 
 	@Test

@@ -10,7 +10,6 @@
 package org.openmrs.api.db.hibernate;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -64,8 +63,8 @@ public class HibernateObsDAOTest extends BaseContextSensitiveTest {
 		cqDesc.orderBy(cb.desc(rootDesc.get("obsId")));
 		obsListExpected = session.createQuery(cqDesc).getResultList();
 
-		obsListActual = dao.getObservations(null, null, null, null, null, null, Collections.singletonList("obsId desc"),
-		    null, null, null, null, false, null);
+		obsListActual = dao.getObservations(null, null, null, null, null, null, List.of("obsId desc"), null, null, null,
+		    null, false, null);
 		assertArrayEquals(obsListExpected.toArray(), obsListActual.toArray());
 
 		//Order by obsId asc
@@ -74,8 +73,8 @@ public class HibernateObsDAOTest extends BaseContextSensitiveTest {
 		cqAsc.orderBy(cb.asc(rootAsc.get("obsId")));
 		obsListExpected = session.createQuery(cqAsc).getResultList();
 
-		obsListActual = dao.getObservations(null, null, null, null, null, null, Collections.singletonList("obsId asc"), null,
-		    null, null, null, false, null);
+		obsListActual = dao.getObservations(null, null, null, null, null, null, List.of("obsId asc"), null, null, null, null,
+		    false, null);
 		assertArrayEquals(obsListExpected.toArray(), obsListActual.toArray());
 
 		// Order by person_id asc and id desc

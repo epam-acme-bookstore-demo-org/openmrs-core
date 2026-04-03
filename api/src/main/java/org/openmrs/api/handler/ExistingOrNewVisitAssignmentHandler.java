@@ -120,10 +120,10 @@ public class ExistingOrNewVisitAssignmentHandler extends ExistingVisitAssignment
 			for (String mapping : mappings) {
 				int index = mapping.indexOf(':');
 				if (index > 0) {
-					String encounterTypeIdOrUuid = mapping.substring(0, index).trim();
+					String encounterTypeIdOrUuid = mapping.substring(0, index).strip();
 					if (targetEncounterTypeId.equals(encounterTypeIdOrUuid)
 					        || encounterType.getUuid().equals(encounterTypeIdOrUuid)) {
-						String visitTypeIdOrUuid = mapping.substring(index + 1).trim();
+						String visitTypeIdOrUuid = mapping.substring(index + 1).strip();
 						VisitType visitType;
 						if (StringUtils.isNumeric(visitTypeIdOrUuid)) {
 							visitType = visitService.getVisitType(Integer.parseInt(visitTypeIdOrUuid));

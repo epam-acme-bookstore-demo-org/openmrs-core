@@ -10,7 +10,6 @@
 package org.openmrs.api.context;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -627,7 +626,7 @@ public class ServiceContext implements ApplicationContextAware {
 	@SuppressWarnings("unchecked")
 	private Set<Advisor> getAddedAdvisors(Class cls) {
 		Set<Advisor> result = addedAdvisors.get(cls);
-		return (Set<Advisor>) (result == null ? Collections.emptySet() : result);
+		return (Set<Advisor>) (result == null ? Set.of() : result);
 	}
 
 	/**
@@ -654,7 +653,7 @@ public class ServiceContext implements ApplicationContextAware {
 	@SuppressWarnings("unchecked")
 	private Set<Advice> getAddedAdvice(Class cls) {
 		Set<Advice> result = addedAdvice.get(cls);
-		return (Set<Advice>) (result == null ? Collections.emptySet() : result);
+		return (Set<Advice>) (result == null ? Set.of() : result);
 	}
 
 	/**
@@ -717,7 +716,7 @@ public class ServiceContext implements ApplicationContextAware {
 					if (!serviceAdvised) {
 						// Adding a bare service, wrap with AOP proxy
 						Class[] interfaces = { cls };
-						ProxyFactory factory = new ProxyFactory(interfaces);
+						var factory = new ProxyFactory(interfaces);
 						factory.setTarget(classInstance);
 						advisedService = (Advised) factory.getProxy(OpenmrsClassLoader.getInstance());
 					} else {
@@ -908,7 +907,7 @@ public class ServiceContext implements ApplicationContextAware {
 	private <T> Map<String, T> getRegisteredComponents(ApplicationContext context, Class<T> type) {
 		Map<String, T> registeredComponents = context.getBeansOfType(type);
 		log.trace("getRegisteredComponents({}, {}) = {}", context, type, registeredComponents);
-		Map<String, T> components = new HashMap<>(registeredComponents);
+		var components = new HashMap<String, T>(registeredComponents);
 		if (context.getParent() != null) {
 			components.putAll(getRegisteredComponents(context.getParent(), type));
 		}
@@ -965,7 +964,7 @@ public class ServiceContext implements ApplicationContextAware {
 	 * @since 1.9
 	 */
 	public List<OpenmrsService> getModuleOpenmrsServices(String modulePackage) {
-		List<OpenmrsService> openmrsServices = new ArrayList<>();
+		var openmrsServices = new ArrayList<OpenmrsService>();
 
 		for (Entry<String, OpenmrsService> entry : moduleOpenmrsServices.entrySet()) {
 			if (entry.getKey().startsWith(modulePackage)) {

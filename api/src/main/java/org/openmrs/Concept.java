@@ -1289,7 +1289,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 	 */
 	public Collection<ConceptName> getSynonyms(Locale locale) {
 
-		List<ConceptName> syns = new ArrayList<>();
+		var syns = new ArrayList<ConceptName>();
 		ConceptName preferredConceptName = null;
 		for (ConceptName possibleSynonymInLoc : getSynonyms()) {
 			if (locale.equals(possibleSynonymInLoc.getLocale())) {
@@ -1430,11 +1430,11 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 	@Override
 	@Deprecated
 	public List<Concept> findPossibleValues(String searchText) {
-		List<Concept> concepts = new ArrayList<>();
+		var concepts = new ArrayList<Concept>();
 		try {
 
 			for (ConceptSearchResult searchResult : Context.getConceptService().getConcepts(searchText,
-			    Collections.singletonList(Context.getLocale()), false, null, null, null, null, null, null, null)) {
+			    List.of(Context.getLocale()), false, null, null, null, null, null, null, null)) {
 				concepts.add(searchResult.getConcept());
 			}
 		} catch (Exception e) {
@@ -1454,7 +1454,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 		} catch (Exception e) {
 			// pass
 		}
-		return Collections.emptyList();
+		return List.of();
 	}
 
 	/**
@@ -1513,7 +1513,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 			return null;
 		}
 
-		Set<Locale> locales = new HashSet<>();
+		var locales = new HashSet<Locale>();
 
 		for (ConceptName cn : getNames()) {
 			locales.add(cn.getLocale());
@@ -1546,7 +1546,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 	 * @return sortedConceptSet Collection&lt;ConceptSet&gt;
 	 */
 	private List<ConceptSet> getSortedConceptSets() {
-		List<ConceptSet> cs = new ArrayList<>();
+		var cs = new ArrayList<ConceptSet>();
 		if (conceptSets != null) {
 			cs.addAll(conceptSets);
 			Collections.sort(cs);
@@ -1567,7 +1567,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 	 * @return List&lt;Concept&gt; the Concepts that are members of this Concept's set
 	 */
 	public List<Concept> getSetMembers() {
-		List<Concept> conceptMembers = new ArrayList<>();
+		var conceptMembers = new ArrayList<Concept>();
 
 		Collection<ConceptSet> sortedConceptSet = getSortedConceptSets();
 
@@ -1653,7 +1653,7 @@ public class Concept extends BaseOpenmrsObject implements Auditable, Retireable,
 			weight = (prevSortWeight + nextSortWeight) / 2;
 		}
 
-		ConceptSet conceptSet = new ConceptSet(setMember, weight);
+		var conceptSet = new ConceptSet(setMember, weight);
 		conceptSet.setConceptSet(this);
 		conceptSets.add(conceptSet);
 	}

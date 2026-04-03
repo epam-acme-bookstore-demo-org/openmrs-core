@@ -19,7 +19,6 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -110,7 +109,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 		}
 
 		// build the mysql command line string
-		List<String> commands = new ArrayList<>();
+		var commands = new ArrayList<String>();
 		String databaseName;
 		try {
 			commands.add("mysql");
@@ -134,7 +133,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 		        + databaseName;
 
 		// run the command line string
-		StringBuilder output = new StringBuilder();
+		var output = new StringBuilder();
 		Integer exitValue = -1; // default to a non-zero exit value in case of exceptions
 		try {
 			exitValue = execCmd(tmpOutputFile.getParentFile(), commands.toArray(new String[] {}), output);
@@ -150,7 +149,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 			throw new CustomChangeException("Error while executing command: '" + commands.getFirst() + "'", e);
 		}
 
-		log.debug("Exec called: " + Collections.singletonList(commands));
+		log.debug("Exec called: " + List.of(commands));
 
 		if (exitValue != 0) {
 			log.error("There was an error while running the " + commands.getFirst() + " command.  Command output: "
@@ -174,7 +173,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 	 * @return
 	 */
 	private String fixWindowsPathHack(String path) {
-		StringBuilder returnedPath = new StringBuilder();
+		var returnedPath = new StringBuilder();
 		path = path.replace("\\", "/"); // so java doesn't freak out with windows backslashes
 		for (String pathPart : path.split("/")) {
 			if (pathPart.contains(" ")) {
@@ -212,7 +211,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 
 		out.append("Normal cmd output:\n");
 		Reader reader = new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8);
-		BufferedReader input = new BufferedReader(reader);
+		var input = new BufferedReader(reader);
 		int readChar;
 		while ((readChar = input.read()) != -1) {
 			out.append((char) readChar);

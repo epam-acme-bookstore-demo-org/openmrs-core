@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +111,7 @@ public class MemoryAppender extends AbstractAppender {
 
 		LogEvent[] events = buffer.toArray(new LogEvent[0]);
 		if (events.length == 0) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		return Arrays.stream(events).filter(Objects::nonNull).map(((StringLayout) getLayout())::toSerializable)

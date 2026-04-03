@@ -442,7 +442,7 @@ public class Person extends BaseChangeableOpenmrsData {
 	 * @return list attributes
 	 */
 	public List<PersonAttribute> getActiveAttributes() {
-		List<PersonAttribute> attrs = new ArrayList<>();
+		var attrs = new ArrayList<PersonAttribute>();
 		for (PersonAttribute attr : getAttributes()) {
 			if (!attr.getVoided()) {
 				attrs.add(attr);
@@ -620,7 +620,7 @@ public class Person extends BaseChangeableOpenmrsData {
 	 * @param attributeName
 	 */
 	public List<PersonAttribute> getAttributes(String attributeName) {
-		List<PersonAttribute> ret = new ArrayList<>();
+		var ret = new ArrayList<PersonAttribute>();
 
 		for (PersonAttribute attribute : getActiveAttributes()) {
 			PersonAttributeType type = attribute.getAttributeType();
@@ -642,7 +642,7 @@ public class Person extends BaseChangeableOpenmrsData {
 	 * @param attributeTypeId
 	 */
 	public List<PersonAttribute> getAttributes(Integer attributeTypeId) {
-		List<PersonAttribute> ret = new ArrayList<>();
+		var ret = new ArrayList<PersonAttribute>();
 
 		for (PersonAttribute attribute : getActiveAttributes()) {
 			if (attributeTypeId.equals(attribute.getAttributeType().getPersonAttributeTypeId())) {
@@ -660,7 +660,7 @@ public class Person extends BaseChangeableOpenmrsData {
 	 * @param personAttributeType
 	 */
 	public List<PersonAttribute> getAttributes(PersonAttributeType personAttributeType) {
-		List<PersonAttribute> ret = new ArrayList<>();
+		var ret = new ArrayList<PersonAttribute>();
 		for (PersonAttribute attribute : getAttributes()) {
 			if (personAttributeType.equals(attribute.getAttributeType()) && !attribute.getVoided()) {
 				ret.add(attribute);
@@ -716,7 +716,7 @@ public class Person extends BaseChangeableOpenmrsData {
 	 * @return Returns a string with all the attributes
 	 */
 	public String printAttributes() {
-		StringBuilder s = new StringBuilder("");
+		var s = new StringBuilder("");
 
 		for (PersonAttribute attribute : getAttributes()) {
 			s.append(attribute.getAttributeType()).append(" : ").append(attribute.getValue()).append(" : voided? ")

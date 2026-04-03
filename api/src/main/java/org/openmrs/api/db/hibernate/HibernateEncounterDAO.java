@@ -10,7 +10,6 @@
 package org.openmrs.api.db.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +125,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 		CriteriaQuery<Encounter> cq = cb.createQuery(Encounter.class);
 		Root<Encounter> encounter = cq.from(Encounter.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (searchCriteria.getPatient() != null && searchCriteria.getPatient().getPatientId() != null) {
 			predicates.add(cb.equal(encounter.get("patient"), searchCriteria.getPatient()));
@@ -293,7 +292,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 	public List<Encounter> getEncounters(String query, Integer patientId, Integer start, Integer length,
 	        boolean includeVoided) {
 		if (StringUtils.isBlank(query) && patientId == null) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		Session session = sessionFactory.getCurrentSession();
@@ -378,12 +377,12 @@ public class HibernateEncounterDAO implements EncounterDAO {
 	 * @return a map of patient with their encounters
 	 */
 	private List<Predicate> createEncounterPredicates(CriteriaBuilder cb, Root<Encounter> root, Cohort patients) {
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(cb.isFalse(root.get("voided")));
 
 		// only include this where clause if patients were passed in
 		if (patients != null) {
-			ArrayList<Integer> patientIds = new ArrayList<>();
+			var patientIds = new ArrayList<Integer>();
 			patients.getMemberships().forEach(m -> patientIds.add(m.getPatientId()));
 			predicates.add(root.get("patient").get("personId").in(patientIds));
 		}
@@ -420,7 +419,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 	 */
 	private QueryResult createEncounterByQueryPredicates(CriteriaBuilder cb, Root<Encounter> encounterRoot, String query,
 	        Integer patientId, boolean includeVoided, boolean orderByNames) {
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (!includeVoided) {
 			predicates.add(cb.isFalse(encounterRoot.get("voided")));
@@ -448,7 +447,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 				Predicate providerIdentifierPredicate = cb.like(cb.lower(providerJoin.get("identifier")),
 				    queryMatchingPattern);
 
-				List<Predicate> orPredicates = new ArrayList<>();
+				var orPredicates = new ArrayList<Predicate>();
 				orPredicates.add(locationNamePredicate);
 				orPredicates.add(encounterTypeNamePredicate);
 				orPredicates.add(formNamePredicate);
@@ -456,7 +455,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 				orPredicates.add(providerIdentifierPredicate);
 
 				String[] splitNames = query.split(" ");
-				List<Predicate> personNamePredicates = new ArrayList<>();
+				var personNamePredicates = new ArrayList<Predicate>();
 				for (String splitName : splitNames) {
 					String splitNamePattern = MatchMode.ANYWHERE.toLowerCasePattern(splitName);
 					personNamePredicates.add(cb.like(cb.lower(personNameJoin.get("givenName")), splitNamePattern));
@@ -483,7 +482,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 
 				predicates.add(cb.or(orPredicates.toArray(new Predicate[] {})));
 			}
-			return new QueryResult(predicates, Collections.emptyList());
+			return new QueryResult(predicates, List.of());
 		} else {
 			//As identifier could be all alpha, no heuristic here will work in determining intent of user for querying by name versus identifier
 			//So search by both!
@@ -504,7 +503,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 		CriteriaQuery<Encounter> cq = cb.createQuery(Encounter.class);
 		Root<Encounter> root = cq.from(Encounter.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(cb.equal(root.get("visit"), visit));
 
 		if (!includeVoided) {
@@ -598,7 +597,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 		CriteriaQuery<Encounter> cq = cb.createQuery(Encounter.class);
 		Root<Encounter> root = cq.from(Encounter.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(cb.equal(root.get("patient"), patient));
 		predicates.add(cb.isNull(root.get("visit")));
 		predicates.add(cb.isFalse(root.get("voided")));
@@ -641,7 +640,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 
 		if (!emptyVisits.isEmpty()) {
 			for (Visit emptyVisit : emptyVisits) {
-				Encounter mockEncounter = new Encounter();
+				var mockEncounter = new Encounter();
 				mockEncounter.setVisit(emptyVisit);
 				encounters.add(mockEncounter);
 			}
@@ -700,7 +699,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 
 	private List<Predicate> createEmptyVisitsByPatientPredicates(CriteriaBuilder cb, Root<Visit> root, Patient patient,
 	        boolean includeVoided, String query) {
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		predicates.add(cb.equal(root.get("patient"), patient));
 		predicates.add(cb.isEmpty(root.get("encounters")));
@@ -722,7 +721,7 @@ public class HibernateEncounterDAO implements EncounterDAO {
 
 	private List<Predicate> createEncountersByPatientPredicates(CriteriaBuilder cb, Root<Encounter> root, Patient patient,
 	        boolean includeVoided, String query) {
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		predicates.add(cb.equal(root.get("patient"), patient));
 

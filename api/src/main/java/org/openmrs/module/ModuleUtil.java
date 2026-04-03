@@ -88,11 +88,11 @@ public class ModuleUtil {
 			log.debug("Starting all modules in this list: " + moduleListString);
 
 			String[] moduleArray = moduleListString.split(" ");
-			List<File> modulesToLoad = new ArrayList<>();
+			var modulesToLoad = new ArrayList<File>();
 
 			for (String modulePath : moduleArray) {
 				if (modulePath != null && modulePath.length() > 0) {
-					File file = new File(modulePath);
+					var file = new File(modulePath);
 					if (file.exists()) {
 						modulesToLoad.add(file);
 					} else {
@@ -107,7 +107,7 @@ public class ModuleUtil {
 								File expandedFile = File.createTempFile(file.getName() + "-", ".omod", new File(tmpDir));
 
 								// pull the name from the absolute path load attempt
-								FileOutputStream outStream = new FileOutputStream(expandedFile, false);
+								var outStream = new FileOutputStream(expandedFile, false);
 
 								// do the actual file copying
 								OpenmrsUtil.copyFile(stream, outStream);
@@ -447,8 +447,8 @@ public class ModuleUtil {
 				return 0;
 			}
 
-			List<String> versionANumbers = new ArrayList<>();
-			List<String> versionBNumbers = new ArrayList<>();
+			var versionANumbers = new ArrayList<String>();
+			var versionBNumbers = new ArrayList<String>();
 			String qualifierSeparator = "-";
 
 			// strip off any qualifier e.g. "-SNAPSHOT"
@@ -475,8 +475,8 @@ public class ModuleUtil {
 			}
 
 			for (int x = 0; x < versionANumbers.size(); x++) {
-				String verAPartString = versionANumbers.get(x).trim();
-				String verBPartString = versionBNumbers.get(x).trim();
+				String verAPartString = versionANumbers.get(x).strip();
+				String verBPartString = versionBNumbers.get(x).strip();
 				Long verAPart = NumberUtils.toLong(verAPartString, 0);
 				Long verBPart = NumberUtils.toLong(verBPartString, 0);
 
@@ -530,7 +530,7 @@ public class ModuleUtil {
 			    ModuleConstants.REPOSITORY_FOLDER_PROPERTY_DEFAULT);
 		}
 		// try to load the repository folder straight away.
-		File folder = new File(folderName);
+		var folder = new File(folderName);
 
 		// if the property wasn't a full path already, assume it was intended to be a folder in the
 		// application directory
@@ -654,7 +654,7 @@ public class ModuleUtil {
 	private static void expand(InputStream input, String fileDir, String name) throws IOException {
 		log.debug("expanding: {}", name);
 
-		File file = new File(fileDir, name);
+		var file = new File(fileDir, name);
 
 		if (!file.toPath().normalize().startsWith(fileDir)) {
 			throw new UnsupportedOperationException("Attempted to write file '" + name
@@ -793,7 +793,7 @@ public class ModuleUtil {
 			if (StringUtils.isNotEmpty(updateURL)) {
 				try {
 					// get the contents pointed to by the url
-					URL url = new URL(updateURL);
+					var url = new URL(updateURL);
 					if (!url.toString().endsWith(ModuleConstants.UPDATE_FILE_NAME)) {
 						log.warn("Illegal url: " + url);
 						continue;
@@ -806,7 +806,7 @@ public class ModuleUtil {
 					}
 
 					// process and parse the contents
-					UpdateFileParser parser = new UpdateFileParser(content);
+					var parser = new UpdateFileParser(content);
 					parser.parse();
 
 					log.debug("Update for mod: " + mod.getModuleId() + " compareVersion result: "
@@ -1077,7 +1077,7 @@ public class ModuleUtil {
 	 */
 	public static List<String> getMandatoryModules() {
 
-		List<String> mandatoryModuleIds = new ArrayList<>();
+		var mandatoryModuleIds = new ArrayList<String>();
 
 		try {
 			List<GlobalProperty> props = Context.getAdministrationService().getGlobalPropertiesBySuffix(".mandatory");
@@ -1169,53 +1169,38 @@ public class ModuleUtil {
 
 		// End early if we're given a non jar file
 		if (!file.getName().endsWith(".jar")) {
-			return Collections.emptySet();
+			return Set.of();
 		}
 
-		Set<String> packagesProvided = new HashSet<>();
+		var packagesProvided = new HashSet<String>();
 
-		JarFile jar = null;
-		try {
-			jar = new JarFile(file);
-
+		try (var jar = new JarFile(file)) {
 			Enumeration<JarEntry> jarEntries = jar.entries();
 			while (jarEntries.hasMoreElements()) {
-				JarEntry jarEntry = jarEntries.nextElement();
+				var jarEntry = jarEntries.nextElement();
 				if (jarEntry.isDirectory()) {
 					// skip over directory entries, we only care about files
 					continue;
 				}
-				String name = jarEntry.getName();
+				var name = jarEntry.getName();
 
 				// Skip over some folders in the jar/omod
 				if (name.startsWith("lib") || name.startsWith("META-INF") || name.startsWith("web/module")) {
 					continue;
 				}
 
-				Integer indexOfLastSlash = name.lastIndexOf("/");
+				int indexOfLastSlash = name.lastIndexOf("/");
 				if (indexOfLastSlash <= 0) {
 					continue;
 				}
-				String packageName = name.substring(0, indexOfLastSlash);
-
-				packageName = packageName.replaceAll("/", ".");
+				var packageName = name.substring(0, indexOfLastSlash).replaceAll("/", ".");
 
 				if (packagesProvided.add(packageName) && log.isTraceEnabled()) {
 					log.trace("Adding module's jarentry with package: " + packageName);
 				}
 			}
-
-			jar.close();
 		} catch (IOException e) {
 			log.error("Error while reading file: " + file.getAbsolutePath(), e);
-		} finally {
-			if (jar != null) {
-				try {
-					jar.close();
-				} catch (IOException e) {
-					// Ignore quietly
-				}
-			}
 		}
 
 		return packagesProvided;

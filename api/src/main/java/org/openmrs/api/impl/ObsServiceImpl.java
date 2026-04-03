@@ -457,11 +457,11 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService, Re
 		// search on patient identifier
 		PatientService ps = Context.getPatientService();
 		List<Patient> patients = ps.getPatients(searchString);
-		List<Person> persons = new ArrayList<>(patients);
+		var persons = new ArrayList<Person>(patients);
 
 		// try to search on encounterId
 		EncounterService es = Context.getEncounterService();
-		List<Encounter> encounters = new ArrayList<>();
+		var encounters = new ArrayList<Encounter>();
 		try {
 			Encounter e = es.getEncounter(Integer.valueOf(searchString));
 			if (e != null) {
@@ -497,7 +497,7 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService, Re
 	@Override
 	@Transactional(readOnly = true)
 	public List<Obs> getObservationsByPerson(Person who) {
-		List<Person> whom = new ArrayList<>();
+		var whom = new ArrayList<Person>();
 		whom.add(who);
 		return Context.getObsService().getObservations(whom, null, null, null, null, null, null, null, null, null, null,
 		    false);
@@ -510,11 +510,11 @@ public class ObsServiceImpl extends BaseOpenmrsService implements ObsService, Re
 	@Override
 	@Transactional(readOnly = true)
 	public List<Obs> getObservationsByPersonAndConcept(Person who, Concept question) throws APIException {
-		List<Person> whom = new ArrayList<>();
+		var whom = new ArrayList<Person>();
 		if (who != null && who.getPersonId() != null) {
 			whom.add(who);
 		}
-		List<Concept> questions = new ArrayList<>();
+		var questions = new ArrayList<Concept>();
 		questions.add(question);
 
 		return Context.getObsService().getObservations(whom, null, questions, null, null, null, null, null, null, null, null,

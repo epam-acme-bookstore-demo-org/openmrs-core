@@ -169,9 +169,9 @@ public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 			if (classAndLevel.length == 0) {
 				break;
 			} else if (classAndLevel.length == 1) {
-				applyLogLevel(configuration, OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].trim());
+				applyLogLevel(configuration, OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].strip());
 			} else {
-				applyLogLevel(configuration, classAndLevel[0].trim(), classAndLevel[1].trim());
+				applyLogLevel(configuration, classAndLevel[0].strip(), classAndLevel[1].strip());
 			}
 		}
 	}

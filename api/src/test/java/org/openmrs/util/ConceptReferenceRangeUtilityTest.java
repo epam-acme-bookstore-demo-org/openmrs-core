@@ -12,6 +12,7 @@ package org.openmrs.util;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeUtils;
@@ -262,9 +263,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 		Mockito.when(conceptService.getConceptByReference("CIEL:1234")).thenReturn(concept);
 		Mockito.when(conceptService.getConceptByReference("CIEL:1000")).thenReturn(valueCoded);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility
 		        .evaluateCriteria("$fn.isObsValueCodedAnswer('CIEL:1234', $patient, 'CIEL:1000')", obs));
@@ -282,9 +282,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility.evaluateCriteria("$patient.getGender().equals('F') "
 		        + "&& $fn.getLatestObs('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $patient).getValueText().equals('PREGNANT')",
@@ -362,9 +361,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility.evaluateCriteria(
 		    "$fn.getCurrentObs('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $obs).getValueNumeric() >= 20", obs));
@@ -387,15 +385,11 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 		Mockito.when(conceptService.getConceptByReference("a09ab2c5-878e-4905-b25d-5784167d0216")).thenReturn(heightConcept);
 		Mockito.when(conceptService.getConceptByReference("c607c80f-1ea9-4da3-bb88-6276ce8868dd")).thenReturn(weightConcept);
 
-		Mockito.when(
-		    obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(heightConcept),
-		        null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(heightObservation));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(heightConcept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(heightObservation));
 
-		Mockito.when(
-		    obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(weightConcept),
-		        null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(weightObservation));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(weightConcept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(weightObservation));
 
 		assertTrue(conceptReferenceRangeUtility.evaluateCriteria(
 		    "($fn.getCurrentObs('c607c80f-1ea9-4da3-bb88-6276ce8868dd', $obs).getValueNumeric() "
@@ -420,9 +414,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility
 		        .evaluateCriteria("$fn.getObsDays('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $patient) == 90", obs));
@@ -441,9 +434,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility
 		        .evaluateCriteria("$fn.getObsWeeks('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $patient) == 32", obs));
@@ -462,9 +454,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility
 		        .evaluateCriteria("$fn.getObsMonths('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $patient) == 9", obs));
@@ -483,9 +474,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility
 		        .evaluateCriteria("$fn.getObsYears('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $patient) == 18", obs));
@@ -501,9 +491,8 @@ class ConceptReferenceRangeUtilityTest extends BaseContextSensitiveTest {
 
 		Mockito.when(conceptService.getConceptByReference(Mockito.anyString())).thenReturn(concept);
 
-		Mockito.when(obsService.getObservations(Collections.singletonList(person), null, Collections.singletonList(concept),
-		    null, null, null, Collections.singletonList("dateCreated"), 1, null, null, null, false))
-		        .thenReturn(Collections.singletonList(obs));
+		Mockito.when(obsService.getObservations(List.of(person), null, List.of(concept), null, null, null,
+		    List.of("dateCreated"), 1, null, null, null, false)).thenReturn(List.of(obs));
 
 		assertTrue(conceptReferenceRangeUtility
 		        .evaluateCriteria("$fn.getObsWeeks('bac25fd5-c143-4e43-bffe-4eb1e7efb6ce', $patient) == -1", obs));

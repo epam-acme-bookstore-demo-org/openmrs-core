@@ -232,7 +232,7 @@ public class OpenmrsClassLoader extends URLClassLoader {
 	 */
 	@Override
 	public Enumeration<URL> findResources(final String name) throws IOException {
-		Set<URI> results = new HashSet<>();
+		var results = new HashSet<URI>();
 		for (ModuleClassLoader classLoader : ModuleFactory.getModuleClassLoaders()) {
 			Enumeration<URL> urls = classLoader.findResources(name);
 			while (urls.hasMoreElements()) {
@@ -292,7 +292,7 @@ public class OpenmrsClassLoader extends URLClassLoader {
 	 */
 	@Override
 	public Enumeration<URL> getResources(String packageName) throws IOException {
-		Set<URI> results = new HashSet<>();
+		var results = new HashSet<URI>();
 		for (ModuleClassLoader classLoader : ModuleFactory.getModuleClassLoaders()) {
 			Enumeration<URL> urls = classLoader.getResources(packageName);
 			while (urls.hasMoreElements()) {
@@ -645,7 +645,7 @@ public class OpenmrsClassLoader extends URLClassLoader {
 		log.debug("jarPath: {}", jarPath);
 		log.debug("filePath: {}", filePath);
 
-		File file = new File(folder, filePath);
+		var file = new File(folder, filePath);
 
 		log.debug("absolute path: {}", file.getAbsolutePath());
 
@@ -655,7 +655,7 @@ public class OpenmrsClassLoader extends URLClassLoader {
 				return file.toURI().toURL();
 			} else {
 				// expand the url and return a url to the temp file
-				File jarFile = new File(jarPath);
+				var jarFile = new File(jarPath);
 				if (!jarFile.exists()) {
 					log.warn("Cannot find jar at: {} for url: {}", jarFile, result);
 					return null;

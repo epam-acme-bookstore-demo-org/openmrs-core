@@ -17,7 +17,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -275,7 +274,7 @@ public class ModuleFactory {
 	 * @return list of modules
 	 */
 	private static List<Module> getModulesThatShouldStart() {
-		List<Module> modules = new ArrayList<>();
+		var modules = new ArrayList<Module>();
 
 		AdministrationService adminService = Context.getAdministrationService();
 
@@ -387,7 +386,7 @@ public class ModuleFactory {
 	 *         1.8, org.rg.patientmatching"
 	 */
 	private static List<String> getMissingRequiredModules(Module module) {
-		List<String> ret = new ArrayList<>();
+		var ret = new ArrayList<String>();
 		for (String moduleName : module.getRequiredModules()) {
 			boolean started = false;
 			for (Module mod : getStartedModules()) {
@@ -419,7 +418,7 @@ public class ModuleFactory {
 			return getLoadedModulesMap().values();
 		}
 
-		return Collections.emptyList();
+		return List.of();
 	}
 
 	/**
@@ -439,7 +438,7 @@ public class ModuleFactory {
 	 * @return map&lt;PackageName, Module&gt;
 	 */
 	public static Map<String, Module> getLoadedModulesMapPackage() {
-		Map<String, Module> map = new HashMap<>();
+		var map = new HashMap<String, Module>();
 		for (Module loadedModule : getLoadedModulesMap().values()) {
 			map.put(loadedModule.getPackageName(), loadedModule);
 		}
@@ -456,11 +455,11 @@ public class ModuleFactory {
 			return getStartedModulesMap().values();
 		}
 
-		return Collections.emptyList();
+		return List.of();
 	}
 
 	public static List<Module> getStartedModulesInOrder() {
-		List<Module> modules = new ArrayList<>();
+		var modules = new ArrayList<Module>();
 		if (actualStartupOrder != null) {
 			for (String moduleId : actualStartupOrder) {
 				modules.add(getStartedModulesMap().get(moduleId));
@@ -773,7 +772,7 @@ public class ModuleFactory {
 
 	private static void registerProvidedPackages(ModuleClassLoader moduleClassLoader) {
 		for (String providedPackage : moduleClassLoader.getProvidedPackages()) {
-			Set<ModuleClassLoader> newSet = new HashSet<>();
+			var newSet = new HashSet<ModuleClassLoader>();
 
 			Set<ModuleClassLoader> set = providedPackages.get(providedPackage);
 			if (set != null) {
@@ -787,7 +786,7 @@ public class ModuleFactory {
 
 	private static void unregisterProvidedPackages(ModuleClassLoader moduleClassLoader) {
 		for (String providedPackage : moduleClassLoader.getProvidedPackages()) {
-			Set<ModuleClassLoader> newSet = new HashSet<>();
+			var newSet = new HashSet<ModuleClassLoader>();
 
 			Set<ModuleClassLoader> set = providedPackages.get(providedPackage);
 			if (set != null) {
@@ -802,7 +801,7 @@ public class ModuleFactory {
 	public static Set<ModuleClassLoader> getModuleClassLoadersForPackage(String packageName) {
 		Set<ModuleClassLoader> set = providedPackages.get(packageName);
 		if (set == null) {
-			return Collections.emptySet();
+			return Set.of();
 		} else {
 			return new HashSet<>(set);
 		}
@@ -893,7 +892,7 @@ public class ModuleFactory {
 				log.debug("Executing sql: " + sql);
 				String[] sqlStatements = sql.split(";");
 				for (String sqlStatement : sqlStatements) {
-					if (sqlStatement.trim().length() > 0) {
+					if (!sqlStatement.isBlank()) {
 						as.executeSQL(sqlStatement, false);
 					}
 				}
@@ -1010,7 +1009,7 @@ public class ModuleFactory {
 	public static List<Module> stopModule(Module mod, boolean skipOverStartedProperty, boolean isFailedStartup)
 	        throws ModuleMustStartException {
 
-		List<Module> dependentModulesStopped = new ArrayList<>();
+		var dependentModulesStopped = new ArrayList<Module>();
 
 		if (mod != null) {
 
@@ -1260,7 +1259,7 @@ public class ModuleFactory {
 	 */
 	public static List<Privilege> getPrivileges() {
 
-		List<Privilege> privileges = new ArrayList<>();
+		var privileges = new ArrayList<Privilege>();
 
 		for (Module mod : getStartedModules()) {
 			privileges.addAll(mod.getPrivileges());
@@ -1278,7 +1277,7 @@ public class ModuleFactory {
 	 */
 	public static List<GlobalProperty> getGlobalProperties() {
 
-		List<GlobalProperty> globalProperties = new ArrayList<>();
+		var globalProperties = new ArrayList<GlobalProperty>();
 
 		for (Module mod : getStartedModules()) {
 			globalProperties.addAll(mod.getGlobalProperties());
@@ -1355,7 +1354,7 @@ public class ModuleFactory {
 			return classLoaders.values();
 		}
 
-		return Collections.emptyList();
+		return List.of();
 	}
 
 	/**
@@ -1367,7 +1366,7 @@ public class ModuleFactory {
 		// because the OpenMRS classloader depends on this static function, it is weirdly possible for this to get called
 		// as this classfile is loaded, in which case, the static final field can be null.
 		if (moduleClassLoaders == null) {
-			return Collections.emptyMap();
+			return Map.of();
 		}
 
 		return moduleClassLoaders.asMap();

@@ -12,7 +12,6 @@ package org.openmrs.module;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
 
 import org.openmrs.util.OpenmrsConstants;
 import org.slf4j.Logger;
@@ -61,15 +60,13 @@ public class UpdateFileParser {
 	 * @throws ModuleException
 	 */
 	public void parse() throws ModuleException {
-		StringReader stringReader = null;
-		try {
+		try (var stringReader = new StringReader(content)) {
 			Document updateDoc;
 			try {
-				stringReader = new StringReader(content);
-				InputSource inputSource = new InputSource(stringReader);
+				var inputSource = new InputSource(stringReader);
 				inputSource.setSystemId("./");
 
-				DocumentBuilder db = createDocumentBuilder();
+				var db = createDocumentBuilder();
 				updateDoc = db.parse(inputSource);
 			} catch (Exception e) {
 				log.warn("Unable to parse content");
@@ -116,10 +113,6 @@ public class UpdateFileParser {
 		} catch (ModuleException e) {
 			// rethrow the moduleException
 			throw e;
-		} finally {
-			if (stringReader != null) {
-				stringReader.close();
-			}
 		}
 
 	}

@@ -13,7 +13,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -149,7 +148,7 @@ public class HibernateAdministrationDAO implements AdministrationDAO, Applicatio
 	public List<GlobalProperty> getGlobalPropertiesByPrefix(String prefix) {
 		if (prefix == null) {
 			log.warn("Attempted to get global properties with a null prefix");
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		Session session = sessionFactory.getCurrentSession();
@@ -169,7 +168,7 @@ public class HibernateAdministrationDAO implements AdministrationDAO, Applicatio
 	public List<GlobalProperty> getGlobalPropertiesBySuffix(String suffix) {
 		if (suffix == null) {
 			log.warn("Attempted to get global properties with a null suffix");
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		Session session = sessionFactory.getCurrentSession();
@@ -335,7 +334,7 @@ public class HibernateAdministrationDAO implements AdministrationDAO, Applicatio
 	 * @return list of compatible validators
 	 */
 	protected List<Validator> getValidators(Object obj) {
-		List<Validator> matchingValidators = new ArrayList<>();
+		var matchingValidators = new ArrayList<Validator>();
 
 		List<Validator> validators = HandlerUtil.getHandlersForType(Validator.class, obj.getClass());
 

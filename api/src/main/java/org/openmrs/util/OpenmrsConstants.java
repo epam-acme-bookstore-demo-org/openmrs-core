@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,8 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import liquibase.GlobalConfiguration;
-
-import static java.util.Arrays.asList;
 
 /**
  * Constants used in OpenMRS. Contents built from build properties (version, version_short, and
@@ -112,7 +109,7 @@ public final class OpenmrsConstants {
 		}
 
 		try {
-			Properties props = new Properties();
+			var props = new Properties();
 			props.load(file);
 
 			file.close();
@@ -181,7 +178,7 @@ public final class OpenmrsConstants {
 	 * @return Collection&lt;String&gt; of words that are ignored
 	 */
 	public static final Collection<String> STOP_WORDS() {
-		List<String> stopWords = new ArrayList<>();
+		var stopWords = new ArrayList<String>();
 		stopWords.add("A");
 		stopWords.add("AND");
 		stopWords.add("AT");
@@ -206,7 +203,7 @@ public final class OpenmrsConstants {
 	@Deprecated
 	@SuppressWarnings("squid:S00100")
 	public static final Map<String, String> GENDER() {
-		Map<String, String> genders = new LinkedHashMap<>();
+		var genders = new LinkedHashMap<String, String>();
 		genders.put("M", "Male");
 		genders.put("F", "Female");
 		return genders;
@@ -215,7 +212,7 @@ public final class OpenmrsConstants {
 	/**
 	 * A list of 1-letter strings representing genders
 	 */
-	public static final List<String> GENDERS = Collections.unmodifiableList(asList("M", "F"));
+	public static final List<String> GENDERS = List.of("M", "F");
 
 	/**
 	 * These roles are given to a user automatically and cannot be assigned
@@ -223,7 +220,7 @@ public final class OpenmrsConstants {
 	 * @return <code>Collection&lt;String&gt;</code> of the auto-assigned roles
 	 */
 	public static final Collection<String> AUTO_ROLES() {
-		List<String> roles = new ArrayList<>();
+		var roles = new ArrayList<String>();
 
 		roles.add(RoleConstants.ANONYMOUS);
 		roles.add(RoleConstants.AUTHENTICATED);
@@ -668,7 +665,7 @@ public final class OpenmrsConstants {
 	 * @return List&lt;GlobalProperty&gt; of the core global properties
 	 */
 	public static final List<GlobalProperty> CORE_GLOBAL_PROPERTIES() {
-		List<GlobalProperty> props = new ArrayList<>();
+		var props = new ArrayList<GlobalProperty>();
 
 		props.add(new GlobalProperty("use_patient_attribute.healthCenter", "false",
 		        "Indicates whether or not the 'health center' attribute is shown when viewing/searching for patients",
@@ -1057,7 +1054,7 @@ public final class OpenmrsConstants {
 	public static final String CONCEPT_PROPOSAL_REJECT = "REJECT";
 
 	public static final Collection<String> CONCEPT_PROPOSAL_STATES() {
-		Collection<String> states = new ArrayList<>();
+		var states = new ArrayList<String>();
 
 		states.add(CONCEPT_PROPOSAL_UNMAPPED);
 		states.add(CONCEPT_PROPOSAL_CONCEPT);

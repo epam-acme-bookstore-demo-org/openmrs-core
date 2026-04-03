@@ -37,10 +37,10 @@ public class InsertWithUuidDataChangeDatabaseIT extends DatabaseIT {
 		Map<String, String> actual = getNamesWithUuids();
 
 		assertEquals(3, actual.size());
-		assertEquals(expected.get("alpha"), actual.get("alpha").trim());
-		assertEquals(expected.get("bravo"), actual.get("bravo").trim());
+		assertEquals(expected.get("alpha"), actual.get("alpha").strip());
+		assertEquals(expected.get("bravo"), actual.get("bravo").strip());
 
-		String uuid = actual.get("charlie").trim();
+		String uuid = actual.get("charlie").strip();
 		assertNotNull(uuid);
 		try {
 			UUID.fromString(uuid);

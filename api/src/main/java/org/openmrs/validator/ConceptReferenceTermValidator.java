@@ -92,7 +92,7 @@ public class ConceptReferenceTermValidator implements Validator {
 			return;
 		}
 
-		code = code.trim();
+		code = code.strip();
 		//Ensure that there are no terms with the same code in the same source
 		ConceptReferenceTerm termWithDuplicateCode = Context.getConceptService().getConceptReferenceTermByCode(code,
 		    conceptReferenceTerm.getConceptSource());

@@ -31,11 +31,11 @@ public class OpenmrsMetadataSaveHandler implements SaveHandler<OpenmrsMetadata> 
 	@Override
 	public void handle(OpenmrsMetadata object, User creator, Date dateCreated, String other) {
 		if (object.getName() != null) {
-			object.setName(object.getName().trim());
+			object.setName(object.getName().strip());
 		}
 
 		if (object.getDescription() != null) {
-			object.setDescription(object.getDescription().trim());
+			object.setDescription(object.getDescription().strip());
 		}
 	}
 

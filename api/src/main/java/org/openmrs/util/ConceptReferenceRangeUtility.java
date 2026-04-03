@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -143,9 +142,8 @@ public class ConceptReferenceRangeUtility {
 		Concept concept = Context.getConceptService().getConceptByReference(conceptRef);
 
 		if (concept != null) {
-			List<Obs> observations = Context.getObsService().getObservations(Collections.singletonList(person), null,
-			    Collections.singletonList(concept), null, null, null, Collections.singletonList("dateCreated"), 1, null,
-			    null, null, false);
+			List<Obs> observations = Context.getObsService().getObservations(List.of(person), null, List.of(concept), null,
+			    null, null, List.of("dateCreated"), 1, null, null, null, false);
 
 			return observations.isEmpty() ? null : observations.getFirst();
 		}

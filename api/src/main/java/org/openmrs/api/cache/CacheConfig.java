@@ -81,19 +81,19 @@ public class CacheConfig {
 	@Bean(name = "apiCacheManager", destroyMethod = "stop")
 	public SpringEmbeddedCacheManager apiCacheManager() throws Exception {
 		if (StringUtils.isBlank(cacheConfig)) {
-			String local = "local".equalsIgnoreCase(cacheType.trim()) ? "-local" : "";
+			String local = "local".equalsIgnoreCase(cacheType.strip()) ? "-local" : "";
 			cacheConfig = "infinispan-api" + local + ".xml";
 		}
 
-		ParserRegistry parser = new ParserRegistry();
+		var parser = new ParserRegistry();
 		ConfigurationBuilderHolder baseConfigBuilder = parser.parseFile(cacheConfig);
-		if (cacheType.trim().equals("cluster")) {
+		if (cacheType.strip().equals("cluster")) {
 			jChannelConfig = getJChannelConfig(cacheStack);
-			JChannel jchannel = new JChannel(jChannelConfig);
+			var jchannel = new JChannel(jChannelConfig);
 			Class<? extends TP> protocolClass = TCP.class;
-			if (cacheStack.trim().isEmpty() || cacheStack.trim().equals("udp")) {
+			if (cacheStack.isBlank() || cacheStack.strip().equals("udp")) {
 				protocolClass = UDP.class;
-			} else if (cacheStack.trim().equals("tunnel")) {
+			} else if (cacheStack.strip().equals("tunnel")) {
 				protocolClass = TUNNEL.class;
 			}
 			TP protocol = jchannel.getProtocolStack().findProtocol(protocolClass);
@@ -105,7 +105,7 @@ public class CacheConfig {
 				apiCacheBindPort = String.valueOf(Integer.parseInt(hibernateCacheBindPort) + 1);
 			}
 			protocol.setBindPort(Integer.parseInt(apiCacheBindPort));
-			JGroupsTransport transport = new JGroupsTransport(jchannel);
+			var transport = new JGroupsTransport(jchannel);
 			baseConfigBuilder.getGlobalConfigurationBuilder().transport().clusterName("infinispan-api-cluster")
 			        .transport(transport);
 		}
@@ -114,10 +114,10 @@ public class CacheConfig {
 		cacheType = StringUtils.removeEnd(cacheType, "-configuration");
 		cacheType = CaseUtils.toCamelCase(cacheType, false, '-');
 
-		DumperOptions options = new DumperOptions();
+		var options = new DumperOptions();
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		options.setPrettyFlow(true);
-		Yaml yaml = new Yaml(options);
+		var yaml = new Yaml(options);
 
 		for (URL configFile : getCacheConfigurations()) {
 			// Apply cache type for caches using the 'entity' template
@@ -128,7 +128,7 @@ public class CacheConfig {
 			parser.parse(fullConfig, baseConfigBuilder, ConfigurationResourceResolver.DEFAULT, MediaType.APPLICATION_YAML);
 		}
 
-		DefaultCacheManager cacheManager = new DefaultCacheManager(baseConfigBuilder, true);
+		var cacheManager = new DefaultCacheManager(baseConfigBuilder, true);
 		return new SpringEmbeddedCacheManager(cacheManager);
 	}
 
@@ -136,10 +136,10 @@ public class CacheConfig {
 	        throws IOException {
 		Map<String, Object> loadedConfig = yaml.load(configFile.openStream());
 
-		Map<String, Object> config = new LinkedHashMap<>();
-		Map<String, Object> cacheContainer = new LinkedHashMap<>();
-		Map<String, Object> caches = new LinkedHashMap<>();
-		Map<String, Object> cacheList = new LinkedHashMap<>();
+		var config = new LinkedHashMap<String, Object>();
+		var cacheContainer = new LinkedHashMap<String, Object>();
+		var caches = new LinkedHashMap<String, Object>();
+		var cacheList = new LinkedHashMap<String, Object>();
 		config.put("infinispan", cacheContainer);
 		cacheContainer.put("cacheContainer", caches);
 
@@ -149,7 +149,7 @@ public class CacheConfig {
 			@SuppressWarnings("unchecked")
 			Map<String, Object> value = (Map<String, Object>) entry.getValue();
 			if ("entity".equals(value.get("configuration"))) {
-				Map<Object, Object> cache = new LinkedHashMap<>();
+				var cache = new LinkedHashMap<Object, Object>();
 				cache.put(cacheType, value);
 				if (!skipCaches.contains(entry.getKey())) {
 					cacheList.put(entry.getKey(), cache);
@@ -177,7 +177,7 @@ public class CacheConfig {
 			throw new IllegalStateException("Unable to find cache configurations", e);
 		}
 
-		List<URL> files = new ArrayList<>();
+		var files = new ArrayList<URL>();
 		for (Resource configResource : configResources) {
 			try {
 				URL file = configResource.getURL();
@@ -191,6 +191,6 @@ public class CacheConfig {
 	}
 
 	public String getJChannelConfig(String cacheStack) {
-		return switch(cacheStack.trim()){case"tcp"->"default-configs/default-jgroups-tcp.xml";case"kubernetes"->"default-configs/default-jgroups-kubernetes.xml";case"google"->"default-configs/default-jgroups-google.xml";case"tunnel"->"default-configs/default-jgroups-tunnel.xml";case"ec2"->"default-configs/default-jgroups-ec2.xml";case"azure"->"default-configs/default-jgroups-azure.xml";default->"default-configs/default-jgroups-udp.xml";};
+		return switch(cacheStack.strip()){case"tcp"->"default-configs/default-jgroups-tcp.xml";case"kubernetes"->"default-configs/default-jgroups-kubernetes.xml";case"google"->"default-configs/default-jgroups-google.xml";case"tunnel"->"default-configs/default-jgroups-tunnel.xml";case"ec2"->"default-configs/default-jgroups-ec2.xml";case"azure"->"default-configs/default-jgroups-azure.xml";default->"default-configs/default-jgroups-udp.xml";};
 	}
 }

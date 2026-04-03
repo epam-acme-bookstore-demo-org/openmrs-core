@@ -529,8 +529,8 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 				if (!StringUtils.isBlank(allowedLocaleStr)) {
 					String[] localesArray = allowedLocaleStr.split(",");
 					for (String localeStr : localesArray) {
-						if (localeStr.trim().length() > 1) {
-							allowedLocales.add(LocaleUtility.fromSpecification(localeStr.trim()));
+						if (localeStr.strip().length() > 1) {
+							allowedLocales.add(LocaleUtility.fromSpecification(localeStr.strip()));
 						} else {
 							updateWarnings.add(
 							    "'" + localeStr + "' is an invalid value for the global property locale.allowed.list");

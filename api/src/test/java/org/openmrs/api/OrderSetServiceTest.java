@@ -11,7 +11,6 @@ package org.openmrs.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -360,7 +359,7 @@ public class OrderSetServiceTest extends BaseContextSensitiveTest {
 		orderSetMember.setRetired(orderSetMemberRetired);
 		orderSetMember.setOrderSet(orderSet);
 
-		List<OrderSetMember> orderSetMembers = new ArrayList<>(Collections.singletonList(orderSetMember));
+		List<OrderSetMember> orderSetMembers = new ArrayList<>(List.of(orderSetMember));
 		orderSet.setOrderSetMembers(orderSetMembers);
 		orderSet.setCreator(new User(1));
 		orderSet.setDateCreated(new Date());

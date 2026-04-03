@@ -12,7 +12,6 @@ package org.openmrs.api.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -262,11 +261,11 @@ public class VisitServiceImpl extends BaseOpenmrsService implements VisitService
 	public List<Visit> getVisitsByPatient(Patient patient) throws APIException {
 		//Don't bother to hit the database
 		if (patient == null || patient.getId() == null) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
-		return Context.getVisitService().getVisits(null, Collections.singletonList(patient), null, null, null, null, null,
-		    null, null, true, false);
+		return Context.getVisitService().getVisits(null, List.of(patient), null, null, null, null, null, null, null, true,
+		    false);
 	}
 
 	/**
@@ -286,11 +285,11 @@ public class VisitServiceImpl extends BaseOpenmrsService implements VisitService
 	public List<Visit> getVisitsByPatient(Patient patient, boolean includeInactive, boolean includeVoided)
 	        throws APIException {
 		if (patient == null || patient.getId() == null) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
-		return dao.getVisits(null, Collections.singletonList(patient), null, null, null, null, null, null, null,
-		    includeInactive, includeVoided);
+		return dao.getVisits(null, List.of(patient), null, null, null, null, null, null, null, includeInactive,
+		    includeVoided);
 	}
 
 	/**
@@ -379,7 +378,7 @@ public class VisitServiceImpl extends BaseOpenmrsService implements VisitService
 		}
 
 		int counter = 0;
-		Date stopDate = new Date();
+		var stopDate = new Date();
 		Visit nextVisit = dao.getNextVisit(null, visitTypesToStop, maximumStartDate);
 		while (nextVisit != null) {
 			nextVisit.setStopDatetime(stopDate);
@@ -398,7 +397,7 @@ public class VisitServiceImpl extends BaseOpenmrsService implements VisitService
 	private List<VisitType> getVisitTypesToStop() {
 		String gpValue = Context.getAdministrationService().getGlobalProperty(OpenmrsConstants.GP_VISIT_TYPES_TO_AUTO_CLOSE);
 		if (StringUtils.isBlank(gpValue)) {
-			return Collections.emptyList();
+			return List.of();
 		} else {
 			String[] visitTypeNames = getVisitTypeNamesFromGlobalPropertyValue(gpValue);
 			return getVisitTypesFromVisitTypeNames(visitTypeNames);
@@ -406,16 +405,16 @@ public class VisitServiceImpl extends BaseOpenmrsService implements VisitService
 	}
 
 	private String[] getVisitTypeNamesFromGlobalPropertyValue(String commaSeparatedNames) {
-		String[] result = StringUtils.split(commaSeparatedNames.trim(), ",");
+		String[] result = StringUtils.split(commaSeparatedNames.strip(), ",");
 		for (int i = 0; i < result.length; i++) {
 			String currName = result[i];
-			result[i] = currName.trim().toLowerCase();
+			result[i] = currName.strip().toLowerCase();
 		}
 		return result;
 	}
 
 	private List<VisitType> getVisitTypesFromVisitTypeNames(String[] visitTypeNames) {
-		List<VisitType> result = new ArrayList<>();
+		var result = new ArrayList<VisitType>();
 		for (VisitType visitType : Context.getVisitService().getAllVisitTypes()) {
 			if (ArrayUtils.contains(visitTypeNames, visitType.getName().toLowerCase())) {
 				result.add(visitType);

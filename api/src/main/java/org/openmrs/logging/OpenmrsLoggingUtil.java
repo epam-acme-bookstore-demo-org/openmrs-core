@@ -114,9 +114,9 @@ public final class OpenmrsLoggingUtil {
 				if (classAndLevel.length == 0) {
 					break;
 				} else if (classAndLevel.length == 1) {
-					applyLogLevelInternal(OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].trim());
+					applyLogLevelInternal(OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].strip());
 				} else {
-					applyLogLevelInternal(classAndLevel[0].trim(), classAndLevel[1].trim());
+					applyLogLevelInternal(classAndLevel[0].strip(), classAndLevel[1].strip());
 				}
 			}
 

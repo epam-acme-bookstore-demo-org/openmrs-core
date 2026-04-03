@@ -11,7 +11,6 @@ package org.openmrs;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -255,7 +254,7 @@ public class User extends BaseOpenmrsObject implements java.io.Serializable, Att
 	 * @return Collection of complete Privileges this user has
 	 */
 	public Collection<Privilege> getPrivileges() {
-		Set<Privilege> privileges = new HashSet<>();
+		var privileges = new HashSet<Privilege>();
 		Set<Role> tmproles = getAllRoles();
 
 		Role role;
@@ -280,11 +279,11 @@ public class User extends BaseOpenmrsObject implements java.io.Serializable, Att
 	 */
 	public Set<Role> getAllRoles() {
 		// the user's immediate roles
-		Set<Role> baseRoles = new HashSet<>();
+		var baseRoles = new HashSet<Role>();
 
 		// the user's complete list of roles including
 		// the parent roles of their immediate roles
-		Set<Role> totalRoles = new HashSet<>();
+		var totalRoles = new HashSet<Role>();
 		if (getRoles() != null) {
 			baseRoles.addAll(getRoles());
 			totalRoles.addAll(getRoles());
@@ -361,7 +360,7 @@ public class User extends BaseOpenmrsObject implements java.io.Serializable, Att
 		try {
 			return Context.getUserService().getUsersByName(searchText, "", false);
 		} catch (Exception e) {
-			return Collections.emptyList();
+			return List.of();
 		}
 	}
 
@@ -374,7 +373,7 @@ public class User extends BaseOpenmrsObject implements java.io.Serializable, Att
 		try {
 			return Context.getUserService().getAllUsers();
 		} catch (Exception e) {
-			return Collections.emptyList();
+			return List.of();
 		}
 	}
 

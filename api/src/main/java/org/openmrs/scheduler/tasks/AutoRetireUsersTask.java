@@ -9,7 +9,6 @@
  */
 package org.openmrs.scheduler.tasks;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +67,7 @@ public class AutoRetireUsersTask extends AbstractTask {
 		        .getGlobalProperty(OpenmrsConstants.GP_NUMBER_OF_DAYS_TO_AUTO_RETIRE_USERS);
 
 		if (StringUtils.isBlank(numberOfDaysToRetire)) {
-			return Collections.emptySet();
+			return Set.of();
 		}
 
 		long numberOfMillisecondsToRetire = TimeUnit.DAYS.toMillis(Long.parseLong(numberOfDaysToRetire));

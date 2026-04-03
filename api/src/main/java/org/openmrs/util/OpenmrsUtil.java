@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,7 +58,6 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -217,7 +215,7 @@ public class OpenmrsUtil {
 	 * @throws IOException
 	 */
 	public static String getFileAsString(File file) throws IOException {
-		StringBuilder fileData = new StringBuilder(1000);
+		var fileData = new StringBuilder(1000);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 		char[] buf = new char[1024];
 		int numRead;
@@ -238,22 +236,12 @@ public class OpenmrsUtil {
 	 * @throws IOException
 	 */
 	public static byte[] getFileAsBytes(File file) throws IOException {
-		FileInputStream fileInputStream = null;
-		try {
-			fileInputStream = new FileInputStream(file);
+		try (var fileInputStream = new FileInputStream(file)) {
 			byte[] b = new byte[fileInputStream.available()];
 			fileInputStream.read(b);
 			return b;
 		} catch (Exception e) {
 			log.error("Unable to get file as byte array", e);
-		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (IOException io) {
-					log.warn("Couldn't close fileInputStream: " + io);
-				}
-			}
 		}
 
 		return null;
@@ -339,7 +327,7 @@ public class OpenmrsUtil {
 	 * @see Context#checkCoreDataset()
 	 */
 	public static Map<String, String> getCorePrivileges() {
-		Map<String, String> corePrivileges = new HashMap<>();
+		var corePrivileges = new HashMap<String, String>();
 
 		// TODO getCorePrivileges() is called so so many times that getClassesWithAnnotation() better do some catching.
 		Set<Class<?>> classes = OpenmrsClassScanner.getInstance().getClassesWithAnnotation(HasAddOnStartupPrivileges.class);
@@ -381,7 +369,7 @@ public class OpenmrsUtil {
 	 * @return roles that are core to the system
 	 */
 	public static Map<String, String> getCoreRoles() {
-		Map<String, String> roles = new HashMap<>();
+		var roles = new HashMap<String, String>();
 
 		Field[] flds = RoleConstants.class.getDeclaredFields();
 		for (Field fld : flds) {
@@ -530,7 +518,7 @@ public class OpenmrsUtil {
 	 * @return Map&lt;String, String&gt; of the parameters passed
 	 */
 	public static Map<String, String> parseParameterList(String paramList) {
-		Map<String, String> ret = new HashMap<>();
+		var ret = new HashMap<String, String>();
 		if (paramList != null && paramList.length() > 0) {
 			String[] args = paramList.split("\\|");
 			for (String s : args) {
@@ -646,7 +634,7 @@ public class OpenmrsUtil {
 			return "";
 		}
 
-		StringBuilder ret = new StringBuilder();
+		var ret = new StringBuilder();
 		for (Iterator<E> i = c.iterator(); i.hasNext();) {
 			ret.append(i.next());
 			if (i.hasNext()) {
@@ -657,25 +645,25 @@ public class OpenmrsUtil {
 	}
 
 	public static Set<Concept> conceptSetHelper(String descriptor) {
-		Set<Concept> ret = new HashSet<>();
+		var ret = new HashSet<Concept>();
 		if (descriptor == null || descriptor.length() == 0) {
 			return ret;
 		}
 		ConceptService cs = Context.getConceptService();
 
 		for (StringTokenizer st = new StringTokenizer(descriptor, "|"); st.hasMoreTokens();) {
-			String s = st.nextToken().trim();
+			String s = st.nextToken().strip();
 			boolean isSet = s.startsWith("set:");
 			if (isSet) {
-				s = s.substring(4).trim();
+				s = s.substring(4).strip();
 			}
 			Concept c = null;
 			if (s.startsWith("name:")) {
-				String name = s.substring(5).trim();
+				String name = s.substring(5).strip();
 				c = cs.getConceptByName(name);
 			} else {
 				try {
-					c = cs.getConcept(Integer.valueOf(s.trim()));
+					c = cs.getConcept(Integer.valueOf(s.strip()));
 				} catch (Exception ex) {}
 			}
 			if (c != null) {
@@ -753,25 +741,25 @@ public class OpenmrsUtil {
 	}
 
 	public static List<Concept> conceptListHelper(String descriptor) {
-		Set<Concept> ret = new LinkedHashSet<>();
+		var ret = new LinkedHashSet<Concept>();
 		if (descriptor == null || descriptor.length() == 0) {
-			return Collections.emptyList();
+			return List.of();
 		}
 		ConceptService cs = Context.getConceptService();
 
 		for (StringTokenizer st = new StringTokenizer(descriptor, "|"); st.hasMoreTokens();) {
-			String s = st.nextToken().trim();
+			String s = st.nextToken().strip();
 			boolean isSet = s.startsWith("set:");
 			if (isSet) {
-				s = s.substring(4).trim();
+				s = s.substring(4).strip();
 			}
 			Concept c = null;
 			if (s.startsWith("name:")) {
-				String name = s.substring(5).trim();
+				String name = s.substring(5).strip();
 				c = cs.getConceptByName(name);
 			} else {
 				try {
-					c = cs.getConcept(Integer.valueOf(s.trim()));
+					c = cs.getConcept(Integer.valueOf(s.strip()));
 				} catch (Exception ex) {}
 			}
 			if (c != null) {
@@ -936,7 +924,7 @@ public class OpenmrsUtil {
 				throw new FileNotFoundException(url.toExternalForm());
 			}
 			try (InputStream in = jarFile.getInputStream(entry)) {
-				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				var out = new ByteArrayOutputStream();
 				copyFile(in, out);
 				return new ByteArrayInputStream(out.toByteArray());
 			}
@@ -999,7 +987,7 @@ public class OpenmrsUtil {
 			filepath = filepath + File.separator;
 		}
 
-		File folder = new File(filepath);
+		var folder = new File(filepath);
 		if (!folder.exists()) {
 			folder.mkdirs();
 		}
@@ -1086,7 +1074,7 @@ public class OpenmrsUtil {
 	 */
 	public static File getDirectoryInApplicationDataDirectory(String folderName) throws APIException {
 		// try to load the repository folder straight away.
-		File folder = new File(folderName);
+		var folder = new File(folderName);
 
 		// if the property wasn't a full path already, assume it was intended to
 		// be a folder in the
@@ -1115,11 +1103,9 @@ public class OpenmrsUtil {
 	 * @param outFile file pointer to the location the xml file is to be saved to
 	 */
 	public static void saveDocument(Document doc, File outFile) {
-		OutputStream outStream = null;
-		try {
-			outStream = new FileOutputStream(outFile);
-			TransformerFactory tFactory = TransformerFactory.newInstance();
-			Transformer transformer = tFactory.newTransformer();
+		try (var outStream = new FileOutputStream(outFile)) {
+			var tFactory = TransformerFactory.newInstance();
+			var transformer = tFactory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
 			DocumentType doctype = doc.getDoctype();
@@ -1128,29 +1114,23 @@ public class OpenmrsUtil {
 				transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
 			}
 
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(outStream);
+			var source = new DOMSource(doc);
+			var result = new StreamResult(outStream);
 			transformer.transform(source, result);
 		} catch (TransformerException e) {
 			throw new ModuleException("Error while saving dwrmodulexml back to dwr-modules.xml", e);
 		} catch (FileNotFoundException e) {
 			throw new ModuleException(outFile.getAbsolutePath() + " file doesn't exist.", e);
-		} finally {
-			try {
-				if (outStream != null) {
-					outStream.close();
-				}
-			} catch (Exception e) {
-				log.warn("Unable to close outstream", e);
-			}
+		} catch (IOException e) {
+			log.warn("Unable to close outstream", e);
 		}
 	}
 
 	public static List<Integer> delimitedStringToIntegerList(String delimitedString, String delimiter) {
-		List<Integer> ret = new ArrayList<>();
+		var ret = new ArrayList<Integer>();
 		String[] tokens = delimitedString.split(delimiter);
 		for (String token : tokens) {
-			token = token.trim();
+			token = token.strip();
 			if (token.length() != 0) {
 				ret.add(Integer.valueOf(token));
 			}
@@ -1349,7 +1329,7 @@ public class OpenmrsUtil {
 		timeFormat = getTimeFormat(locale);
 
 		String pattern = dateFormat.toPattern() + " " + timeFormat.toPattern();
-		SimpleDateFormat sdf = new SimpleDateFormat();
+		var sdf = new SimpleDateFormat();
 		sdf.applyPattern(pattern);
 		return sdf;
 	}
@@ -1386,42 +1366,42 @@ public class OpenmrsUtil {
 			} else if (Location.class.equals(clazz)) {
 				try {
 					Integer.parseInt(string);
-					LocationEditor ed = new LocationEditor();
+					var ed = new LocationEditor();
 					ed.setAsText(string);
 					return ed.getValue();
 				} catch (NumberFormatException ex) {
 					return Context.getLocationService().getLocation(string);
 				}
 			} else if (Concept.class.equals(clazz)) {
-				ConceptEditor ed = new ConceptEditor();
+				var ed = new ConceptEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (Program.class.equals(clazz)) {
-				ProgramEditor ed = new ProgramEditor();
+				var ed = new ProgramEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (ProgramWorkflowState.class.equals(clazz)) {
-				ProgramWorkflowStateEditor ed = new ProgramWorkflowStateEditor();
+				var ed = new ProgramWorkflowStateEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (EncounterType.class.equals(clazz)) {
-				EncounterTypeEditor ed = new EncounterTypeEditor();
+				var ed = new EncounterTypeEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (Form.class.equals(clazz)) {
-				FormEditor ed = new FormEditor();
+				var ed = new FormEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (Drug.class.equals(clazz)) {
-				DrugEditor ed = new DrugEditor();
+				var ed = new DrugEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (PersonAttributeType.class.equals(clazz)) {
-				PersonAttributeTypeEditor ed = new PersonAttributeTypeEditor();
+				var ed = new PersonAttributeTypeEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (Cohort.class.equals(clazz)) {
-				CohortEditor ed = new CohortEditor();
+				var ed = new CohortEditor();
 				ed.setAsText(string);
 				return ed.getValue();
 			} else if (Date.class.equals(clazz)) {
@@ -1484,18 +1464,18 @@ public class OpenmrsUtil {
 	 * @return file new file that is able to be written to
 	 */
 	public static File getOutFile(File dir, Date date, User user) {
-		Random gen = new Random();
+		var gen = new Random();
 		File outFile;
 		do {
 			// format to print date in filename
-			DateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd-HHmm-ssSSS");
+			var dateFormat = new SimpleDateFormat("yyyy.MM.dd-HHmm-ssSSS");
 
 			// use current date if none provided
 			if (date == null) {
 				date = new Date();
 			}
 
-			StringBuilder filename = new StringBuilder();
+			var filename = new StringBuilder();
 
 			// the start of the filename is the time so we can do some sorting
 			filename.append(dateFormat.format(date));
@@ -1527,8 +1507,8 @@ public class OpenmrsUtil {
 	 * @return unique string
 	 */
 	public static String generateUid(Integer size) {
-		Random gen = new Random();
-		StringBuilder sb = new StringBuilder(size);
+		var gen = new Random();
+		var sb = new StringBuilder(size);
 		for (int i = 0; i < size; i++) {
 			int ch = gen.nextInt() * 62;
 			if (ch < 10) {
@@ -1563,20 +1543,10 @@ public class OpenmrsUtil {
 	 * @param comment
 	 */
 	public static void storeProperties(Properties properties, File file, String comment) {
-		OutputStream outStream = null;
-		try {
-			outStream = new FileOutputStream(file, true);
+		try (var outStream = new FileOutputStream(file, true)) {
 			storeProperties(properties, outStream, comment);
 		} catch (IOException ex) {
 			log.error("Unable to create file " + file.getAbsolutePath() + " in storeProperties routine.");
-		} finally {
-			try {
-				if (outStream != null) {
-					outStream.close();
-				}
-			} catch (IOException ioe) {
-				// pass
-			}
 		}
 	}
 
@@ -1614,9 +1584,7 @@ public class OpenmrsUtil {
 	 * @param inputStream the input stream to read from
 	 */
 	public static void loadProperties(Properties props, InputStream inputStream) {
-		InputStreamReader reader = null;
-		try {
-			reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+		try (var reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
 			props.load(reader);
 		} catch (FileNotFoundException fnfe) {
 			log.error("Unable to find properties file" + fnfe);
@@ -1624,14 +1592,6 @@ public class OpenmrsUtil {
 			log.error("Unsupported encoding used in properties file" + uee);
 		} catch (IOException ioe) {
 			log.error("Unable to read properties from properties file" + ioe);
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException ioe) {
-				log.error("Unable to close properties file " + ioe);
-			}
 		}
 	}
 
@@ -1907,7 +1867,7 @@ public class OpenmrsUtil {
 			return null;
 		}
 
-		List<String> results = new ArrayList<>();
+		var results = new ArrayList<String>();
 		final Pattern exclude = Pattern.compile("(org.springframework.|java.lang.reflect.Method.invoke|sun.reflect.)");
 		boolean found = false;
 
@@ -1964,7 +1924,7 @@ public class OpenmrsUtil {
 				        + " in the OpenMRS application data directory, or the current directory");
 			}
 
-			Properties props = new Properties();
+			var props = new Properties();
 			OpenmrsUtil.loadProperties(props, propertyStream);
 			propertyStream.close();
 			log.info("Using runtime properties file: " + pathName);

@@ -448,7 +448,7 @@ public class LocationServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getLocationsHavingAnyTag_shouldReturnEmptyListWhenNoLocationHasTheGivenTags() {
 		LocationService ls = Context.getLocationService();
-		assertEquals(0, ls.getLocationsHavingAnyTag(Collections.singletonList(ls.getLocationTagByName("Retired"))).size());
+		assertEquals(0, ls.getLocationsHavingAnyTag(List.of(ls.getLocationTagByName("Retired"))).size());
 	}
 
 	/**

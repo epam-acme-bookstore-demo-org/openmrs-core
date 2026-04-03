@@ -109,8 +109,8 @@ public class HibernateProviderDAO implements ProviderDAO {
 		CriteriaQuery<Provider> cq = cb.createQuery(Provider.class);
 		Root<Provider> root = cq.from(Provider.class);
 
-		List<Predicate> predicates = new ArrayList<>();
-		List<Order> orders = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
+		var orders = new ArrayList<Order>();
 
 		if (!includeRetired) {
 			predicates.add(cb.isFalse(root.get("retired")));
@@ -212,7 +212,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 			name = "%";
 		}
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (!includeRetired) {
 			predicates.add(cb.isFalse(root.get("retired")));
 		}
@@ -223,7 +223,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 		Join<Provider, Person> personJoin = root.join("person", JoinType.LEFT);
 		Join<Person, PersonName> personNameJoin = personJoin.join("names", JoinType.LEFT);
 
-		List<Predicate> splitNamePredicates = new ArrayList<>();
+		var splitNamePredicates = new ArrayList<Predicate>();
 		String[] splitNames = name.split(" ");
 
 		for (String splitName : splitNames) {
@@ -290,7 +290,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 		CriteriaQuery<T> cq = cb.createQuery(clazz);
 		Root<T> root = cq.from(clazz);
 
-		List<Order> orderList = new ArrayList<>();
+		var orderList = new ArrayList<Order>();
 		if (!includeRetired) {
 			cq.where(cb.isFalse(root.get("retired")));
 		} else {
@@ -369,7 +369,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 		CriteriaQuery<Long> cq = cb.createQuery(Long.class);
 		Root<Provider> root = cq.from(Provider.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(cb.equal(root.get("identifier"), provider.getIdentifier()));
 		if (provider.getProviderId() != null) {
 			predicates.add(cb.notEqual(root.get("providerId"), provider.getProviderId()));
@@ -420,7 +420,7 @@ public class HibernateProviderDAO implements ProviderDAO {
 		CriteriaQuery<Provider> cq = cb.createQuery(Provider.class);
 		Root<Provider> root = cq.from(Provider.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(root.get("providerRole").in(roles));
 		if (!includeRetired) {
 			predicates.add(cb.isFalse(root.get("retired")));

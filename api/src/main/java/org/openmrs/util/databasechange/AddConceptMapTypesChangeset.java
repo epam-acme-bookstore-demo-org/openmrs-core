@@ -94,7 +94,7 @@ public class AddConceptMapTypesChangeset implements CustomTaskChange {
 			int mapTypeId = 1;
 
 			for (String map : visibleConceptMapTypeArray) {
-				String[] mapTypeAndUuid = map.trim().split("\\|");
+				String[] mapTypeAndUuid = map.strip().split("\\|");
 				String mapType = mapTypeAndUuid[0];
 				String mapUuid = mapTypeAndUuid[1];
 
@@ -110,7 +110,7 @@ public class AddConceptMapTypesChangeset implements CustomTaskChange {
 			}
 
 			for (String map : hiddenConceptMapTypeArray) {
-				String[] mapTypeAndUuid = map.trim().split("\\|");
+				String[] mapTypeAndUuid = map.strip().split("\\|");
 				String mapType = mapTypeAndUuid[0];
 				String mapUuid = mapTypeAndUuid[1];
 

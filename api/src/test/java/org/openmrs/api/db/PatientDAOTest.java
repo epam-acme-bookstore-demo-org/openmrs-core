@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -335,8 +334,8 @@ public class PatientDAOTest extends BaseContextSensitiveTest {
 	@Test
 	public void getPatientIdentifiers_shouldLimitByResultsByLocation() {
 		Location location = Context.getLocationService().getLocation(3); // there is only one identifier in the test database for location 3
-		List<PatientIdentifier> patientIdentifiers = dao.getPatientIdentifiers(null, new ArrayList<>(),
-		    Collections.singletonList(location), new ArrayList<>(), null);
+		List<PatientIdentifier> patientIdentifiers = dao.getPatientIdentifiers(null, new ArrayList<>(), List.of(location),
+		    new ArrayList<>(), null);
 		assertEquals(1, patientIdentifiers.size());
 		assertEquals("12345K", patientIdentifiers.getFirst().getIdentifier());
 	}
@@ -436,7 +435,7 @@ public class PatientDAOTest extends BaseContextSensitiveTest {
 		Patient patientWithId2 = Context.getPatientService().getPatient(2);
 
 		List<PatientIdentifier> patientIdentifiers = dao.getPatientIdentifiers(null, new ArrayList<>(), new ArrayList<>(),
-		    Collections.singletonList(patientWithId2), null);
+		    List.of(patientWithId2), null);
 
 		assertThat(patientIdentifiers, containsInAnyOrder(hasIdentifier("101"), hasIdentifier("101-6")));
 	}

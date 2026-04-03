@@ -63,7 +63,7 @@ public class OpenmrsApplicationContextConfig {
 
 	@Bean
 	public TaskExecutor taskExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		var executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(1);
 		executor.setMaxPoolSize(20);
 		executor.setQueueCapacity(1000);
@@ -73,7 +73,7 @@ public class OpenmrsApplicationContextConfig {
 	@Bean
 	public Map<String, ComplexObsHandler> handlers(ImageHandler imageHandler, TextHandler textHandler,
 	        BinaryDataHandler binaryDataHandler, BinaryStreamHandler binaryStreamHandler) {
-		Map<String, ComplexObsHandler> map = new LinkedHashMap<>();
+		var map = new LinkedHashMap<String, ComplexObsHandler>();
 		map.put("ImageHandler", imageHandler);
 		map.put("TextHandler", textHandler);
 		map.put("BinaryDataHandler", binaryDataHandler);
@@ -92,14 +92,14 @@ public class OpenmrsApplicationContextConfig {
 
 	@Bean
 	public List<OpenmrsSerializer> serializerList(SimpleXStreamSerializer simpleXStreamSerializer) {
-		List<OpenmrsSerializer> serializers = new ArrayList<>();
+		var serializers = new ArrayList<OpenmrsSerializer>();
 		serializers.add(simpleXStreamSerializer);
 		return serializers;
 	}
 
 	@Bean
 	public MutableResourceBundleMessageSource mutableResourceBundleMessageSource() {
-		MutableResourceBundleMessageSource messageSource = new MutableResourceBundleMessageSource();
+		var messageSource = new MutableResourceBundleMessageSource();
 		messageSource.setBasenames("classpath:custom_messages", "classpath:messages");
 		messageSource.setUseCodeAsDefaultMessage(true);
 		messageSource.setCacheSeconds(5);
@@ -116,9 +116,9 @@ public class OpenmrsApplicationContextConfig {
 	 */
 	@Bean
 	public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+		var configurer = new PropertySourcesPlaceholderConfigurer();
 		String appDataDir = OpenmrsUtil.getApplicationDataDirectory();
-		Properties props = new Properties();
+		var props = new Properties();
 		props.setProperty(OpenmrsConstants.KEY_OPENMRS_APPLICATION_DATA_DIRECTORY, appDataDir);
 		configurer.setProperties(props);
 		configurer.setLocations(new ClassPathResource("hibernate.default.properties"),
@@ -141,7 +141,7 @@ public class OpenmrsApplicationContextConfig {
 
 	@Bean
 	public Map<String, Application> hL7Handlers(ORUR01Handler orur01Handler, ADTA28Handler adta28Handler) {
-		Map<String, Application> map = new LinkedHashMap<>();
+		var map = new LinkedHashMap<String, Application>();
 		map.put("ORU_R01", orur01Handler);
 		map.put("ADT_A28", adta28Handler);
 		return map;

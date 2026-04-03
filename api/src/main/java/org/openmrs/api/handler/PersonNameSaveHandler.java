@@ -30,16 +30,16 @@ public class PersonNameSaveHandler implements SaveHandler<PersonName> {
 	@Override
 	public void handle(PersonName personName, User creator, Date dateCreated, String other) {
 		if (personName.getGivenName() != null) {
-			personName.setGivenName(personName.getGivenName().trim());
+			personName.setGivenName(personName.getGivenName().strip());
 		}
 		if (personName.getMiddleName() != null) {
-			personName.setMiddleName(personName.getMiddleName().trim());
+			personName.setMiddleName(personName.getMiddleName().strip());
 		}
 		if (personName.getFamilyName() != null) {
-			personName.setFamilyName(personName.getFamilyName().trim());
+			personName.setFamilyName(personName.getFamilyName().strip());
 		}
 		if (personName.getFamilyName2() != null) {
-			personName.setFamilyName2(personName.getFamilyName2().trim());
+			personName.setFamilyName2(personName.getFamilyName2().strip());
 		}
 	}
 

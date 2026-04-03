@@ -166,7 +166,7 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 		ConceptService cs = Context.getConceptService();
 		cs.updateConceptIndex(conceptWithMultipleMatchingNames);
 		cs.updateConceptIndex(dao.getConcept(4000));
-		List<ConceptSearchResult> searchResults = dao.getConcepts("trust", Collections.singletonList(Locale.ENGLISH), false,
+		List<ConceptSearchResult> searchResults = dao.getConcepts("trust", List.of(Locale.ENGLISH), false,
 		    Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null, null,
 		    null);
 
@@ -213,9 +213,8 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 
 		updateSearchIndex();
 
-		List<ConceptSearchResult> searchResults1 = dao.getConcepts("one", Collections.singletonList(locale), false,
-		    Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null, null,
-		    null);
+		List<ConceptSearchResult> searchResults1 = dao.getConcepts("one", List.of(locale), false, Collections.EMPTY_LIST,
+		    Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null, null, null);
 
 		assertEquals(2, searchResults1.size());
 		assertEquals(c1, searchResults1.getFirst().getConcept());
@@ -230,9 +229,9 @@ public class ConceptDAOTest extends BaseContextSensitiveTest {
 	public void getConcepts_shouldBeDiacriticInsensitive() {
 		executeDataSet("org/openmrs/api/include/ConceptServiceTest-accents.xml");
 		Context.getConceptService().updateConceptIndexes();
-		List<ConceptSearchResult> searchResults = dao.getConcepts("Hysterectom", Collections.singletonList(Locale.ENGLISH),
-		    false, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null,
-		    null, null);
+		List<ConceptSearchResult> searchResults = dao.getConcepts("Hysterectom", List.of(Locale.ENGLISH), false,
+		    Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, null, null,
+		    null);
 		assertEquals(4, searchResults.size());
 		assertEquals("Hystérectomie", searchResults.getFirst().getConcept().getName().getName());
 	}

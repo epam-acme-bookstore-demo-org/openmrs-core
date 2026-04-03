@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.xml.parsers.ParserConfigurationException;
@@ -811,7 +811,7 @@ public class ModuleConfigDTDTest_V1_0 {
 	public void configXmlValidServlet(String version)
 	        throws ParserConfigurationException, TransformerException, IOException, URISyntaxException {
 		Document configXml = withMinimalTags(version)
-		        .withServlet(Optional.of("ServletName"), Optional.of("ServletClass"), Collections.emptyMap()).build();
+		        .withServlet(Optional.of("ServletName"), Optional.of("ServletClass"), Map.of()).build();
 
 		try (InputStream inputStream = writeToInputStream(configXml)) {
 			assertTrue(isValidConfigXml(inputStream));
@@ -822,8 +822,8 @@ public class ModuleConfigDTDTest_V1_0 {
 	@MethodSource("getCompatibleVersions")
 	public void configXmlServletMissingName(String version)
 	        throws ParserConfigurationException, TransformerException, IOException, URISyntaxException {
-		Document configXml = withMinimalTags(version)
-		        .withServlet(Optional.empty(), Optional.of("ServletClass"), Collections.emptyMap()).build();
+		Document configXml = withMinimalTags(version).withServlet(Optional.empty(), Optional.of("ServletClass"), Map.of())
+		        .build();
 
 		try (InputStream inputStream = writeToInputStream(configXml)) {
 			assertFalse(isValidConfigXml(inputStream));
@@ -834,8 +834,8 @@ public class ModuleConfigDTDTest_V1_0 {
 	@MethodSource("getCompatibleVersions")
 	public void configXmlServletMissingClass(String version)
 	        throws ParserConfigurationException, TransformerException, IOException, URISyntaxException {
-		Document configXml = withMinimalTags(version)
-		        .withServlet(Optional.of("ServletName"), Optional.empty(), Collections.emptyMap()).build();
+		Document configXml = withMinimalTags(version).withServlet(Optional.of("ServletName"), Optional.empty(), Map.of())
+		        .build();
 
 		try (InputStream inputStream = writeToInputStream(configXml)) {
 			assertFalse(isValidConfigXml(inputStream));
