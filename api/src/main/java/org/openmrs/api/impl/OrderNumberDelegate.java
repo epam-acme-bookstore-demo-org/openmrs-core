@@ -81,16 +81,17 @@ class OrderNumberDelegate {
 	}
 
 	void setProperty(Order order, String propertyName, Object value) {
-		Boolean isAccessible = null;
 		Field field = null;
+		boolean isAccessible = false;
 		try {
 			field = Order.class.getDeclaredField(propertyName);
+			isAccessible = field.canAccess(order);
 			field.setAccessible(true);
 			field.set(order, value);
 		} catch (Exception e) {
 			throw new APIException("Order.failed.set.property", new Object[] { propertyName, order }, e);
 		} finally {
-			if (field != null && isAccessible != null) {
+			if (field != null) {
 				field.setAccessible(isAccessible);
 			}
 		}
