@@ -111,23 +111,14 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	private ConceptProposalDelegate conceptProposalDelegate;
 
 	private ConceptSetDelegate conceptSetDelegate() {
-		if (conceptSetDelegate == null) {
-			conceptSetDelegate = new ConceptSetDelegate(dao);
-		}
 		return conceptSetDelegate;
 	}
 
 	private ConceptMappingDelegate conceptMappingDelegate() {
-		if (conceptMappingDelegate == null) {
-			conceptMappingDelegate = new ConceptMappingDelegate(dao);
-		}
 		return conceptMappingDelegate;
 	}
 
 	private ConceptProposalDelegate conceptProposalDelegate() {
-		if (conceptProposalDelegate == null) {
-			conceptProposalDelegate = new ConceptProposalDelegate(dao);
-		}
 		return conceptProposalDelegate;
 	}
 
@@ -137,10 +128,10 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	public void setConceptDAO(ConceptDAO dao) {
 		this.dao = dao;
-		// Reset delegates so they are re-created with the new DAO
-		this.conceptSetDelegate = null;
-		this.conceptMappingDelegate = null;
-		this.conceptProposalDelegate = null;
+		// Eagerly initialize delegates with the new DAO for thread safety
+		this.conceptSetDelegate = new ConceptSetDelegate(dao);
+		this.conceptMappingDelegate = new ConceptMappingDelegate(dao);
+		this.conceptProposalDelegate = new ConceptProposalDelegate(dao);
 	}
 
 	/**

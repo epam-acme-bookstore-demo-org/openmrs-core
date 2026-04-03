@@ -89,7 +89,7 @@ class ModuleSetupHandler implements WizardStepHandler {
 
 			} catch (APIAuthenticationException e) {
 				log.warn("Unable to authenticate as a User with the System Developer role");
-				callback.reportError(ErrorMessageConstants.UPDATE_ERROR_UNABLE_AUTHENTICATE, null, "");
+				callback.reportError(ErrorMessageConstants.UPDATE_ERROR_UNABLE_AUTHENTICATE, "remotedetails.vm", "");
 				return false;
 			}
 		} catch (Exception e) {

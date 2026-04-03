@@ -194,10 +194,10 @@ final class ModuleStopper {
 					Class cls = Context.loadClass(advice.getPoint());
 					Object aopObject = advice.getClassInstance();
 					if (aopObject instanceof Advisor advisor) {
-						log.debug("adding advisor: " + aopObject.getClass());
+						log.debug("removing advisor: " + aopObject.getClass());
 						Context.removeAdvisor(cls, advisor);
 					} else {
-						log.debug("Adding advice: " + aopObject.getClass());
+						log.debug("Removing advice: " + aopObject.getClass());
 						Context.removeAdvice(cls, (Advice) aopObject);
 					}
 				} catch (Exception t) {
