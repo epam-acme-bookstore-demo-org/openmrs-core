@@ -83,6 +83,11 @@
 		<property name="severity" value="warning" default="error"/>
 	</module>
 
+	<module name="LineLength">
+		<property name="max" value="125"/>
+		<property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+	</module>
+
 	<module name="TreeWalker">
 		<!-- Defines expected tab width for checks that require a tab width -->
 		<property name="tabWidth" value="4"/>
@@ -98,10 +103,6 @@
 			<property name="allowEscapesForControlCharacters" value="true"/>
 			<property name="allowByTailComment" value="true"/>
 			<property name="allowNonPrintableEscapes" value="true"/>
-		</module>
-		<module name="LineLength">
-			<property name="max" value="125"/>
-			<property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
 		</module>
 		<module name="AvoidStarImport">
 			<property name="severity" value="error"/>
