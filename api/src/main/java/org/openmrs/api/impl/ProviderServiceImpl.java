@@ -25,6 +25,7 @@ import org.openmrs.api.RefByUuid;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.ProviderDAO;
 import org.openmrs.customdatatype.CustomDatatypeUtil;
+import org.openmrs.parameter.ProviderSearchCriteria;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -413,5 +414,15 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 			throw new APIException("Cannot purge a provider role that is assigned to one or more providers");
 		}
 		dao.deleteProviderRole(providerRole);
+	}
+
+	/**
+	 * @see org.openmrs.api.ProviderService#getProviders(ProviderSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Provider> getProviders(ProviderSearchCriteria criteria) {
+		return this.getProviders(criteria.query(), criteria.start(), criteria.length(), criteria.attributes(),
+		    criteria.includeRetired());
 	}
 }

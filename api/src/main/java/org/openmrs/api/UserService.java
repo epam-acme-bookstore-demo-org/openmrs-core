@@ -20,6 +20,7 @@ import org.openmrs.User;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.annotation.Logging;
 import org.openmrs.notification.MessageException;
+import org.openmrs.parameter.UserSearchCriteria;
 import org.openmrs.util.PersonByNameComparator;
 import org.openmrs.util.PrivilegeConstants;
 
@@ -559,10 +560,23 @@ public interface UserService extends OpenmrsService {
 	 * @param length number of users to return in the batch
 	 * @return list of matching users of a size based on the specified arguments
 	 * @since 1.8
+	 * @deprecated As of 3.0.0, replaced by {@link #getUsers(UserSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_USERS })
 	List<User> getUsers(String name, List<Role> roles, boolean includeRetired, Integer start, Integer length)
 	        throws APIException;
+
+	/**
+	 * Get users matching a variety of (nullable) criteria contained in the parameter object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return list of matching users
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_USERS })
+	List<User> getUsers(UserSearchCriteria criteria) throws APIException;
 
 	/**
 	 * Return the number of users with a matching name or system id and have at least one of the given
