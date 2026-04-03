@@ -9,8 +9,6 @@
  */
 package org.openmrs.module;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,35 +16,23 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.openmrs.GlobalProperty;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.ServiceContext;
 import org.openmrs.util.OpenmrsClassLoader;
-import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,26 +158,7 @@ public class ModuleUtil {
 	 * @return filename String of the file's name of the stream
 	 */
 	public static File insertModuleFile(InputStream inputStream, String filename) {
-		File folder = getModuleRepository();
-
-		// check if module filename is already loaded
-		if (OpenmrsUtil.folderContains(folder, filename)) {
-			throw new ModuleException(filename + " is already associated with a loaded module.");
-		}
-
-		File file = new File(folder.getAbsolutePath(), filename);
-
-		try (FileOutputStream outputStream = new FileOutputStream(file)) {
-			OpenmrsUtil.copyFile(inputStream, outputStream);
-		} catch (IOException e) {
-			throw new ModuleException("Can't create module file for " + filename, e);
-		} finally {
-			try {
-				inputStream.close();
-			} catch (Exception e) { /* pass */}
-		}
-
-		return file;
+		return ModuleFileUtil.insertModuleFile(inputStream, filename);
 	}
 
 	/**
@@ -211,7 +178,7 @@ public class ModuleUtil {
 	 * @return true if the current openmrs version is in versions otherwise false
 	 */
 	public static boolean isOpenmrsVersionInVersions(String... versions) {
-		return isVersionInVersions(OpenmrsConstants.OPENMRS_VERSION_SHORT, versions);
+		return ModuleVersionUtil.isOpenmrsVersionInVersions(versions);
 	}
 
 	/**
@@ -222,18 +189,7 @@ public class ModuleUtil {
 	 * @return true if version matches any value from versions
 	 */
 	static boolean isVersionInVersions(String version, String... versions) {
-		if (versions == null || versions.length == 0) {
-			return false;
-		}
-
-		boolean result = false;
-		for (String candidateVersion : versions) {
-			if (matchRequiredVersions(version, candidateVersion)) {
-				result = true;
-				break;
-			}
-		}
-		return result;
+		return ModuleVersionUtil.isVersionInVersions(version, versions);
 	}
 
 	/**
@@ -295,70 +251,7 @@ public class ModuleUtil {
 	 * @return true if the <code>version</code> is within the <code>value</code>
 	 */
 	public static boolean matchRequiredVersions(String version, String versionRange) {
-		// There is a null check so no risk in keeping the literal on the right side
-		if (StringUtils.isNotEmpty(versionRange)) {
-			String[] ranges = versionRange.split(",");
-			for (String range : ranges) {
-				// need to externalize this string
-				String separator = "-";
-				if (range.indexOf("*") > 0 || range.indexOf(separator) > 0 && (!isVersionWithQualifier(range))) {
-					// if it contains "*" or "-" then we must separate those two
-					// assume it's always going to be two part
-					// assign the upper and lower bound
-					// if there's no "-" to split lower and upper bound
-					// then assign the same value for the lower and upper
-					String lowerBound = range;
-					String upperBound = range;
-
-					int indexOfSeparator = range.indexOf(separator);
-					while (indexOfSeparator > 0) {
-						lowerBound = range.substring(0, indexOfSeparator);
-						upperBound = range.substring(indexOfSeparator + 1);
-						if (upperBound.matches("^\\s?\\d+.*")) {
-							break;
-						}
-						indexOfSeparator = range.indexOf(separator, indexOfSeparator + 1);
-					}
-
-					// only preserve part of the string that match the following format:
-					// - xx.yy.*
-					// - xx.yy.zz*
-					lowerBound = StringUtils.remove(lowerBound, lowerBound.replaceAll("^\\s?\\d+[\\.\\d+\\*?|\\.\\*]+", ""));
-					upperBound = StringUtils.remove(upperBound, upperBound.replaceAll("^\\s?\\d+[\\.\\d+\\*?|\\.\\*]+", ""));
-
-					// if the lower contains "*" then change it to zero
-					if (lowerBound.indexOf("*") > 0) {
-						lowerBound = lowerBound.replaceAll("\\*", "0");
-					}
-
-					// if the upper contains "*" then change it to maxRevisionNumber
-					if (upperBound.indexOf("*") > 0) {
-						upperBound = upperBound.replaceAll("\\*", Integer.toString(Integer.MAX_VALUE));
-					}
-
-					int lowerReturn = compareVersionIgnoringQualifier(version, lowerBound);
-
-					int upperReturn = compareVersionIgnoringQualifier(version, upperBound);
-
-					if (lowerReturn < 0 || upperReturn > 0) {
-						log.debug("Version " + version + " is not between " + lowerBound + " and " + upperBound);
-					} else {
-						return true;
-					}
-				} else {
-					if (compareVersionIgnoringQualifier(version, range) < 0) {
-						log.debug("Version " + version + " is below " + range);
-					} else {
-						return true;
-					}
-				}
-			}
-		} else {
-			//no version checking if required version is not specified
-			return true;
-		}
-
-		return false;
+		return ModuleVersionUtil.matchRequiredVersions(version, versionRange);
 	}
 
 	/**
@@ -401,11 +294,7 @@ public class ModuleUtil {
 	 * @throws ModuleException if the <code>version</code> is not within the <code>value</code> version
 	 */
 	public static void checkRequiredVersion(String version, String versionRange) throws ModuleException {
-		if (!matchRequiredVersions(version, versionRange)) {
-			String ms = Context.getMessageSourceService().getMessage("Module.requireVersion.outOfBounds",
-			    new String[] { versionRange, version }, Context.getLocale());
-			throw new ModuleException(ms);
-		}
+		ModuleVersionUtil.checkRequiredVersion(version, versionRange);
 	}
 
 	/**
@@ -419,7 +308,7 @@ public class ModuleUtil {
 	 *         the version without the qualifier is considered greater.
 	 */
 	public static int compareVersion(String versionA, String versionB) {
-		return compareVersion(versionA, versionB, false);
+		return ModuleVersionUtil.compareVersion(versionA, versionB);
 	}
 
 	/**
@@ -432,68 +321,7 @@ public class ModuleUtil {
 	 *         after the second one.
 	 */
 	public static int compareVersionIgnoringQualifier(String versionA, String versionB) {
-		return compareVersion(versionA, versionB, true);
-	}
-
-	private static int compareVersion(String versionA, String versionB, boolean ignoreQualifier) {
-		try {
-			if (versionA == null || versionB == null) {
-				return 0;
-			}
-
-			var versionANumbers = new ArrayList<String>();
-			var versionBNumbers = new ArrayList<String>();
-			String qualifierSeparator = "-";
-
-			// strip off any qualifier e.g. "-SNAPSHOT"
-			int qualifierIndexA = versionA.indexOf(qualifierSeparator);
-			if (qualifierIndexA != -1) {
-				versionA = versionA.substring(0, qualifierIndexA);
-			}
-
-			// strip off any qualifier e.g. "-SNAPSHOT"
-			int qualifierIndexB = versionB.indexOf(qualifierSeparator);
-			if (qualifierIndexB != -1) {
-				versionB = versionB.substring(0, qualifierIndexB);
-			}
-
-			Collections.addAll(versionANumbers, versionA.split("\\."));
-			Collections.addAll(versionBNumbers, versionB.split("\\."));
-
-			// match the sizes of the lists
-			while (versionANumbers.size() < versionBNumbers.size()) {
-				versionANumbers.add("0");
-			}
-			while (versionBNumbers.size() < versionANumbers.size()) {
-				versionBNumbers.add("0");
-			}
-
-			for (int x = 0; x < versionANumbers.size(); x++) {
-				String verAPartString = versionANumbers.get(x).strip();
-				String verBPartString = versionBNumbers.get(x).strip();
-				Long verAPart = NumberUtils.toLong(verAPartString, 0);
-				Long verBPart = NumberUtils.toLong(verBPartString, 0);
-
-				int ret = verAPart.compareTo(verBPart);
-				if (ret != 0) {
-					return ret;
-				}
-			}
-
-			// At this point the version numbers are equal.
-			if (!ignoreQualifier) {
-				if (qualifierIndexA >= 0 && qualifierIndexB < 0) {
-					return -1;
-				} else if (qualifierIndexA < 0 && qualifierIndexB >= 0) {
-					return 1;
-				}
-			}
-		} catch (NumberFormatException e) {
-			log.error("Error while converting a version/value to an integer: " + versionA + "/" + versionB, e);
-		}
-
-		// default return value if an error occurs or elements are equal
-		return 0;
+		return ModuleVersionUtil.compareVersionIgnoringQualifier(versionA, versionB);
 	}
 
 	/**
@@ -503,8 +331,7 @@ public class ModuleUtil {
 	 * @return true if version contains qualifier
 	 */
 	public static boolean isVersionWithQualifier(String version) {
-		Matcher matcher = Pattern.compile("(\\d+)\\.(\\d+)(\\.(\\d+))?(\\-([A-Za-z]+))").matcher(version);
-		return matcher.matches();
+		return ModuleVersionUtil.isVersionWithQualifier(version);
 	}
 
 	/**
@@ -553,14 +380,7 @@ public class ModuleUtil {
 	 * @throws MalformedURLException if file can't be represented as URL for some reason
 	 */
 	public static URL file2url(final File file) throws MalformedURLException {
-		if (file == null) {
-			return null;
-		}
-		try {
-			return file.getCanonicalFile().toURI().toURL();
-		} catch (IOException | NoSuchMethodError ioe) {
-			throw new MalformedURLException("Cannot convert: " + file.getName() + " to url");
-		}
+		return ModuleFileUtil.file2url(file);
 	}
 
 	/**
@@ -588,76 +408,7 @@ public class ModuleUtil {
 	 */
 	public static void expandJar(File fileToExpand, File tmpModuleDir, String name, boolean keepFullPath)
 	        throws IOException {
-		String docBase = tmpModuleDir.getAbsolutePath();
-		log.debug("Expanding jar {}", fileToExpand);
-		try (JarFile jarFile = new JarFile(fileToExpand)) {
-			Enumeration<JarEntry> jarEntries = jarFile.entries();
-			boolean foundName = (name == null);
-
-			// loop over all of the elements looking for the match to 'name'
-			while (jarEntries.hasMoreElements()) {
-				JarEntry jarEntry = jarEntries.nextElement();
-				if (name == null || jarEntry.getName().startsWith(name)) {
-					String entryName = jarEntry.getName();
-					// trim out the name path from the name of the new file
-					if (!keepFullPath && name != null) {
-						entryName = entryName.replaceFirst(name, "");
-					}
-
-					// if it has a slash, it's in a directory
-					int last = entryName.lastIndexOf('/');
-					if (last >= 0) {
-						File parent = new File(docBase, entryName.substring(0, last));
-						if (!parent.toPath().normalize().startsWith(docBase)) {
-							throw new UnsupportedOperationException("Attempted to create directory '" + entryName
-							        + "' rejected as it attempts to write outside the chosen directory. This may be the result of a zip-slip style attack.");
-						}
-						parent.mkdirs();
-						log.debug("Creating parent dirs: " + parent.getAbsolutePath());
-					}
-					// we don't want to "expand" directories or empty names
-					if (entryName.endsWith("/") || "".equals(entryName)) {
-						continue;
-					}
-					try (InputStream input = jarFile.getInputStream(jarEntry)) {
-						expand(input, docBase, entryName);
-					}
-					foundName = true;
-				}
-			}
-			if (!foundName) {
-				log.debug("Unable to find: " + name + " in file " + fileToExpand.getAbsolutePath());
-			}
-
-		} catch (IOException e) {
-			log.warn("Unable to delete tmpModuleFile on error", e);
-			throw e;
-		}
-	}
-
-	/**
-	 * Expand the given file in the given stream to a location (fileDir/name) The <code>input</code>
-	 * InputStream is not closed in this method
-	 *
-	 * @param input stream to read from
-	 * @param fileDir directory to copy to
-	 * @param name file/directory within the <code>fileDir</code> to which we expand <code>input</code>
-	 * @return File the file created by the expansion.
-	 * @throws IOException if an error occurred while copying
-	 */
-	private static void expand(InputStream input, String fileDir, String name) throws IOException {
-		log.debug("expanding: {}", name);
-
-		var file = new File(fileDir, name);
-
-		if (!file.toPath().normalize().startsWith(fileDir)) {
-			throw new UnsupportedOperationException("Attempted to write file '" + name
-			        + "' rejected as it attempts to write outside the chosen directory. This may be the result of a zip-slip style attack.");
-		}
-
-		try (FileOutputStream outStream = new FileOutputStream(file)) {
-			OpenmrsUtil.copyFile(input, outStream);
-		}
+		ModuleFileUtil.expandJar(fileToExpand, tmpModuleDir, name, keepFullPath);
 	}
 
 	/**
@@ -669,22 +420,7 @@ public class ModuleUtil {
 	 * @return InputStream of contents
 	 */
 	public static InputStream getURLStream(URL url) {
-		InputStream in = null;
-		try {
-			URLConnection uc = url.openConnection();
-			uc.setDefaultUseCaches(false);
-			uc.setUseCaches(false);
-			uc.setRequestProperty("Cache-Control", "max-age=0,no-cache");
-			uc.setRequestProperty("Pragma", "no-cache");
-
-			log.debug("Logging an attempt to connect to: " + url);
-
-			in = openConnectionCheckRedirects(uc);
-		} catch (IOException io) {
-			log.warn("io while reading: " + url, io);
-		}
-
-		return in;
+		return ModuleFileUtil.getURLStream(url);
 	}
 
 	/**
@@ -698,40 +434,7 @@ public class ModuleUtil {
 	 * @see #getURLStream(URL)
 	 */
 	protected static InputStream openConnectionCheckRedirects(URLConnection c) throws IOException {
-		boolean redir;
-		int redirects = 0;
-		InputStream in;
-		do {
-			if (c instanceof HttpURLConnection connection) {
-				connection.setInstanceFollowRedirects(false);
-			}
-			// We want to open the input stream before getting headers
-			// because getHeaderField() et al swallow IOExceptions.
-			in = c.getInputStream();
-			redir = false;
-			if (c instanceof HttpURLConnection http) {
-				int stat = http.getResponseCode();
-				if (stat == 300 || stat == 301 || stat == 302 || stat == 303 || stat == 305 || stat == 307) {
-					URL base = http.getURL();
-					String loc = http.getHeaderField("Location");
-					URL target = null;
-					if (loc != null) {
-						target = new URL(base, loc);
-					}
-					http.disconnect();
-					// Redirection should be allowed only for HTTP and HTTPS
-					// and should be limited to 5 redirects at most.
-					if (target == null || !("http".equals(target.getProtocol()) || "https".equals(target.getProtocol()))
-					        || redirects >= 5) {
-						throw new SecurityException("illegal URL redirect");
-					}
-					redir = true;
-					c = target.openConnection();
-					redirects++;
-				}
-			}
-		} while (redir);
-		return in;
+		return ModuleFileUtil.openConnectionCheckRedirects(c);
 	}
 
 	/**
@@ -745,31 +448,7 @@ public class ModuleUtil {
 	 * @return String contents of the URL
 	 */
 	public static String getURL(URL url) {
-		InputStream in = null;
-		ByteArrayOutputStream out = null;
-		String output = "";
-		try {
-			in = getURLStream(url);
-			if (in == null) {
-				// skip this module if updateURL is not defined
-				return "";
-			}
-
-			out = new ByteArrayOutputStream();
-			OpenmrsUtil.copyFile(in, out);
-			output = out.toString(StandardCharsets.UTF_8.name());
-		} catch (IOException io) {
-			log.warn("io while reading: " + url, io);
-		} finally {
-			try {
-				in.close();
-			} catch (Exception e) { /* pass */}
-			try {
-				out.close();
-			} catch (Exception e) { /* pass */}
-		}
-
-		return output;
+		return ModuleFileUtil.getURL(url);
 	}
 
 	/**
@@ -1160,44 +839,7 @@ public class ModuleUtil {
 	 * @return list of strings of package names in this jar
 	 */
 	public static Collection<String> getPackagesFromFile(File file) {
-
-		// End early if we're given a non jar file
-		if (!file.getName().endsWith(".jar")) {
-			return Set.of();
-		}
-
-		var packagesProvided = new HashSet<String>();
-
-		try (var jar = new JarFile(file)) {
-			Enumeration<JarEntry> jarEntries = jar.entries();
-			while (jarEntries.hasMoreElements()) {
-				var jarEntry = jarEntries.nextElement();
-				if (jarEntry.isDirectory()) {
-					// skip over directory entries, we only care about files
-					continue;
-				}
-				var name = jarEntry.getName();
-
-				// Skip over some folders in the jar/omod
-				if (name.startsWith("lib") || name.startsWith("META-INF") || name.startsWith("web/module")) {
-					continue;
-				}
-
-				int indexOfLastSlash = name.lastIndexOf("/");
-				if (indexOfLastSlash <= 0) {
-					continue;
-				}
-				var packageName = name.substring(0, indexOfLastSlash).replaceAll("/", ".");
-
-				if (packagesProvided.add(packageName) && log.isTraceEnabled()) {
-					log.trace("Adding module's jarentry with package: " + packageName);
-				}
-			}
-		} catch (IOException e) {
-			log.error("Error while reading file: " + file.getAbsolutePath(), e);
-		}
-
-		return packagesProvided;
+		return ModuleFileUtil.getPackagesFromFile(file);
 	}
 
 	/**
@@ -1214,62 +856,7 @@ public class ModuleUtil {
 	 * @return resource as an input stream or <code>null</code> if resource cannot be loaded
 	 */
 	public static InputStream getResourceFromApi(JarFile jarFile, String moduleId, String version, String resource) {
-		String apiLocation = "lib/" + moduleId + "-api-" + version + ".jar";
-		return getResourceFromInnerJar(jarFile, apiLocation, resource);
-	}
-
-	/**
-	 * Load resource from a jar inside a jar.
-	 *
-	 * @param outerJarFile jar file that contains a jar file
-	 * @param innerJarFileLocation inner jar file location relative to the outer jar
-	 * @param resource path to a resource relative to the inner jar
-	 * @return resource from the inner jar as an input stream or <code>null</code> if resource cannot be
-	 *         loaded
-	 */
-	private static InputStream getResourceFromInnerJar(JarFile outerJarFile, String innerJarFileLocation, String resource) {
-		File tempFile = null;
-		FileOutputStream tempOut = null;
-		JarFile innerJarFile = null;
-		InputStream innerInputStream = null;
-		try {
-			tempFile = File.createTempFile("tempFile", "jar");
-			tempOut = new FileOutputStream(tempFile);
-			ZipEntry innerJarFileEntry = outerJarFile.getEntry(innerJarFileLocation);
-			if (innerJarFileEntry != null) {
-				IOUtils.copy(outerJarFile.getInputStream(innerJarFileEntry), tempOut);
-				innerJarFile = new JarFile(tempFile);
-				ZipEntry targetEntry = innerJarFile.getEntry(resource);
-				if (targetEntry != null) {
-					// clone InputStream to make it work after the innerJarFile is closed
-					innerInputStream = innerJarFile.getInputStream(targetEntry);
-					byte[] byteArray = IOUtils.toByteArray(innerInputStream);
-					return new ByteArrayInputStream(byteArray);
-				}
-			}
-		} catch (IOException e) {
-			log.error(
-			    "Unable to get '" + resource + "' from '" + innerJarFileLocation + "' of '" + outerJarFile.getName() + "'",
-			    e);
-		} finally {
-			IOUtils.closeQuietly(tempOut);
-			IOUtils.closeQuietly(innerInputStream);
-
-			// close inner jar file before attempting to delete temporary file
-			try {
-				if (innerJarFile != null) {
-					innerJarFile.close();
-				}
-			} catch (IOException e) {
-				log.warn("Unable to close inner jarfile: " + innerJarFile, e);
-			}
-
-			// delete temporary file
-			if (tempFile != null && !tempFile.delete()) {
-				log.warn("Could not delete temporary jarfile: " + tempFile);
-			}
-		}
-		return null;
+		return ModuleFileUtil.getResourceFromApi(jarFile, moduleId, version, resource);
 	}
 
 	/**
@@ -1279,11 +866,6 @@ public class ModuleUtil {
 	 * @return the module's development folder is specified, else null
 	 */
 	public static File getDevelopmentDirectory(String moduleId) {
-		String directory = System.getProperty(moduleId + ".development.directory");
-		if (StringUtils.isNotBlank(directory)) {
-			return new File(directory);
-		}
-
-		return null;
+		return ModuleFileUtil.getDevelopmentDirectory(moduleId);
 	}
 }
