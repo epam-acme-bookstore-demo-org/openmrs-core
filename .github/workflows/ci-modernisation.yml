@@ -114,7 +114,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Compile and run SpotBugs
-        run: ./mvnw compile spotbugs:check -B -ntp
+        run: ./mvnw compile com.github.spotbugs:spotbugs-maven-plugin:check -B -ntp -Dspotbugs.skip=false
 
   # ──────────────────────────────────────────────
   # 4. Code coverage with JaCoCo  (after build)
@@ -143,7 +143,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Run tests with JaCoCo coverage
-        run: ./mvnw jacoco:prepare-agent verify jacoco:report -B -ntp -Dspotbugs.skip=true
+        run: ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify org.jacoco:jacoco-maven-plugin:report -B -ntp -Dspotbugs.skip=true
 
       - name: Upload coverage reports
         if: always()
