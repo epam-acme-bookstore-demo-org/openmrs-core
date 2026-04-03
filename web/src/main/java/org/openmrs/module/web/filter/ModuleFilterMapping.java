@@ -284,17 +284,13 @@ public class ModuleFilterMapping implements Serializable {
 					NodeList configNodes = node.getChildNodes();
 					for (int j = 0; j < configNodes.getLength(); j++) {
 						Node configNode = configNodes.item(j);
-						switch (configNode.getNodeName()) {
-							case "filter-name":
-								mapping.setFilterName(configNode.getTextContent());
-								break;
-							case "url-pattern":
-								mapping.addUrlPattern(configNode.getTextContent());
-								break;
-							case "servlet-name":
-								mapping.addServletName(configNode.getTextContent());
-								break;
-						}
+						FilterMappingConfigElement.fromNodeName(configNode.getNodeName()).ifPresent(element -> {
+							switch (element) {
+								case FILTER_NAME -> mapping.setFilterName(configNode.getTextContent());
+								case URL_PATTERN -> mapping.addUrlPattern(configNode.getTextContent());
+								case SERVLET_NAME -> mapping.addServletName(configNode.getTextContent());
+							}
+						});
 					}
 					mappings.add(mapping);
 				}

@@ -161,28 +161,26 @@ public class ModuleFilterDefinition implements Serializable {
 					NodeList configNodes = node.getChildNodes();
 					for (int j = 0; j < configNodes.getLength(); j++) {
 						Node configNode = configNodes.item(j);
-						switch (configNode.getNodeName()) {
-							case "filter-name":
-								filter.setFilterName(configNode.getTextContent().strip());
-								break;
-							case "filter-class":
-								filter.setFilterClass(configNode.getTextContent().strip());
-								break;
-							case "init-param":
-								NodeList paramNodes = configNode.getChildNodes();
-								String paramName = "";
-								String paramValue = "";
-								for (int k = 0; k < paramNodes.getLength(); k++) {
-									Node paramNode = paramNodes.item(k);
-									if ("param-name".equals(paramNode.getNodeName())) {
-										paramName = paramNode.getTextContent().strip();
-									} else if ("param-value".equals(paramNode.getNodeName())) {
-										paramValue = paramNode.getTextContent().strip();
+						FilterConfigElement.fromNodeName(configNode.getNodeName()).ifPresent(element -> {
+							switch (element) {
+								case FILTER_NAME -> filter.setFilterName(configNode.getTextContent().strip());
+								case FILTER_CLASS -> filter.setFilterClass(configNode.getTextContent().strip());
+								case INIT_PARAM -> {
+									NodeList paramNodes = configNode.getChildNodes();
+									String paramName = "";
+									String paramValue = "";
+									for (int k = 0; k < paramNodes.getLength(); k++) {
+										Node paramNode = paramNodes.item(k);
+										if ("param-name".equals(paramNode.getNodeName())) {
+											paramName = paramNode.getTextContent().strip();
+										} else if ("param-value".equals(paramNode.getNodeName())) {
+											paramValue = paramNode.getTextContent().strip();
+										}
 									}
+									filter.addInitParameter(paramName, paramValue);
 								}
-								filter.addInitParameter(paramName, paramValue);
-								break;
-						}
+							}
+						});
 					}
 					filters.add(filter);
 				}
