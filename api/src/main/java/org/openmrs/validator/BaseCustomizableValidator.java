@@ -32,7 +32,7 @@ public abstract class BaseCustomizableValidator implements Validator {
 	/**
 	 * Validate the attributes of the given Customizable, given the list of relevant attribute types
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings("rawtypes") // AttributeType and Attribute generic bounds are complex; raw types needed for API flexibility
 	public <T extends AttributeType, A extends Attribute> void validateAttributes(Customizable<A> customizable,
 	        Errors errors, Collection<T> attributeTypes) {
 

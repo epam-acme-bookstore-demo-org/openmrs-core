@@ -155,21 +155,6 @@ public class DatabaseUpdater {
 	}
 
 	/**
-	 * Run changesets on database using Liquibase to get the database up to the most recent version
-	 *
-	 * @param changelog the liquibase changelog file to use (or null to use the default file)
-	 * @param userInput nullable map from question to user answer. Used if a call to update(null) threw
-	 *            an {@link InputRequiredException}
-	 * @throws DatabaseUpdateException if an error occurs
-	 * @deprecated as of 2.4 see {@link #executeChangelog(String, ChangeSetExecutorCallback)}
-	 */
-	@Deprecated
-	public static void executeChangelog(String changelog, Map<String, Object> userInput) throws DatabaseUpdateException {
-		log.debug("Executing changelog: {}", changelog);
-		executeChangelog(changelog, (ChangeSetExecutorCallback) null);
-	}
-
-	/**
 	 * Executes the given changelog file. This file is assumed to be on the classpath.
 	 *
 	 * @param changelog The string filename of a liquibase changelog xml file to run

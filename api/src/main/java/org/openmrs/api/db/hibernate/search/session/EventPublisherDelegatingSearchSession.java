@@ -63,7 +63,7 @@ public class EventPublisherDelegatingSearchSession implements SearchSession {
 		this.eventPublisher = eventPublisher;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") // Required: Hibernate Search API method is deprecated but has no replacement
 	@Override
 	public <T> SearchQuerySelectStep<NonStaticMetamodelScope, ?, EntityReference, T, SearchLoadingOptionsStep, ?, ?> search(
 	        Collection<? extends Class<? extends T>> collection) {
@@ -82,7 +82,7 @@ public class EventPublisherDelegatingSearchSession implements SearchSession {
 		return search;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("deprecation") // Required: Hibernate Search API method is deprecated but has no replacement
 	@Override
 	public <T> SearchQuerySelectStep<?, ?, EntityReference, T, SearchLoadingOptionsStep, ?, ?> search(
 	        SearchScope<T> searchScope) {

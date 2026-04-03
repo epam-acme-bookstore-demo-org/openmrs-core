@@ -121,7 +121,6 @@ public class TestInstallUtil {
 	 *
 	 * @param in the {@link InputStream} for the zip file
 	 */
-	@SuppressWarnings("rawtypes")
 	protected static boolean addZippedTestModules(InputStream in) {
 		ZipFile zipFile = null;
 		FileOutputStream out = null;
@@ -133,9 +132,9 @@ public class TestInstallUtil {
 			out = new FileOutputStream(tempFile);
 			IOUtils.copy(in, out);
 			zipFile = new ZipFile(tempFile);
-			Enumeration entries = zipFile.entries();
+			Enumeration<? extends ZipEntry> entries = zipFile.entries();
 			while (entries.hasMoreElements()) {
-				ZipEntry entry = (ZipEntry) entries.nextElement();
+				ZipEntry entry = entries.nextElement();
 				if (entry.isDirectory()) {
 					log.debug("Skipping directory: {}", entry.getName());
 					continue;

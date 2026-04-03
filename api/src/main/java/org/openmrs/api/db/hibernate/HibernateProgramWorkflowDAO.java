@@ -221,7 +221,7 @@ public class HibernateProgramWorkflowDAO implements ProgramWorkflowDAO {
 	 *      java.util.Collection)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<PatientProgram> getPatientPrograms(Cohort cohort, Collection<Program> programs) {
 		String hql = "from PatientProgram ";
 		if (cohort != null || programs != null) {

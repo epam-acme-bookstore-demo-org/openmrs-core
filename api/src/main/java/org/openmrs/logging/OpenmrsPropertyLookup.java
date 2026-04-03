@@ -39,7 +39,7 @@ import org.openmrs.util.OpenmrsUtil;
  * Care should be taken in exposing information through this class to ensure that no
  */
 @Plugin(name = OpenmrsPropertyLookup.NAME, category = StrLookup.CATEGORY)
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Log4j2 plugin class; instantiated by framework via reflection
 public class OpenmrsPropertyLookup extends AbstractLookup {
 
 	public static final String NAME = "openmrs";
@@ -54,19 +54,20 @@ public class OpenmrsPropertyLookup extends AbstractLookup {
 
 		}
 
-		switch (key) {
-			case "applicationDirectory":
+		LoggingProperty property = LoggingProperty.fromString(key)
+		        .orElseThrow(() -> new IllegalArgumentException(key));
+		return switch (property) {
+			case APPLICATION_DIRECTORY -> {
 				final String applicationDirectory = OpenmrsUtil.getApplicationDataDirectory();
-				return applicationDirectory == null || applicationDirectory.isEmpty() ? null : applicationDirectory;
-			case "logLocation":
+				yield applicationDirectory == null || applicationDirectory.isEmpty() ? null : applicationDirectory;
+			}
+			case LOG_LOCATION -> {
 				final String logLocation = getGlobalProperty(adminService, OpenmrsConstants.GP_LOG_LOCATION);
-				return logLocation == null ? null
+				yield logLocation == null ? null
 				        : logLocation.endsWith("/") ? logLocation.substring(0, logLocation.length() - 1) : logLocation;
-			case "logLayout":
-				return getGlobalProperty(adminService, OpenmrsConstants.GP_LOG_LAYOUT);
-			default:
-				throw new IllegalArgumentException(key);
-		}
+			}
+			case LOG_LAYOUT -> getGlobalProperty(adminService, OpenmrsConstants.GP_LOG_LAYOUT);
+		};
 	}
 
 	private String getGlobalProperty(AdministrationService adminService, String globalPropertyName) {

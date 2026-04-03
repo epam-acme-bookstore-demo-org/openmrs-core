@@ -61,12 +61,12 @@ public class ThreadSafeCircularFifoQueue<E> extends AbstractQueue<E> implements 
 	// tracks the state of any iterators
 	private transient Iterators iterators = null;
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") // Public API constructor; available for external callers
 	public ThreadSafeCircularFifoQueue() {
 		this(32);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Generic array creation requires unchecked cast from Object[]
 	public ThreadSafeCircularFifoQueue(int maxElements) {
 		if (maxElements <= 0) {
 			throw new IllegalArgumentException("The size must be greater than 0");
@@ -77,7 +77,7 @@ public class ThreadSafeCircularFifoQueue<E> extends AbstractQueue<E> implements 
 		this.maxElements = elements.length;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unused") // Public API constructor; available for external callers
 	public ThreadSafeCircularFifoQueue(Collection<E> collection) {
 		this(collection.size());
 		this.addAll(collection);
@@ -319,7 +319,7 @@ public class ThreadSafeCircularFifoQueue<E> extends AbstractQueue<E> implements 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Array.newInstance returns Object; unchecked cast to T[] required
 	public <T> T[] toArray(T[] a) {
 		Objects.requireNonNull(a);
 

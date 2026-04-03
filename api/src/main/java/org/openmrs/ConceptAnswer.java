@@ -259,7 +259,7 @@ public class ConceptAnswer extends BaseOpenmrsObject implements Auditable, java.
 	 *      that are inconsistent with equals.
 	 */
 	@Override
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	public int compareTo(ConceptAnswer ca) {
 		if ((getSortWeight() == null) && (ca.getSortWeight() != null)) {
 			return -1;

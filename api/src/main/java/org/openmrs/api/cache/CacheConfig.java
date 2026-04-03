@@ -143,10 +143,10 @@ public class CacheConfig {
 		config.put("infinispan", cacheContainer);
 		cacheContainer.put("cacheContainer", caches);
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked") // YAML deserialization returns Object; cast to Map<String, Object> required
 		Map<String, Object> loadedCaches = (Map<String, Object>) loadedConfig.get("caches");
 		for (Map.Entry<String, Object> entry : loadedCaches.entrySet()) {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("unchecked") // YAML deserialization returns Object; cast to Map<String, Object> required
 			Map<String, Object> value = (Map<String, Object>) entry.getValue();
 			if ("entity".equals(value.get("configuration"))) {
 				var cache = new LinkedHashMap<Object, Object>();

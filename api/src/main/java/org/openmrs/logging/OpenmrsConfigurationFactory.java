@@ -22,7 +22,6 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.AbstractConfiguration;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -54,7 +53,7 @@ import org.slf4j.LoggerFactory;
  */
 @Plugin(name = "OpenmrsConfigurationFactory", category = ConfigurationFactory.CATEGORY)
 @Order(10)
-@SuppressWarnings("unused")
+@SuppressWarnings("unused") // Log4j2 plugin class; instantiated by framework via reflection
 public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 
 	private static final org.slf4j.Logger log = LoggerFactory.getLogger(OpenmrsConfigurationFactory.class);
@@ -100,18 +99,15 @@ public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 	@Override
 	public Configuration getConfiguration(LoggerContext loggerContext, ConfigurationSource source) {
 		if (source != null && source.getLocation() != null) {
-			switch (FilenameUtils.getExtension(source.getLocation()).toLowerCase(Locale.ROOT)) {
-				case "xml":
-					return new OpenmrsXmlConfiguration(loggerContext, source);
-				case "yaml":
-				case "yml":
-					return new OpenmrsYamlConfiguration(loggerContext, source);
-				case "json":
-					return new OpenmrsJsonConfiguration(loggerContext, source);
-				default:
-					throw new IllegalArgumentException(OpenmrsConfigurationFactory.class.getName()
-					        + " does not know how to handle source " + source.getFile());
-			}
+			ConfigurationFileType fileType = ConfigurationFileType
+			        .fromExtension(FilenameUtils.getExtension(source.getLocation()).toLowerCase(Locale.ROOT))
+			        .orElseThrow(() -> new IllegalArgumentException(OpenmrsConfigurationFactory.class.getName()
+			                + " does not know how to handle source " + source.getFile()));
+			return switch (fileType) {
+				case XML -> new OpenmrsXmlConfiguration(loggerContext, source);
+				case YAML -> new OpenmrsYamlConfiguration(loggerContext, source);
+				case JSON -> new OpenmrsJsonConfiguration(loggerContext, source);
+			};
 		}
 		return null;
 	}
@@ -187,30 +183,9 @@ public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 
 		LoggerConfig loggerConfig = configuration.getLogger(loggerName);
 		if (loggerConfig != null) {
-			switch (loggerLevel.toLowerCase(Locale.ROOT)) {
-				case OpenmrsConstants.LOG_LEVEL_TRACE:
-					loggerConfig.setLevel(Level.TRACE);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_DEBUG:
-					loggerConfig.setLevel(Level.DEBUG);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_INFO:
-					loggerConfig.setLevel(Level.INFO);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_WARN:
-					loggerConfig.setLevel(Level.WARN);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_ERROR:
-					loggerConfig.setLevel(Level.ERROR);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_FATAL:
-					loggerConfig.setLevel(Level.FATAL);
-					break;
-				default:
-					log.warn("Log level {} is invalid. " + "Valid values are trace, debug, info, warn, error or fatal",
-					    loggerLevel);
-					break;
-			}
+			OpenmrsLogLevel.fromString(loggerLevel).ifPresentOrElse(level -> loggerConfig.setLevel(level.getLog4jLevel()),
+			    () -> log.warn("Log level {} is invalid. " + "Valid values are trace, debug, info, warn, error or fatal",
+			        loggerLevel));
 		}
 	}
 

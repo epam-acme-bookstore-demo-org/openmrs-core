@@ -183,7 +183,6 @@ public class HibernatePersonDAO implements PersonDAO {
 	 * @see org.openmrs.api.db.PersonDAO#getSimilarPeople(String name, Integer birthyear, String gender)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public Set<Person> getSimilarPeople(String name, Integer birthyear, String gender) throws DAOException {
 		if (birthyear == null) {
 			birthyear = 0;
@@ -248,7 +247,6 @@ public class HibernatePersonDAO implements PersonDAO {
 	 * @see org.openmrs.api.db.PersonDAO#getPeople(java.lang.String, java.lang.Boolean)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Person> getPeople(String searchString, Boolean dead, Boolean voided) {
 		if (searchString == null) {
 			return new ArrayList<>();
@@ -724,7 +722,7 @@ public class HibernatePersonDAO implements PersonDAO {
 	 * @see org.openmrs.api.db.PersonDAO#getWinningPersonMergeLogs(org.openmrs.Person)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<PersonMergeLog> getWinningPersonMergeLogs(Person person) throws DAOException {
 		return (List<PersonMergeLog>) sessionFactory.getCurrentSession()
 		        .createQuery("from PersonMergeLog p where p.winner.id = :winnerId").setParameter("winnerId", person.getId())
@@ -745,7 +743,7 @@ public class HibernatePersonDAO implements PersonDAO {
 	 * @see org.openmrs.api.db.PersonDAO#getAllPersonMergeLogs()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<PersonMergeLog> getAllPersonMergeLogs() throws DAOException {
 		return (List<PersonMergeLog>) sessionFactory.getCurrentSession().createQuery("from PersonMergeLog p").list();
 	}

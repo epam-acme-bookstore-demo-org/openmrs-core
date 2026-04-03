@@ -156,14 +156,13 @@ public class PersonAttribute extends BaseChangeableOpenmrsData implements java.i
 	 * @param otherAttribute PersonAttribute with which to compare
 	 * @return boolean true/false whether or not they are the same attributes
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean equalsContent(PersonAttribute otherAttribute) {
 		boolean returnValue = true;
 
 		// these are the methods to compare.
 		String[] methods = { "getAttributeType", "getValue", "getVoided" };
 
-		Class attributeClass = this.getClass();
+		Class<?> attributeClass = this.getClass();
 
 		// loop over all of the selected methods and compare this and other
 		for (String methodAttribute : methods) {
@@ -273,7 +272,7 @@ public class PersonAttribute extends BaseChangeableOpenmrsData implements java.i
 	 *
 	 * @return hydrated object or getValue()
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Reflection: OpenmrsClassLoader returns raw Class; runtime instantiation requires raw types
 	public Object getHydratedObject() {
 
 		if (getValue() == null) {

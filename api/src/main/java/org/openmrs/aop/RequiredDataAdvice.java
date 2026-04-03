@@ -91,7 +91,7 @@ public class RequiredDataAdvice implements MethodBeforeAdvice {
 	 *      java.lang.Object[], java.lang.Object)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // AOP method arguments are Object[]; type-safe access requires unchecked casts
 	public void before(Method method, Object[] args, Object target) throws Throwable {
 		String methodName = method.getName();
 
@@ -337,7 +337,7 @@ public class RequiredDataAdvice implements MethodBeforeAdvice {
 	 * @param field the name of the field that is the collection
 	 * @return the actual collection of objects that is on the given <code>openmrsObject</code>
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Reflection-based field access returns Object; cast to Collection<OpenmrsObject> needed
 	protected static Collection<OpenmrsObject> getChildCollection(OpenmrsObject openmrsObject, Field field) {
 		String fieldName = field.getName();
 		String getterName = "get" + StringUtils.capitalize(fieldName);

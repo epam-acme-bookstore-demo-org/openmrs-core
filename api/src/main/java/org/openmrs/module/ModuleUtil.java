@@ -91,39 +91,14 @@ public class ModuleUtil {
 			var modulesToLoad = new ArrayList<File>();
 
 			for (String modulePath : moduleArray) {
-				if (modulePath != null && modulePath.length() > 0) {
-					var file = new File(modulePath);
-					if (file.exists()) {
-						modulesToLoad.add(file);
-					} else {
-						// try to load the file from the classpath
-						InputStream stream = ModuleUtil.class.getClassLoader().getResourceAsStream(modulePath);
-
-						// expand the classpath-found file to a temporary location
-						if (stream != null) {
-							try {
-								// get and make a temp directory if necessary
-								String tmpDir = System.getProperty("java.io.tmpdir");
-								File expandedFile = File.createTempFile(file.getName() + "-", ".omod", new File(tmpDir));
-
-								// pull the name from the absolute path load attempt
-								var outStream = new FileOutputStream(expandedFile, false);
-
-								// do the actual file copying
-								OpenmrsUtil.copyFile(stream, outStream);
-
-								// add the freshly expanded file to the list of modules we're going to start up
-								modulesToLoad.add(expandedFile);
-								expandedFile.deleteOnExit();
-							} catch (IOException io) {
-								log.error("Unable to expand classpath found module: " + modulePath, io);
-							}
-						} else {
-							log.error("Unable to load module at path: " + modulePath
-							        + " because no file exists there and it is not found on the classpath. (absolute path tried: "
-							        + file.getAbsolutePath() + ")");
-						}
-					}
+				if (modulePath == null || modulePath.length() == 0) {
+					continue;
+				}
+				var file = new File(modulePath);
+				if (file.exists()) {
+					modulesToLoad.add(file);
+				} else {
+					expandClasspathModule(modulePath, file, modulesToLoad);
 				}
 			}
 
@@ -145,6 +120,25 @@ public class ModuleUtil {
 
 		// make sure all mandatory modules are loaded and started
 		checkMandatoryModulesStarted();
+	}
+
+	private static void expandClasspathModule(String modulePath, File file, List<File> modulesToLoad) {
+		try (InputStream stream = ModuleUtil.class.getClassLoader().getResourceAsStream(modulePath)) {
+			if (stream == null) {
+				log.error("Unable to load module at path: " + modulePath
+				        + " because no file exists there and it is not found on the classpath. (absolute path tried: "
+				        + file.getAbsolutePath() + ")");
+				return;
+			}
+			String tmpDir = System.getProperty("java.io.tmpdir");
+			File expandedFile = File.createTempFile(file.getName() + "-", ".omod", new File(tmpDir));
+			var outStream = new FileOutputStream(expandedFile, false);
+			OpenmrsUtil.copyFile(stream, outStream);
+			modulesToLoad.add(expandedFile);
+			expandedFile.deleteOnExit();
+		} catch (IOException io) {
+			log.error("Unable to expand classpath found module: " + modulePath, io);
+		}
 	}
 
 	/**

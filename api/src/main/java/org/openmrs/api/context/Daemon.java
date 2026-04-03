@@ -231,7 +231,7 @@ public final class Daemon {
 	 * @return a future that completes when the task is done;
 	 * @since 2.7.0
 	 */
-	@SuppressWarnings({ "squid:S1217", "unused" })
+	@SuppressWarnings({ "squid:S1217", "unused" }) // Intentional: delegates to daemon thread executor; public API for modules
 	public static <T> Future<T> runInNewDaemonThread(final Callable<T> callable) {
 		// make sure we're already in a daemon thread
 		if (!isDaemonThread()) {
@@ -250,7 +250,7 @@ public final class Daemon {
 	 * @return a future that completes when the task is done;
 	 * @since 2.7.0
 	 */
-	@SuppressWarnings({ "squid:S1217", "unused" })
+	@SuppressWarnings({ "squid:S1217", "unused" }) // Intentional: delegates to daemon thread executor; public API for modules
 	public static Future<?> runNewDaemonTask(final Runnable runnable) {
 		// make sure we're already in a daemon thread
 		if (!isDaemonThread()) {
@@ -331,7 +331,7 @@ public final class Daemon {
 	 *             instead
 	 */
 	@Deprecated
-	@SuppressWarnings({ "squid:S1217", "unused" })
+	@SuppressWarnings({ "squid:S1217", "unused" }) // Intentional: wraps run() in session; deprecated public API for modules
 	public static Thread runInDaemonThread(final Runnable runnable, DaemonToken token) {
 		if (!ModuleFactory.isTokenValid(token)) {
 			throw new ContextAuthenticationException("Invalid token " + token);
@@ -370,7 +370,7 @@ public final class Daemon {
 	 * @return the newly spawned {@link Thread}
 	 * @since 2.7.0
 	 */
-	@SuppressWarnings({ "squid:S1217", "unused" })
+	@SuppressWarnings({ "squid:S1217", "unused" }) // Intentional: delegates to daemon thread executor; public API for modules
 	public static <T> Future<T> runInDaemonThread(final Callable<T> callable, DaemonToken token) {
 		if (!ModuleFactory.isTokenValid(token)) {
 			throw new ContextAuthenticationException("Invalid token");
@@ -387,7 +387,7 @@ public final class Daemon {
 	 * @return the newly spawned {@link Thread}
 	 * @since 2.7.0
 	 */
-	@SuppressWarnings("squid:S1217")
+	@SuppressWarnings("squid:S1217") // Intentional: delegates to daemon thread executor, not Thread.start()
 	public static Future<?> runInDaemonThreadWithoutResult(final Runnable runnable, DaemonToken token) {
 		if (!ModuleFactory.isTokenValid(token)) {
 			throw new ContextAuthenticationException("Invalid token");

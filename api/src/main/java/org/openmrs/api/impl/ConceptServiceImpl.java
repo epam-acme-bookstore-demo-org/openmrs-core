@@ -140,30 +140,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 
 		if (concept.getConceptId() != null) {
 			uuidClonedConceptNameMap = new HashMap<>();
-			for (ConceptName conceptName : concept.getNames()) {
-				// ignore newly added names
-				if (conceptName.getConceptNameId() != null) {
-					ConceptName clone = cloneConceptName(conceptName);
-					clone.setConceptNameId(null);
-					uuidClonedConceptNameMap.put(conceptName.getUuid(), clone);
-
-					if (hasNameChanged(conceptName)) {
-						if (changedConceptNames == null) {
-							changedConceptNames = new ArrayList<>();
-						}
-						changedConceptNames.add(conceptName);
-					} else {
-						// put back the concept name id
-						clone.setConceptNameId(conceptName.getConceptNameId());
-						// Use the cloned version
-						try {
-							BeanUtils.copyProperties(conceptName, clone);
-						} catch (IllegalAccessException | InvocationTargetException e) {
-							log.error(ERROR_MESSAGE, e);
-						}
-					}
-				}
-			}
+			changedConceptNames = detectChangedConceptNames(concept, uuidClonedConceptNameMap);
 		}
 
 		if (CollectionUtils.isNotEmpty(changedConceptNames)) {
@@ -196,6 +173,39 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 		}
 
 		return dao.saveConcept(concept);
+	}
+
+	/**
+	 * Clones existing concept names and detects which ones have changed.
+	 */
+	private List<ConceptName> detectChangedConceptNames(Concept concept, Map<String, ConceptName> uuidClonedConceptNameMap) {
+		List<ConceptName> changedConceptNames = null;
+		for (ConceptName conceptName : concept.getNames()) {
+			// ignore newly added names
+			if (conceptName.getConceptNameId() == null) {
+				continue;
+			}
+			ConceptName clone = cloneConceptName(conceptName);
+			clone.setConceptNameId(null);
+			uuidClonedConceptNameMap.put(conceptName.getUuid(), clone);
+
+			if (hasNameChanged(conceptName)) {
+				if (changedConceptNames == null) {
+					changedConceptNames = new ArrayList<>();
+				}
+				changedConceptNames.add(conceptName);
+			} else {
+				// put back the concept name id
+				clone.setConceptNameId(conceptName.getConceptNameId());
+				// Use the cloned version
+				try {
+					BeanUtils.copyProperties(conceptName, clone);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					log.error(ERROR_MESSAGE, e);
+				}
+			}
+		}
+		return changedConceptNames;
 	}
 
 	private void ensureConceptMapTypeIsSet(Concept concept) {
@@ -2271,7 +2281,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (ConceptSource.class.equals(type)) {
 			return (T) getConceptSourceByUuid(uuid);

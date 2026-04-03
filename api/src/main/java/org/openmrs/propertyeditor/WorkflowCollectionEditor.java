@@ -110,7 +110,7 @@ public class WorkflowCollectionEditor extends PropertyEditorSupport {
 	 * @see java.beans.PropertyEditorSupport#getAsText()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // PropertyEditor getValue() returns Object; cast to Collection<ProgramWorkflow> required
 	public String getAsText() {
 		Collection<ProgramWorkflow> pws = (Collection<ProgramWorkflow>) getValue();
 		if (pws == null || pws.isEmpty()) {

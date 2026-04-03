@@ -12,7 +12,6 @@ package org.openmrs.logging;
 import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Logger;
@@ -162,31 +161,9 @@ public final class OpenmrsLoggingUtil {
 			LoggerContext context = ((Logger) LogManager.getRootLogger()).getContext();
 			LoggerConfig configuration = context.getConfiguration().getLoggerConfig(logClass);
 
-			logLevel = logLevel.toLowerCase();
-			switch (logLevel) {
-				case OpenmrsConstants.LOG_LEVEL_TRACE:
-					configuration.setLevel(Level.TRACE);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_DEBUG:
-					configuration.setLevel(Level.DEBUG);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_INFO:
-					configuration.setLevel(Level.INFO);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_WARN:
-					configuration.setLevel(Level.WARN);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_ERROR:
-					configuration.setLevel(Level.ERROR);
-					break;
-				case OpenmrsConstants.LOG_LEVEL_FATAL:
-					configuration.setLevel(Level.FATAL);
-					break;
-				default:
-					log.warn("Log level {} is invalid. " + "Valid values are trace, debug, info, warn, error or fatal",
-					    logLevel);
-					break;
-			}
+			OpenmrsLogLevel.fromString(logLevel).ifPresentOrElse(level -> configuration.setLevel(level.getLog4jLevel()),
+			    () -> log.warn("Log level {} is invalid. " + "Valid values are trace, debug, info, warn, error or fatal",
+			        logLevel));
 		}
 	}
 

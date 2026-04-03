@@ -126,7 +126,7 @@ class HibernateProxyModule extends Module {
 
 		private final JsonSerializer<Object> delegate;
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked") // JsonSerializer<?> to JsonSerializer<Object> cast needed for delegation
 		HibernateProxySerializer(JsonSerializer<?> delegate) {
 			this.delegate = (JsonSerializer<Object>) delegate;
 		}

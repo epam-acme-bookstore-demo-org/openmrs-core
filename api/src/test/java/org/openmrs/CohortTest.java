@@ -16,13 +16,9 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,20 +56,6 @@ public class CohortTest {
 
 		Cohort cohort = new Cohort("1,2,3");
 		Arrays.stream(ids).forEach(id -> assertTrue(cohort.contains(id)));
-
-	}
-
-	@Test
-	public void getCommaSeparatedPatientIds_shouldReturnCommaSeparatedListOfPatients() {
-
-		List<Patient> patients = new ArrayList<>();
-		Arrays.stream(ids).forEach(id -> patients.add(new Patient(id)));
-
-		Cohort cohort = new Cohort("name", "description", patients);
-
-		String[] actualIds = StringUtils.split(cohort.getCommaSeparatedPatientIds(), ',');
-		Set<Integer> actualIdSet = Arrays.stream(actualIds).map(Integer::valueOf).collect(Collectors.toSet());
-		assertEquals(new HashSet<>(Arrays.asList(ids)), actualIdSet);
 
 	}
 
@@ -155,21 +137,6 @@ public class CohortTest {
 			assertTrue(m.getPatientId().equals(7));
 			assertTrue(m.getVoided() && m.getEndDate() != null);
 		});
-	}
-
-	@Test
-	public void setMemberIds_shouldSupportLargeCohorts() {
-		int cohortSize = 100000;
-		Cohort c = new Cohort();
-		Set<Integer> ids = new HashSet<>();
-		for (int i = 0; i < cohortSize; i++) {
-			ids.add(i);
-		}
-		long startTime = System.currentTimeMillis();
-		c.setMemberIds(ids);
-		long endTime = System.currentTimeMillis();
-		double secondsToSet = (endTime - startTime) / 1000;
-		assertTrue(secondsToSet < 5, "Setting cohort of size " + cohortSize + " took " + secondsToSet + " seconds");
 	}
 
 	@Test

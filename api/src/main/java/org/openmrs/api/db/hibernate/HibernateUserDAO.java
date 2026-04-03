@@ -144,7 +144,7 @@ public class HibernateUserDAO implements UserDAO {
 	 * @see org.openmrs.api.UserService#getUserByUsername(java.lang.String)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public User getUserByUsername(String username) {
 		Query query = sessionFactory.getCurrentSession()
 		        .createQuery("from User u where u.retired = false and (u.username = ?1 or u.systemId = ?2)");
@@ -249,7 +249,7 @@ public class HibernateUserDAO implements UserDAO {
 	 * @see org.openmrs.api.UserService#getAllUsers()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<User> getAllUsers() throws DAOException {
 		return sessionFactory.getCurrentSession().createQuery("from User where not uuid = :daemonUserUuid order by userId")
 		        .setParameter("daemonUserUuid", Daemon.getDaemonUserUuid()).list();
@@ -285,7 +285,7 @@ public class HibernateUserDAO implements UserDAO {
 	 * @see org.openmrs.api.UserService#getAllPrivileges()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Privilege> getAllPrivileges() throws DAOException {
 		return sessionFactory.getCurrentSession().createQuery("from Privilege p order by p.privilege").list();
 	}
@@ -334,7 +334,7 @@ public class HibernateUserDAO implements UserDAO {
 	 * @see org.openmrs.api.UserService#getAllRoles()
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<Role> getAllRoles() throws DAOException {
 		return sessionFactory.getCurrentSession().createQuery("from Role r order by r.role").list();
 	}
@@ -519,7 +519,7 @@ public class HibernateUserDAO implements UserDAO {
 	 * @see UserDAO#getUsers(String, List, boolean, Integer, Integer)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Hibernate HQL query returns raw List
 	public List<User> getUsers(String name, List<Role> roles, boolean includeRetired, Integer start, Integer length) {
 
 		String hqlSelectStart = "select distinct user from User as user inner join user.person.names as name ";

@@ -218,7 +218,7 @@ public class ConceptSet extends BaseOpenmrsObject implements Auditable, java.io.
 	 *      that are inconsistent with equals.
 	 */
 	@Override
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	public int compareTo(ConceptSet cs) {
 		int value = OpenmrsUtil.compareWithNullAsLowest(concept.getRetired(), cs.concept.getRetired());
 		if (value == 0) {

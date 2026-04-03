@@ -52,7 +52,7 @@ public class OpenmrsJacksonLocaleModule extends Module {
 		setupContext.addSerializers(new Serializers.Base() {
 
 			@Override
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings("unchecked") // Jackson serializer lookup requires unchecked cast to Class<Locale>
 			public JsonSerializer<?> findSerializer(SerializationConfig config, JavaType type, BeanDescription beanDesc) {
 
 				final Class<?> raw = type.getRawClass();

@@ -113,7 +113,7 @@ public class Reflect {
 	 * @param subClass Class
 	 * @return true if, given subClass is accessible from the parameterized class
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Reflection: Class parameter lacks type info at runtime
 	public boolean isSuperClass(Class subClass) {
 		return parametrizedClass.isAssignableFrom(subClass);
 	}
@@ -179,7 +179,7 @@ public class Reflect {
 	 * @param field Field
 	 * @return boolean class type parameterized class type
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Reflection: ParameterizedType resolution loses compile-time generic info
 	public boolean isCollectionField(Field field) {
 		if (isCollection(field.getType())) {
 			try {

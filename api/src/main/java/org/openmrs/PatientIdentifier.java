@@ -256,7 +256,7 @@ public class PatientIdentifier extends BaseChangeableOpenmrsData implements java
 	 */
 	@Deprecated
 	@Override
-	@SuppressWarnings("squid:S1210")
+	@SuppressWarnings("squid:S1210") // Comparable.compareTo intentionally inconsistent with equals per design
 	public int compareTo(PatientIdentifier other) {
 		DefaultComparator piDefaultComparator = new DefaultComparator();
 		return piDefaultComparator.compare(this, other);

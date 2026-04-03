@@ -37,7 +37,7 @@ public class JobRequestHandlerAdapter implements org.jobrunr.jobs.lambdas.JobReq
 		this.applicationContext = applicationContext;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // GenericTypeResolver cannot preserve type parameters at runtime
 	@Override
 	public void run(JobRequestAdapter jobRequestAdapter) throws Exception {
 		TaskData request = jobRequestAdapter.getJobRequest();

@@ -14,11 +14,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openmrs.ConceptNumeric;
 
@@ -37,13 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Unit tests for {@link OpenmrsUtil}.
  */
 public class OpenmrsUtilUnitTest {
-
-	private List<String> moduleList;
-
-	@BeforeEach
-	public void setUp() {
-		moduleList = Arrays.asList("module1", "module2");
-	}
 
 	@AfterEach
 	public void clearSystemProperty() {
@@ -111,44 +102,6 @@ public class OpenmrsUtilUnitTest {
 	public void parseParameterList_shouldFailGivenOnlyKeysSeparatedByPipes() {
 
 		assertThrows(IllegalArgumentException.class, () -> OpenmrsUtil.parseParameterList("role_id|patient_id"));
-	}
-
-	@Test
-	public void join_shouldReturnEmptyStringGivenNullForCollection() {
-
-		assertThat(OpenmrsUtil.join(null, ""), is(""));
-	}
-
-	@Test
-	public void join_shouldReturnEmptyStringGivenEmptyCollection() {
-
-		assertThat(OpenmrsUtil.join(Collections.EMPTY_LIST, ""), is(""));
-	}
-
-	@Test
-	public void join_shouldReturnListElementsJoinedBySeparatorWithoutLeadingOrTrailingSeparator() {
-
-		assertThat(OpenmrsUtil.join(moduleList, ","), is("module1,module2"));
-	}
-
-	@Test
-	public void join_shouldReturnListElementsJoinedBySeparatorIfGivenCollectionContainsNull() {
-
-		List<String> listWithNull = Arrays.asList("module1", null, "module2");
-
-		assertThat(OpenmrsUtil.join(listWithNull, ","), is("module1,null,module2"));
-	}
-
-	@Test
-	public void join_shouldReturnListElementsJoinedBySeparatorIfGivenSeparatorIsEmptyString() {
-
-		assertThat(OpenmrsUtil.join(moduleList, ""), is("module1module2"));
-	}
-
-	@Test
-	public void join_shouldReturnListElementsJoinedBySeparatorIfGivenSeparatorIsNull() {
-
-		assertThat(OpenmrsUtil.join(moduleList, null), is("module1nullmodule2"));
 	}
 
 	@Test

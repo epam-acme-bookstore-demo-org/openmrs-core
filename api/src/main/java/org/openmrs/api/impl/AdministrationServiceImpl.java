@@ -731,7 +731,7 @@ public class AdministrationServiceImpl extends BaseOpenmrsService implements Adm
 	 *      java.lang.Object)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Reflection: runtime instantiation via constructor requires unchecked cast
 	public <T> T getGlobalPropertyValue(String propertyName, T defaultValue) throws APIException {
 		if (defaultValue == null) {
 			throw new IllegalArgumentException("The defaultValue argument cannot be null");
@@ -989,7 +989,7 @@ public class AdministrationServiceImpl extends BaseOpenmrsService implements Adm
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (GlobalProperty.class.equals(type)) {
 			return (T) getGlobalPropertyByUuid(uuid);

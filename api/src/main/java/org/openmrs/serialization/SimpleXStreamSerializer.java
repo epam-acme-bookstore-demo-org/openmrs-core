@@ -179,7 +179,7 @@ public class SimpleXStreamSerializer implements OpenmrsSerializer {
 	 * @see OpenmrsSerializer#deserialize(String, Class)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // XStream.fromXML returns Object; unchecked cast to T required
 	public <T> T deserialize(String serializedObject, Class<? extends T> clazz) throws SerializationException {
 		try {
 			return (T) getXstream().fromXML(serializedObject);

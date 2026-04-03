@@ -645,7 +645,7 @@ public class ProgramWorkflowServiceImpl extends BaseOpenmrsService implements Pr
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Type-checked dispatch: each branch casts after verifying Class<T> type
 	public <T> T getRefByUuid(Class<T> type, String uuid) {
 		if (ProgramAttributeType.class.equals(type)) {
 			return (T) getProgramAttributeTypeByUuid(uuid);

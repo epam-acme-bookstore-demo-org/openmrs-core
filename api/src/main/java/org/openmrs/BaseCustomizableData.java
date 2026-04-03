@@ -110,7 +110,7 @@ public abstract class BaseCustomizableData<A extends Attribute> extends BaseChan
 	 *
 	 * @param attribute
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") // Attribute.setOwner(this) requires unchecked cast due to generic type erasure
 	public void setAttribute(A attribute) {
 		if (getAttributes() == null) {
 			addAttribute(attribute);
