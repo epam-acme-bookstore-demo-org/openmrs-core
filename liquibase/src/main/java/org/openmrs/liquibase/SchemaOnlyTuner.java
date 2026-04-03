@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.XPath;
 
@@ -57,7 +56,7 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 
 		List<Node> nodes = xPath.selectNodes(document);
 		for (Node node : nodes) {
-			Element parent = node.getParent();
+			var parent = node.getParent();
 			parent.addAttribute("type", "BOOLEAN");
 
 			String defaultValue = parent.attributeValue("defaultValueNumeric");
@@ -100,7 +99,7 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 		assertLongtextNodes(nodes);
 
 		for (Node node : nodes) {
-			Element parent = node.getParent();
+			var parent = node.getParent();
 			parent.addAttribute("type", "CLOB");
 		}
 
@@ -122,7 +121,7 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 		        .formatted(nodes.size());
 
 		Node node = nodes.getFirst();
-		Element grandParent = node.getParent().getParent();
+		var grandParent = node.getParent().getParent();
 
 		assert grandParent.attributeValue("tableName").equals("clob_datatype_storage")
 		        : "replacing the column type 'LONGTEXT' failed as the node does not refer to the 'clob_datatype_storage' table";

@@ -91,7 +91,7 @@ public abstract class AbstractSnapshotTuner {
 	}
 
 	String addLicenseHeaderToFileContent(String path) throws FileNotFoundException {
-		StringBuilder buffer = new StringBuilder();
+		var buffer = new StringBuilder();
 
 		try (Scanner scanner = new Scanner(new File(path))) {
 			// read first line of xml file
@@ -115,7 +115,7 @@ public abstract class AbstractSnapshotTuner {
 	}
 
 	void deleteFile(String path) {
-		File file = Path.of(path).toFile();
+		var file = Path.of(path).toFile();
 		if (file.exists() && file.isFile()) {
 			log.info("Deleting updated file from previous run: '{}'...", path);
 			file.delete();
@@ -137,14 +137,14 @@ public abstract class AbstractSnapshotTuner {
 	}
 
 	static Document readChangeLogFile(String path) throws DocumentException, SAXException {
-		File file = Path.of(path).toFile();
+		var file = Path.of(path).toFile();
 		if (!file.exists()) {
 			log.error("The source file '{}' does not exist. Please generate both Liquibase changelog files and retry. "
 			        + "Please check if you are running this program from the 'openmrs-core/liquibase' folder.",
 			    path);
 			System.exit(0);
 		}
-		SAXReader reader = new SAXReader();
+		var reader = new SAXReader();
 		reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 		reader.setFeature("http://xml.org/sax/features/external-general-entities", false);
 		reader.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
@@ -175,7 +175,7 @@ public abstract class AbstractSnapshotTuner {
 
 	static String readInputStream(InputStream is) throws IOException {
 		// this may over-allocate, but we're only holding it in memory temporarily
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8192);
+		var outputStream = new ByteArrayOutputStream(8192);
 		byte[] buffer = new byte[8192];
 		int length;
 		while ((length = is.read(buffer)) != -1) {
@@ -198,8 +198,8 @@ public abstract class AbstractSnapshotTuner {
 	void writeChangeLogFile(Document document, String path) throws IOException {
 		XMLWriter xmlWriter = null;
 		try {
-			try (OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8)) {
-				OutputFormat format = OutputFormat.createPrettyPrint();
+			try (var out = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8)) {
+				var format = OutputFormat.createPrettyPrint();
 				xmlWriter = new XMLWriter(out, format);
 				xmlWriter.write(document);
 			}
@@ -218,7 +218,7 @@ public abstract class AbstractSnapshotTuner {
 	}
 
 	void writeFile(String content, String path) throws IOException {
-		File file = Path.of(path).toFile();
+		var file = Path.of(path).toFile();
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 			writer.write(content);
 		} catch (IOException e) {

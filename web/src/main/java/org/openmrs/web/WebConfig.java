@@ -9,7 +9,6 @@
  */
 package org.openmrs.web;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +106,7 @@ public class WebConfig implements WebMvcConfigurer {
 	@Bean
 	public ContentNegotiatingViewResolver contentNegotiatingViewResolver() {
 		ContentNegotiatingViewResolver viewResolver = new ContentNegotiatingViewResolver();
-		viewResolver.setDefaultViews(Arrays.asList(mappingJackson2JsonView(), marshallingView()));
+		viewResolver.setDefaultViews(List.of(mappingJackson2JsonView(), marshallingView()));
 		return viewResolver;
 	}
 

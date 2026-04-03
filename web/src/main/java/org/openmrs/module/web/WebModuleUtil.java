@@ -443,20 +443,20 @@ public class WebModuleUtil {
 				Node childNode = childNodes.item(j);
 				if ("servlet-name".equals(childNode.getNodeName())) {
 					if (childNode.getTextContent() != null) {
-						name = childNode.getTextContent().trim();
+						name = childNode.getTextContent().strip();
 					}
 				} else if ("servlet-class".equals(childNode.getNodeName()) && childNode.getTextContent() != null) {
-					className = childNode.getTextContent().trim();
+					className = childNode.getTextContent().strip();
 				} else if ("init-param".equals(childNode.getNodeName())) {
 					NodeList initParamChildren = childNode.getChildNodes();
 					String paramName = null, paramValue = null;
 					for (int k = 0; k < initParamChildren.getLength(); k++) {
 						Node initParamChild = initParamChildren.item(k);
 						if ("param-name".equals(initParamChild.getNodeName()) && initParamChild.getTextContent() != null) {
-							paramName = initParamChild.getTextContent().trim();
+							paramName = initParamChild.getTextContent().strip();
 						} else if ("param-value".equals(initParamChild.getNodeName())
 						        && initParamChild.getTextContent() != null) {
-							paramValue = initParamChild.getTextContent().trim();
+							paramValue = initParamChild.getTextContent().strip();
 						}
 					}
 
@@ -535,7 +535,7 @@ public class WebModuleUtil {
 			for (int j = 0; j < childNodes.getLength(); j++) {
 				Node childNode = childNodes.item(j);
 				if ("servlet-name".equals(childNode.getNodeName()) && childNode.getTextContent() != null) {
-					name = childNode.getTextContent().trim();
+					name = childNode.getTextContent().strip();
 
 					HttpServlet servlet;
 					SERVLET_LOCK.lock();

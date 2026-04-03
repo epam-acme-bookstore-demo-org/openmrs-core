@@ -13,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -134,11 +133,11 @@ public class CoreDataTunerTest {
 
 	@Test
 	public void shouldMergeTableNamesInTargetOrder() {
-		List<String> first = Arrays.asList("one", "five");
-		List<String> second = Arrays.asList("one", "two", "three", "four", "five");
+		List<String> first = List.of("one", "five");
+		List<String> second = List.of("one", "two", "three", "four", "five");
 
 		List<String> actual = mergeLists(first, second);
-		List<String> expected = Arrays.asList("one", "five", "two", "three", "four");
+		List<String> expected = List.of("one", "five", "two", "three", "four");
 
 		assertEquals(expected, actual);
 	}
@@ -146,8 +145,8 @@ public class CoreDataTunerTest {
 	@Test
 	public void shouldDetectThatSecondListDoesNotContainFirstList() {
 		assertThrows(AssertionError.class, () -> {
-			List<String> first = Arrays.asList("one", "six");
-			List<String> second = Arrays.asList("one", "two", "three", "four", "five");
+			List<String> first = List.of("one", "six");
+			List<String> second = List.of("one", "two", "three", "four", "five");
 
 			List<String> actual = mergeLists(first, second);
 		});
@@ -171,11 +170,11 @@ public class CoreDataTunerTest {
 
 	@Test
 	public void shouldGetTableNames() {
-		List<String> expected = Arrays.asList("care_setting", "concept", "concept_class", "concept_datatype",
-		    "concept_map_type", "concept_name", "concept_stop_word", "encounter_role", "field_type", "global_property",
-		    "hl7_source", "liquibasechangelog", "liquibasechangeloglock", "location", "order_type",
-		    "patient_identifier_type", "person", "person_attribute_type", "person_name", "privilege", "relationship_type",
-		    "role", "role_privilege", "scheduler_task_config", "user_property", "user_role", "users");
+		List<String> expected = List.of("care_setting", "concept", "concept_class", "concept_datatype", "concept_map_type",
+		    "concept_name", "concept_stop_word", "encounter_role", "field_type", "global_property", "hl7_source",
+		    "liquibasechangelog", "liquibasechangeloglock", "location", "order_type", "patient_identifier_type", "person",
+		    "person_attribute_type", "person_name", "privilege", "relationship_type", "role", "role_privilege",
+		    "scheduler_task_config", "user_property", "user_role", "users");
 
 		List<String> actual = getTableNames(document);
 

@@ -87,7 +87,7 @@ public class CookieClearingFilter extends OncePerRequestFilter {
 								Cookie clearedCookie = new Cookie(cookie.getName(), null);
 								String contextPath = request.getContextPath();
 								clearedCookie
-								        .setPath(contextPath == null || contextPath.trim().equals("") ? "/" : contextPath);
+								        .setPath(contextPath == null || contextPath.strip().isBlank() ? "/" : contextPath);
 								clearedCookie.setMaxAge(0);
 								clearedCookie.setHttpOnly(true);
 								clearedCookie.setSecure(request.isSecure());

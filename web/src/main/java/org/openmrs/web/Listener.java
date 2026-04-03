@@ -23,7 +23,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -176,7 +175,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 * @see HttpSessionListener#sessionDestroyed(HttpSessionEvent)
 	 */
 	private List<HttpSessionListener> getHttpSessionListeners() {
-		List<HttpSessionListener> httpSessionListeners = Collections.emptyList();
+		List<HttpSessionListener> httpSessionListeners = List.of();
 
 		if (openmrsStarted) {
 			try {
@@ -262,8 +261,8 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	}
 
 	private void loadCsrfGuardProperties(ServletContext servletContext) throws IOException {
-		File csrfGuardFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "csrfguard.properties");
-		Properties csrfGuardProperties = new Properties();
+		var csrfGuardFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "csrfguard.properties");
+		var csrfGuardProperties = new Properties();
 		if (csrfGuardFile.exists()) {
 			try (InputStream csrfGuardInputStream = Files.newInputStream(csrfGuardFile.toPath())) {
 				csrfGuardProperties.load(csrfGuardInputStream);
@@ -524,29 +523,10 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 * @return true/false whether the copy was a success
 	 */
 	private boolean copyFile(String fromPath, String toPath) {
-		FileInputStream inputStream = null;
-		FileOutputStream outputStream = null;
-		try {
-			inputStream = new FileInputStream(fromPath);
-			outputStream = new FileOutputStream(toPath);
+		try (var inputStream = new FileInputStream(fromPath); var outputStream = new FileOutputStream(toPath)) {
 			OpenmrsUtil.copyFile(inputStream, outputStream);
 		} catch (IOException io) {
 			return false;
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException io) {
-				log.warn("Unable to close input stream", io);
-			}
-			try {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			} catch (IOException io) {
-				log.warn("Unable to close input stream", io);
-			}
 		}
 		return true;
 	}
@@ -668,7 +648,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 *             {@link MandatoryModuleException}
 	 */
 	public static void performWebStartOfModules(ServletContext servletContext) throws ModuleMustStartException, Exception {
-		List<Module> startedModules = new ArrayList<>(ModuleFactory.getStartedModules());
+		var startedModules = new ArrayList<>(ModuleFactory.getStartedModules());
 		performWebStartOfModules(startedModules, servletContext);
 	}
 
