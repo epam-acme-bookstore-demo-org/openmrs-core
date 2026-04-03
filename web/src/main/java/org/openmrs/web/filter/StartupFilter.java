@@ -20,8 +20,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -139,7 +137,7 @@ public abstract class StartupFilter implements Filter {
 				// strip out the /initfilter part
 				servletPath = servletPath.replaceFirst("/initfilter", "/WEB-INF/view");
 				// writes the actual file path to the response
-				Path filePath = Paths.get(filterConfig.getServletContext().getRealPath(servletPath)).normalize();
+				Path filePath = Path.of(filterConfig.getServletContext().getRealPath(servletPath)).normalize();
 				Path fullFilePath = filePath;
 
 				if (httpRequest.getPathInfo() != null) {
@@ -261,7 +259,7 @@ public abstract class StartupFilter implements Filter {
 		Object locale = referenceMap.get(FilterUtil.LOCALE_ATTRIBUTE);
 		ToolContext velocityToolContext = getToolContext(
 		    locale != null ? locale.toString() : Context.getLocale().toString());
-		VelocityContext velocityContext = new VelocityContext(velocityToolContext);
+		var velocityContext = new VelocityContext(velocityToolContext);
 
 		for (Map.Entry<String, Object> entry : referenceMap.entrySet()) {
 			velocityContext.put(entry.getKey(), entry.getValue());
@@ -380,7 +378,7 @@ public abstract class StartupFilter implements Filter {
 
 			result.put("logLines", logLines);
 		} else {
-			result.put("logLines", Collections.emptyList());
+			result.put("logLines", List.of());
 		}
 	}
 
@@ -392,7 +390,7 @@ public abstract class StartupFilter implements Filter {
 	 * @return JSON string to be eval'd in javascript
 	 */
 	protected String toJSONString(Object object) {
-		ObjectMapper mapper = new ObjectMapper();
+		var mapper = new ObjectMapper();
 		mapper.getFactory().setCharacterEscapes(new OpenmrsCharacterEscapes());
 		try {
 			return mapper.writeValueAsString(object);

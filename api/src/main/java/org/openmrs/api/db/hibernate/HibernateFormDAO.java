@@ -242,7 +242,7 @@ public class HibernateFormDAO implements FormDAO {
 		}
 
 		// save the first formfield in case we're not a in a "force" situation
-		FormField backupPlan = formFields.get(0);
+		FormField backupPlan = formFields.getFirst();
 
 		// remove the formfields we're supposed to ignore from the return list
 		formFields.removeAll(ignoreFormFields);
@@ -258,7 +258,7 @@ public class HibernateFormDAO implements FormDAO {
 			}
 		} else {
 			// if formFields.size() is still greater than 0
-			return formFields.get(0);
+			return formFields.getFirst();
 		}
 	}
 

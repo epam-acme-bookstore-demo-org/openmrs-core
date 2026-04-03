@@ -260,7 +260,7 @@ public class MessageServiceImpl implements MessageService {
 	@Transactional(readOnly = true)
 	public Message prepareMessage(String templateName, Map data) throws MessageException {
 		try {
-			Template template = (Template) getTemplatesByName(templateName).get(0);
+			Template template = (Template) getTemplatesByName(templateName).getFirst();
 			template.setData(data);
 			return Context.getMessageService().prepareMessage(template);
 		} catch (Exception e) {

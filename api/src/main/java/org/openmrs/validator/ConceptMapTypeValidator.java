@@ -66,7 +66,7 @@ public class ConceptMapTypeValidator implements Validator {
 			return;
 		}
 
-		name = name.trim();
+		name = name.strip();
 		ConceptMapType duplicate = Context.getConceptService().getConceptMapTypeByName(name);
 		if (duplicate != null && !OpenmrsUtil.nullSafeEquals(duplicate.getUuid(), conceptMapType.getUuid())) {
 			errors.rejectValue("name", "ConceptMapType.duplicate.name", "Duplicate concept map type name: " + name);

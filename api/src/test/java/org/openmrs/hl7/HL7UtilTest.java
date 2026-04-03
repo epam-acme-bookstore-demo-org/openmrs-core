@@ -50,7 +50,7 @@ public class HL7UtilTest {
 	@Test
 	public void parseHL7Timestamp_shouldHandle197804110615dash0200() throws HL7Exception {
 		Date d = HL7Util.parseHL7Date("197804110615-0200");
-		assertEquals(new Long("261130500000"), (Long) d.getTime());
+		assertEquals(Long.valueOf("261130500000"), (Long) d.getTime());
 	}
 
 	/**

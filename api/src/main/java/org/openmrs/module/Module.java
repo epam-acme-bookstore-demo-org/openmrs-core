@@ -132,8 +132,7 @@ public final class Module {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof Module) {
-			Module mod = (Module) obj;
+		if (obj != null && obj instanceof Module mod) {
 			return getModuleId().equals(mod.getModuleId());
 		}
 		return false;

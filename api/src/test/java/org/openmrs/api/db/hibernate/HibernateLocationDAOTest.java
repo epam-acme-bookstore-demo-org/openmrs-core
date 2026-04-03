@@ -10,7 +10,7 @@
 package org.openmrs.api.db.hibernate;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -61,8 +61,7 @@ public class HibernateLocationDAOTest extends BaseContextSensitiveTest {
 	@Test
 	public void getLocationsHavingAllTags_shouldReturnEmptyListWhenNoLocationHasTheGivenTags() {
 		assertEquals(0,
-		    dao.getLocationsHavingAllTags(Collections.singletonList(dao.getLocationTagByName("Nobody got this tag")))
-		            .size());
+		    dao.getLocationsHavingAllTags(Arrays.asList(dao.getLocationTagByName("Nobody got this tag"))).size());
 	}
 
 	@Test

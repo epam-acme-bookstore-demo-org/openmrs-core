@@ -16,7 +16,6 @@ import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -40,7 +39,7 @@ public class LocalStorageServiceTest extends BaseStorageServiceTest {
 	public void getData_shouldReturnDataWhenLegacyFileExists() throws IOException {
 		Path legacyPath = null;
 		try {
-			Path dir = Files.createDirectories(Paths.get(OpenmrsUtil.getApplicationDataDirectory(), "storage"));
+			Path dir = Files.createDirectories(Path.of(OpenmrsUtil.getApplicationDataDirectory(), "storage"));
 			legacyPath = Files.createFile(dir.resolve(RandomStringUtils.insecure().nextAlphanumeric(8)));
 
 			try (OutputStream out = Files.newOutputStream(legacyPath)) {
@@ -96,7 +95,7 @@ public class LocalStorageServiceTest extends BaseStorageServiceTest {
 		});
 		assertThat(e.getMessage(), is("Key must not point outside storage dir. Wrong key: /test"));
 
-		Path testFile = Paths.get(OpenmrsUtil.getApplicationDataDirectory(), "../test");
+		Path testFile = Path.of(OpenmrsUtil.getApplicationDataDirectory(), "../test");
 		try {
 			testFile.toFile().createNewFile();
 			IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class, () -> {

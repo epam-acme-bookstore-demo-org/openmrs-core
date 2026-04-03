@@ -93,7 +93,7 @@ public class ProgramWorkflowDAOTest extends BaseContextSensitiveTest {
 		clearHibernateCache();
 		List<Program> programs = dao.getProgramsByName("testProgramName", true);
 		assertEquals(2, programs.size());
-		assertEquals(program1, programs.get(0));
+		assertEquals(program1, programs.getFirst());
 		assertEquals(program2, programs.get(1));
 	}
 
@@ -101,7 +101,7 @@ public class ProgramWorkflowDAOTest extends BaseContextSensitiveTest {
 	public void getPatientPrograms_shouldReturnListChronologicallySortedByEnrollmentDate() {
 		List<PatientProgram> patientPrograms = dao.getPatientPrograms(null, null, null, null, null, null, true);
 		assertNotNull(patientPrograms);
-		Date previousDate = patientPrograms.get(0).getDateEnrolled();
+		Date previousDate = patientPrograms.getFirst().getDateEnrolled();
 		for (PatientProgram patientProgram : patientPrograms) {
 			assertTrue(patientProgram.getDateEnrolled().compareTo(previousDate) >= 0);
 			previousDate = patientProgram.getDateEnrolled();

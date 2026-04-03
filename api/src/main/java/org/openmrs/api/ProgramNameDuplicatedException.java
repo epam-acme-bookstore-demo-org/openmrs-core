@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 /**
  * This exception is thrown when one attempts to retrieve a program by name while there accidentally
  * are more than one programs with the same name in the dB.
@@ -18,6 +20,7 @@ package org.openmrs.api;
  */
 public class ProgramNameDuplicatedException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

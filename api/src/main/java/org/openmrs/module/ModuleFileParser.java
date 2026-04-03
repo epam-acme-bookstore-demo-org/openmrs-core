@@ -283,8 +283,6 @@ public class ModuleFileParser {
 
 	private DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
 		DocumentBuilder db = createDocumentBuilder();
-		;
-
 		// When asked to resolve external entities (such as a
 		// DTD) we return an InputSource
 		// with no data at the end, causing the parser to ignore
@@ -315,7 +313,7 @@ public class ModuleFileParser {
 		String desc = getElementTrimmed(configRoot, "description");
 		String version = getElementTrimmed(configRoot, "version");
 
-		Module module = new Module(name, moduleId, packageName, author, desc, version, configVersion);
+		var module = new Module(name, moduleId, packageName, author, desc, version, configVersion);
 
 		module.setActivatorName(getElementTrimmed(configRoot, "activator"));
 		module.setRequireDatabaseVersion(getElementTrimmed(configRoot, "require_database_version"));
@@ -341,7 +339,7 @@ public class ModuleFileParser {
 	}
 
 	private String ensureValidModuleConfigVersion(Element configRoot, File moduleFile) {
-		String configVersion = configRoot.getAttribute("configVersion").trim();
+		String configVersion = configRoot.getAttribute("configVersion").strip();
 		validateModuleConfigVersion(configVersion, moduleFile);
 		return configVersion;
 	}
@@ -398,7 +396,7 @@ public class ModuleFileParser {
 
 		NodeList parents = configRoot.getElementsByTagName(elementParentName);
 
-		Map<String, String> result = new HashMap<>();
+		var result = new HashMap<String, String>();
 		if (parents.getLength() == 0) {
 			return result;
 		}
@@ -411,7 +409,7 @@ public class ModuleFileParser {
 			Element child = (Element) children.item(i);
 			Attr versionAttribute = child.getAttributeNode("version");
 			String version = versionAttribute == null ? null : versionAttribute.getValue();
-			result.put(child.getTextContent().trim(), version);
+			result.put(child.getTextContent().strip(), version);
 			i++;
 		}
 		return result;
@@ -419,7 +417,7 @@ public class ModuleFileParser {
 
 	private List<AdvicePoint> extractAdvice(Element configRoot, Module module) {
 
-		List<AdvicePoint> result = new ArrayList<>();
+		var result = new ArrayList<AdvicePoint>();
 
 		NodeList advice = configRoot.getElementsByTagName("advice");
 		if (advice.getLength() == 0) {
@@ -476,7 +474,7 @@ public class ModuleFileParser {
 
 	private List<Privilege> extractPrivileges(Element configRoot) {
 
-		List<Privilege> result = new ArrayList<>();
+		var result = new ArrayList<Privilege>();
 
 		NodeList privileges = configRoot.getElementsByTagName("privilege");
 		if (privileges.getLength() == 0) {
@@ -503,7 +501,7 @@ public class ModuleFileParser {
 
 	private List<GlobalProperty> extractGlobalProperties(Element configRoot) {
 
-		List<GlobalProperty> result = new ArrayList<>();
+		var result = new ArrayList<GlobalProperty>();
 
 		NodeList propNodes = configRoot.getElementsByTagName("globalProperty");
 		if (propNodes.getLength() == 0) {
@@ -547,7 +545,7 @@ public class ModuleFileParser {
 	}
 
 	private String removeTabsAndTrim(String string) {
-		return string.replaceAll("	", "").trim();
+		return string.replaceAll("	", "").strip();
 	}
 
 	private GlobalProperty createGlobalProperty(String property, String defaultValue, String description,
@@ -598,13 +596,13 @@ public class ModuleFileParser {
 	}
 
 	private List<String> extractMappingFiles(Element configRoot) {
-		List<String> result = new ArrayList<>();
+		var result = new ArrayList<String>();
 		splitTagContentByWhitespace(configRoot, "mappingFiles", result);
 		return result;
 	}
 
 	private Set<String> extractPackagesWithMappedClasses(Element configRoot) {
-		Set<String> result = new HashSet<>();
+		var result = new HashSet<String>();
 		splitTagContentByWhitespace(configRoot, "packagesWithMappedClasses", result);
 		return result;
 	}
@@ -612,7 +610,7 @@ public class ModuleFileParser {
 	private Collection<String> splitTagContentByWhitespace(Element rootNode, String tag, Collection<String> result) {
 		String content = getElement(rootNode, tag);
 		for (String s : content.split("\\s")) {
-			String s2 = s.trim();
+			String s2 = s.strip();
 			if (s2.length() > 0) {
 				result.add(s2);
 			}
@@ -629,7 +627,7 @@ public class ModuleFileParser {
 	}
 
 	private String getElementTrimmed(Element element, String name) {
-		return getElement(element, name).trim();
+		return getElement(element, name).strip();
 	}
 
 	private String getElement(Element root, String tag) {
@@ -663,7 +661,7 @@ public class ModuleFileParser {
 	 * <strong>Should</strong> throw exception if path is blank
 	 */
 	List<ModuleConditionalResource> extractConditionalResources(Element configRoot) {
-		List<ModuleConditionalResource> conditionalResources = new ArrayList<>();
+		var conditionalResources = new ArrayList<ModuleConditionalResource>();
 
 		NodeList parentConditionalResources = configRoot.getElementsByTagName("conditionalResources");
 
@@ -690,7 +688,7 @@ public class ModuleFileParser {
 
 			NodeList resourceElements = conditionalResourceNode.getChildNodes();
 
-			ModuleConditionalResource resource = new ModuleConditionalResource();
+			var resource = new ModuleConditionalResource();
 			conditionalResources.add(resource);
 
 			for (int j = 0; j < resourceElements.getLength(); j++) {

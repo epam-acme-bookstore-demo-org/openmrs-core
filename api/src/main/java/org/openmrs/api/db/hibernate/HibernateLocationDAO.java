@@ -91,7 +91,7 @@ public class HibernateLocationDAO implements LocationDAO {
 		if (null == locations || locations.isEmpty()) {
 			return null;
 		}
-		return locations.get(0);
+		return locations.getFirst();
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class HibernateLocationDAO implements LocationDAO {
 		if (null == tags || tags.isEmpty()) {
 			return null;
 		}
-		return tags.get(0);
+		return tags.getFirst();
 	}
 
 	/**

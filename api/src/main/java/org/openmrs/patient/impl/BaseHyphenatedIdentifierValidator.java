@@ -147,29 +147,6 @@ public abstract class BaseHyphenatedIdentifierValidator implements IdentifierVal
 	 * @return
 	 */
 	private char convertCheckDigitToChar(int checkDigit) {
-		switch (checkDigit) {
-			case 0:
-				return 'A';
-			case 1:
-				return 'B';
-			case 2:
-				return 'C';
-			case 3:
-				return 'D';
-			case 4:
-				return 'E';
-			case 5:
-				return 'F';
-			case 6:
-				return 'G';
-			case 7:
-				return 'H';
-			case 8:
-				return 'I';
-			case 9:
-				return 'J';
-			default:
-				return 'X';
-		}
+		return switch(checkDigit){case 0->'A';case 1->'B';case 2->'C';case 3->'D';case 4->'E';case 5->'F';case 6->'G';case 7->'H';case 8->'I';case 9->'J';default->'X';};
 	}
 }

@@ -370,7 +370,7 @@ public class PatientTest {
 		pa3.setVoided(true);
 
 		assertThat(p.getActiveIdentifiers(), hasSize(2));
-		assertEquals(pa2, p.getActiveIdentifiers().get(0), "Preferred identifier should be first in the list");
+		assertEquals(pa2, p.getActiveIdentifiers().getFirst(), "Preferred identifier should be first in the list");
 		assertEquals(pa1, p.getActiveIdentifiers().get(1), "Non-preferred identifier should be last in the list");
 	}
 }

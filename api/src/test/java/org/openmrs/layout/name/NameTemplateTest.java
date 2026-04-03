@@ -11,7 +11,6 @@ package org.openmrs.layout.name;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class NameTemplateTest extends BaseContextSensitiveTest {
 		sizeMappings.put("familyName", "30");
 		nameTemplate.setSizeMappings(sizeMappings);
 
-		nameSupport.setLayoutTemplates(Collections.singletonList(nameTemplate));
+		nameSupport.setLayoutTemplates(List.of(nameTemplate));
 
 		PersonName personName = new PersonName();
 		personName.setGivenName("Mark");
@@ -92,7 +91,7 @@ public class NameTemplateTest extends BaseContextSensitiveTest {
 		sizeMappings.put("middleName", "30");
 		nameTemplate.setSizeMappings(sizeMappings);
 
-		nameSupport.setLayoutTemplates(Collections.singletonList(nameTemplate));
+		nameSupport.setLayoutTemplates(List.of(nameTemplate));
 
 		PersonName personName = new PersonName();
 		personName.setGivenName("Mark");

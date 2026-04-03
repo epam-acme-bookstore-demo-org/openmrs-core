@@ -9,6 +9,7 @@
  */
 package org.openmrs.notification;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -29,6 +30,7 @@ import org.openmrs.api.context.Context;
 @Audited
 public class Alert extends BaseOpenmrsObject implements Auditable, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -507111111109152L;
 
 	public static final int TEXT_MAX_LENGTH = 512;

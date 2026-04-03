@@ -15,7 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -394,7 +393,7 @@ class ThreadSafeCircularFifoQueueTest {
 	void shouldHandleEmptyCollectionOperations() {
 		Queue<String> queue = new ThreadSafeCircularFifoQueue<>(100);
 		queue.add("a");
-		assertFalse(queue.removeAll(Collections.emptyList()));
+		assertFalse(queue.removeAll(List.of()));
 		assertFalse(queue.retainAll(Arrays.asList("a")));
 		assertEquals(1, queue.size());
 	}
@@ -537,7 +536,7 @@ class ThreadSafeCircularFifoQueueTest {
 			elements.add(elem);
 		}
 		assertEquals(3, elements.size());
-		assertEquals(Integer.valueOf(8), elements.get(0));
+		assertEquals(Integer.valueOf(8), elements.getFirst());
 		assertEquals(Integer.valueOf(9), elements.get(1));
 		assertEquals(Integer.valueOf(10), elements.get(2));
 	}

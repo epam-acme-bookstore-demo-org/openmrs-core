@@ -17,9 +17,9 @@ import java.time.Month;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -601,7 +601,7 @@ public class PersonTest extends BaseContextSensitiveTest {
 
 		PersonName voidedName = PersonNameBuilder.newBuilder().withVoided(true).build();
 
-		checkGetPersonNameResultForVoidedPerson(voidedName, new HashSet<>(Collections.singletonList(voidedName)));
+		checkGetPersonNameResultForVoidedPerson(voidedName, new HashSet<>(List.of(voidedName)));
 
 	}
 
@@ -710,7 +710,7 @@ public class PersonTest extends BaseContextSensitiveTest {
 	@Test
 	public void getAttribute_shouldreturnPersonAttributeBasedOnAttributeTypeId() {
 		Person person = personHelper(false, 1, 2, 3, "name1", "name2", "name3", "value1", "value2", "value3");
-		assertEquals(new Integer(3), person.getAttribute(3).getAttributeType().getId());
+		assertEquals(Integer.valueOf(3), person.getAttribute(3).getAttributeType().getId());
 	}
 
 	/**

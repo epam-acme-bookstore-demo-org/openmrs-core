@@ -12,7 +12,7 @@ package org.openmrs.web.test;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,7 +54,7 @@ public class WebModuleActivatorTest extends BaseModuleActivatorTest {
 		//org.openmrs.module.ModuleException: Unable to load module messages from file:
 		// /Projects/openmrs/core/web/target/test-classes/WEB-INF/module_messages_fr.properties
 
-		File folder = Paths.get("target", "test-classes", "WEB-INF").toFile();
+		File folder = Path.of("target", "test-classes", "WEB-INF").toFile();
 		if (!folder.exists()) {
 			folder.mkdirs();
 		}

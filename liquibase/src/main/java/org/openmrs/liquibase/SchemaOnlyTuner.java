@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.XPath;
 
@@ -42,7 +41,7 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 	}
 
 	Document detachChangeSet(Document document, String tableName) {
-		XPath xPath = DocumentHelper.createXPath(String.format("//dbchangelog:createTable[@tableName=\"%s\"]", tableName));
+		XPath xPath = DocumentHelper.createXPath("//dbchangelog:createTable[@tableName=\"%s\"]".formatted(tableName));
 		xPath.setNamespaceURIs(getNamespaceUris());
 
 		Node node = xPath.selectSingleNode(document);
@@ -57,7 +56,7 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 
 		List<Node> nodes = xPath.selectNodes(document);
 		for (Node node : nodes) {
-			Element parent = node.getParent();
+			var parent = node.getParent();
 			parent.addAttribute("type", "BOOLEAN");
 
 			String defaultValue = parent.attributeValue("defaultValueNumeric");
@@ -100,7 +99,7 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 		assertLongtextNodes(nodes);
 
 		for (Node node : nodes) {
-			Element parent = node.getParent();
+			var parent = node.getParent();
 			parent.addAttribute("type", "CLOB");
 		}
 
@@ -118,11 +117,11 @@ public class SchemaOnlyTuner extends AbstractSnapshotTuner {
 	 * @return a boolean value for unit testing
 	 */
 	boolean assertLongtextNodes(List<Node> nodes) {
-		assert nodes.size() == 2 : String
-		        .format("replacing the column type 'LONGTEXT' failed as the number of nodes is not 2 but %d", nodes.size());
+		assert nodes.size() == 2 : "replacing the column type 'LONGTEXT' failed as the number of nodes is not 2 but %d"
+		        .formatted(nodes.size());
 
-		Node node = nodes.get(0);
-		Element grandParent = node.getParent().getParent();
+		Node node = nodes.getFirst();
+		var grandParent = node.getParent().getParent();
 
 		assert grandParent.attributeValue("tableName").equals("clob_datatype_storage")
 		        : "replacing the column type 'LONGTEXT' failed as the node does not refer to the 'clob_datatype_storage' table";

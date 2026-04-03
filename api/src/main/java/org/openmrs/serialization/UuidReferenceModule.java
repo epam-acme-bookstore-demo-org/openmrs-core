@@ -105,8 +105,8 @@ public class UuidReferenceModule extends SimpleModule {
 						public void serializeAsField(Object bean, JsonGenerator gen, SerializerProvider prov)
 						        throws Exception {
 							Object value = get(bean);
-							if (value instanceof OpenmrsObject) {
-								gen.writeStringField(getName(), ((OpenmrsObject) value).getUuid());
+							if (value instanceof OpenmrsObject object) {
+								gen.writeStringField(getName(), object.getUuid());
 							} else {
 								super.serializeAsField(bean, gen, prov);
 							}
@@ -138,7 +138,6 @@ public class UuidReferenceModule extends SimpleModule {
 								if (uuid == null || uuid.isEmpty()) {
 									return null;
 								}
-								;
 								return domainService.fetchByUuid((Class<?>) rawType, uuid);
 							}
 						};

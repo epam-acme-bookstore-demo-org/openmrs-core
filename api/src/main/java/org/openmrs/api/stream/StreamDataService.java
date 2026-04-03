@@ -101,7 +101,7 @@ public class StreamDataService {
 				return result;
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				InterruptedIOException interruptedIoException = new InterruptedIOException();
+				var interruptedIoException = new InterruptedIOException();
 				interruptedIoException.initCause(e);
 				throw interruptedIoException;
 			}
@@ -148,12 +148,12 @@ public class StreamDataService {
 				queueInputStream.checkStreamException();
 
 				if (!queueInputStream.blockingQueue.offer(255 & b, queueInputStream.timeoutNanos, TimeUnit.NANOSECONDS)) {
-					IOException streamException = new IOException("Failed to write to full queue");
+					var streamException = new IOException("Failed to write to full queue");
 					queueInputStream.propagateStreamException(streamException);
 				}
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				InterruptedIOException interruptedIoException = new InterruptedIOException();
+				var interruptedIoException = new InterruptedIOException();
 				interruptedIoException.initCause(e);
 				throw interruptedIoException;
 			}
@@ -172,12 +172,12 @@ public class StreamDataService {
 
 				// Indicate the end of stream
 				if (!this.queueInputStream.blockingQueue.offer(-1, queueInputStream.timeoutNanos, TimeUnit.NANOSECONDS)) {
-					IOException streamException = new IOException("Failed to write to full queue");
+					var streamException = new IOException("Failed to write to full queue");
 					queueInputStream.propagateStreamException(streamException);
 				}
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
-				InterruptedIOException interruptedIoException = new InterruptedIOException();
+				var interruptedIoException = new InterruptedIOException();
 				interruptedIoException.initCause(e);
 				throw interruptedIoException;
 			}
@@ -205,7 +205,7 @@ public class StreamDataService {
 			}
 			return new ByteArrayInputStream(out.toByteArray());
 		} else {
-			QueueInputStream in = new QueueInputStream();
+			var in = new QueueInputStream();
 
 			taskExecutor.execute(() -> {
 				QueueOutputStream out = in.newQueueOutputStream();

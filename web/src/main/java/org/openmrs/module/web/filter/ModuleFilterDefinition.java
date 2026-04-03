@@ -163,10 +163,10 @@ public class ModuleFilterDefinition implements Serializable {
 						Node configNode = configNodes.item(j);
 						switch (configNode.getNodeName()) {
 							case "filter-name":
-								filter.setFilterName(configNode.getTextContent().trim());
+								filter.setFilterName(configNode.getTextContent().strip());
 								break;
 							case "filter-class":
-								filter.setFilterClass(configNode.getTextContent().trim());
+								filter.setFilterClass(configNode.getTextContent().strip());
 								break;
 							case "init-param":
 								NodeList paramNodes = configNode.getChildNodes();
@@ -175,9 +175,9 @@ public class ModuleFilterDefinition implements Serializable {
 								for (int k = 0; k < paramNodes.getLength(); k++) {
 									Node paramNode = paramNodes.item(k);
 									if ("param-name".equals(paramNode.getNodeName())) {
-										paramName = paramNode.getTextContent().trim();
+										paramName = paramNode.getTextContent().strip();
 									} else if ("param-value".equals(paramNode.getNodeName())) {
-										paramValue = paramNode.getTextContent().trim();
+										paramValue = paramNode.getTextContent().strip();
 									}
 								}
 								filter.addInitParameter(paramName, paramValue);

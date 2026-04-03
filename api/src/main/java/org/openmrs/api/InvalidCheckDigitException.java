@@ -9,10 +9,13 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 import org.openmrs.PatientIdentifier;
 
 public class InvalidCheckDigitException extends PatientIdentifierException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public InvalidCheckDigitException() {

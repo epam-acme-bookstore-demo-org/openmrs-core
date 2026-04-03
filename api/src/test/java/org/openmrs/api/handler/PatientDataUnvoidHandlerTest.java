@@ -105,7 +105,7 @@ public class PatientDataUnvoidHandlerTest extends BaseContextSensitiveTest {
 		EncounterService es = Context.getEncounterService();
 		OrderService os = Context.getOrderService();
 
-		Encounter testEncounter = es.getEncountersByPatient(patient).get(0);
+		Encounter testEncounter = es.getEncountersByPatient(patient).getFirst();
 		//santy checks
 		assertFalse(testEncounter.getVoided());
 		assertNull(testEncounter.getDateVoided());

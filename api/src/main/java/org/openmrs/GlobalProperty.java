@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.util.Date;
 
 import jakarta.persistence.Cacheable;
@@ -32,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class GlobalProperty extends BaseOpenmrsObject implements CustomValueDescriptor, SingleCustomValue<GlobalProperty> {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private String property = "";

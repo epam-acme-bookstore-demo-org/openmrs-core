@@ -9,6 +9,7 @@
  */
 package org.openmrs.notification;
 
+import java.io.Serial;
 import java.util.Date;
 
 import jakarta.persistence.Column;
@@ -33,6 +34,7 @@ import org.openmrs.User;
 @Audited
 public class AlertRecipient extends BaseOpenmrsObject {
 
+	@Serial
 	private static final long serialVersionUID = -507111109155L;
 
 	@JoinColumn(name = "alert_id")

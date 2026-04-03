@@ -402,7 +402,7 @@ public class UserServiceImpl extends BaseOpenmrsService implements UserService, 
 		        .filter(Objects::nonNull).flatMap(Collection::stream).map(Privilege::getPrivilege)
 		        .filter(p -> !Context.hasPrivilege(p)).sorted().collect(Collectors.toList());
 		if (requiredPrivs.size() == 1) {
-			throw new APIException("User.you.must.have.privilege", new Object[] { requiredPrivs.get(0) });
+			throw new APIException("User.you.must.have.privilege", new Object[] { requiredPrivs.getFirst() });
 		} else if (requiredPrivs.size() > 1) {
 			throw new APIException("User.you.must.have.privileges", new Object[] { String.join(", ", requiredPrivs) });
 		}

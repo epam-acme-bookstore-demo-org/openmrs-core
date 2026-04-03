@@ -27,7 +27,7 @@ import org.openmrs.util.InputRequiredException;
 public final class WebDaemon {
 
 	private WebDaemon() {
-	};
+	}
 
 	/**
 	 * Start openmrs in a new thread that is authenticated as the daemon user.
@@ -47,10 +47,10 @@ public final class WebDaemon {
 			}).get();
 		} catch (InterruptedException ignored) {} catch (ExecutionException e) {
 			Throwable cause = e.getCause();
-			if (cause instanceof DatabaseUpdateException) {
-				throw (DatabaseUpdateException) cause;
-			} else if (cause instanceof InputRequiredException) {
-				throw (InputRequiredException) cause;
+			if (cause instanceof DatabaseUpdateException exception1) {
+				throw exception1;
+			} else if (cause instanceof InputRequiredException exception) {
+				throw exception;
 			} else if (!(cause instanceof ModuleException)) {
 				throw new ModuleException("Unable to start OpenMRS. Error thrown was: " + cause.getMessage(), cause);
 			} else {

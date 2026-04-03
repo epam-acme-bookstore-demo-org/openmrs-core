@@ -10,8 +10,8 @@
 package org.openmrs.parameter;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.openmrs.Concept;
@@ -87,7 +87,7 @@ public class VisitSearchCriteriaBuilder {
 	 * @return the current instance of {@link VisitSearchCriteriaBuilder} for method chaining.
 	 */
 	public VisitSearchCriteriaBuilder patient(Patient patient) {
-		this.patients = Collections.singletonList(patient);
+		this.patients = List.of(patient);
 		return this;
 	}
 

@@ -19,7 +19,6 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -110,7 +109,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 		}
 
 		// build the mysql command line string
-		List<String> commands = new ArrayList<>();
+		var commands = new ArrayList<String>();
 		String databaseName;
 		try {
 			commands.add("mysql");
@@ -134,28 +133,28 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 		        + databaseName;
 
 		// run the command line string
-		StringBuilder output = new StringBuilder();
+		var output = new StringBuilder();
 		Integer exitValue = -1; // default to a non-zero exit value in case of exceptions
 		try {
 			exitValue = execCmd(tmpOutputFile.getParentFile(), commands.toArray(new String[] {}), output);
 		} catch (IOException io) {
 			if (io.getMessage().endsWith("not found")) {
 				throw new CustomChangeException(
-				        "Unable to run command: " + commands.get(0)
+				        "Unable to run command: " + commands.getFirst()
 				                + ".  Make sure that it is on the PATH and then restart your server and try again. "
 				                + " Or run " + errorCommand + " at the command line with the appropriate full mysql path",
 				        io);
 			}
 		} catch (Exception e) {
-			throw new CustomChangeException("Error while executing command: '" + commands.get(0) + "'", e);
+			throw new CustomChangeException("Error while executing command: '" + commands.getFirst() + "'", e);
 		}
 
-		log.debug("Exec called: " + Collections.singletonList(commands));
+		log.debug("Exec called: " + List.of(commands));
 
 		if (exitValue != 0) {
-			log.error("There was an error while running the " + commands.get(0) + " command.  Command output: "
+			log.error("There was an error while running the " + commands.getFirst() + " command.  Command output: "
 			        + output.toString());
-			throw new CustomChangeException("There was an error while running the " + commands.get(0)
+			throw new CustomChangeException("There was an error while running the " + commands.getFirst()
 			        + " command. See your server's error log for the full error output. As an alternative, you"
 			        + " can run this command manually on your database to skip over this error.  Run this at the command line "
 			        + errorCommand + "  ");
@@ -174,7 +173,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 	 * @return
 	 */
 	private String fixWindowsPathHack(String path) {
-		StringBuilder returnedPath = new StringBuilder();
+		var returnedPath = new StringBuilder();
 		path = path.replace("\\", "/"); // so java doesn't freak out with windows backslashes
 		for (String pathPart : path.split("/")) {
 			if (pathPart.contains(" ")) {
@@ -212,7 +211,7 @@ public class SourceMySqldiffFile implements CustomTaskChange {
 
 		out.append("Normal cmd output:\n");
 		Reader reader = new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8);
-		BufferedReader input = new BufferedReader(reader);
+		var input = new BufferedReader(reader);
 		int readChar;
 		while ((readChar = input.read()) != -1) {
 			out.append((char) readChar);

@@ -180,12 +180,10 @@ public class AuditableInterceptor implements Interceptor {
 	}
 
 	private void handleCollectionChange(Object collection) {
-		if (collection instanceof PersistentSet) {
-			PersistentSet persistentCollection = (PersistentSet) collection;
+		if (collection instanceof PersistentSet persistentCollection) {
 			if ("org.openmrs.User.roles".equals(persistentCollection.getRole())) {
 				Object owner = persistentCollection.getOwner();
-				if (owner instanceof User) {
-					User user = (User) owner;
+				if (owner instanceof User user) {
 					if (user.getCreator() != null) {
 						user.setChangedBy(Context.getAuthenticatedUser());
 						user.setDateChanged(new Date());

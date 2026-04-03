@@ -246,7 +246,7 @@ public class SearchQueryUnique<T, R> {
 					while (chunk.hasHits()) {
 						boolean limitReached = false;
 						for (List<?> match : chunk.hits()) {
-							if (!uniqueKeys.add(match.get(0))) {
+							if (!uniqueKeys.add(match.getFirst())) {
 								duplicateIds.add(match.get(1));
 								if (duplicateIds.size() > maxClauseCount) {
 									// stop at max clause count

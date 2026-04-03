@@ -65,7 +65,7 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 	//A set to store unique concept names that have been updated and changes have to be persisted to the database
 	private Set<ConceptName> updatedConceptNames = new HashSet<>();
 
-	private Locale defaultLocale = new Locale("en");
+	private Locale defaultLocale = Locale.of("en");
 
 	private List<Locale> allowedLocales = null;
 
@@ -114,7 +114,7 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 		List<Integer> conceptIds = getAllUnretiredConceptIds(connection);
 		allowedLocales = getAllowedLocalesList(connection);
 		//default locale(if none, then 'en') is always the last in the list.
-		defaultLocale = allowedLocales.get(allowedLocales.size() - 1);
+		defaultLocale = allowedLocales.getLast();
 		//a map to store all duplicates names found for each locale
 		Map<Locale, Set<String>> localeDuplicateNamesMap = null;
 
@@ -401,7 +401,7 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 		for (Map.Entry<Locale, List<ConceptName>> entry : localeConceptNamesMap.entrySet()) {
 			Locale locale = entry.getKey();
 			if (locale != null) {
-				ConceptName fullySpecName = entry.getValue().get(0);
+				ConceptName fullySpecName = entry.getValue().getFirst();
 				fullySpecName.setConceptNameType(ConceptNameType.FULLY_SPECIFIED);
 				reportUpdatedName(fullySpecName,
 				    "ConceptName with id " + fullySpecName.getConceptNameId() + " (" + fullySpecName.getName()
@@ -529,8 +529,8 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 				if (!StringUtils.isBlank(allowedLocaleStr)) {
 					String[] localesArray = allowedLocaleStr.split(",");
 					for (String localeStr : localesArray) {
-						if (localeStr.trim().length() > 1) {
-							allowedLocales.add(LocaleUtility.fromSpecification(localeStr.trim()));
+						if (localeStr.strip().length() > 1) {
+							allowedLocales.add(LocaleUtility.fromSpecification(localeStr.strip()));
 						} else {
 							updateWarnings.add(
 							    "'" + localeStr + "' is an invalid value for the global property locale.allowed.list");
@@ -553,7 +553,7 @@ public class ConceptValidatorChangeSet implements CustomTaskChange {
 		}
 
 		//if it isn't among
-		allowedLocales.add(new Locale("en"));
+		allowedLocales.add(Locale.of("en"));
 
 		return allowedLocales.asList();
 	}

@@ -808,7 +808,7 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void unretireProgram_shouldSetRetireFalseForWorkflowsAndWorkflowStates() {
-		Program program = pws.getAllPrograms().get(0);
+		Program program = pws.getAllPrograms().getFirst();
 		Date lastModifiedDate = program.getDateChanged();
 		assertEquals(program.getRetired(), false);
 		for (ProgramWorkflow workflow : program.getAllWorkflows()) {
@@ -826,8 +826,8 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void saveUnretireProgram_shouldTestSaveUnretireProgram() {
 		Program program = new Program();
-		Concept concept = Context.getConceptService().getAllConcepts().get(0);
-		User testUser = Context.getUserService().getAllUsers().get(0);
+		Concept concept = Context.getConceptService().getAllConcepts().getFirst();
+		User testUser = Context.getUserService().getAllUsers().getFirst();
 		program.setConcept(concept);
 		program.setDescription("test");
 		program.setName("programTest");
@@ -986,7 +986,7 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void saveConceptStateConversion_shouldTestSaveConceptStateConversion() {
 		ConceptStateConversion newConceptStateConversion = new ConceptStateConversion();
-		ConceptStateConversion existingConceptStateConversion = pws.getAllConceptStateConversions().get(0);
+		ConceptStateConversion existingConceptStateConversion = pws.getAllConceptStateConversions().getFirst();
 		newConceptStateConversion.setConcept(new Concept(3));
 		newConceptStateConversion.setProgramWorkflow(existingConceptStateConversion.getProgramWorkflow());
 		newConceptStateConversion.setProgramWorkflowState(existingConceptStateConversion.getProgramWorkflowState());
@@ -998,7 +998,7 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void getConceptStateConversion_shouldTestGetConceptStateConversion() {
-		ConceptStateConversion conceptStateConversion1 = pws.getAllConceptStateConversions().get(0);
+		ConceptStateConversion conceptStateConversion1 = pws.getAllConceptStateConversions().getFirst();
 		int conceptStateConversion1Id = conceptStateConversion1.getId();
 		ConceptStateConversion conceptStateConversion2 = pws.getConceptStateConversion(conceptStateConversion1Id);
 		assertEquals(conceptStateConversion1, conceptStateConversion2);
@@ -1013,7 +1013,7 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void purgeConceptStateConversion_shouldTestPurgeConceptStateConversion() {
-		ConceptStateConversion conceptStateConversion = pws.getAllConceptStateConversions().get(0);
+		ConceptStateConversion conceptStateConversion = pws.getAllConceptStateConversions().getFirst();
 		Context.getProgramWorkflowService().purgeConceptStateConversion(conceptStateConversion, false);
 		List<ConceptStateConversion> list = pws.getAllConceptStateConversions();
 		assertEquals(list.size(), 0);
@@ -1021,21 +1021,21 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void getProgramsByConcept_shouldTestGetProgramsByConcept() {
-		Concept concept = Context.getConceptService().getAllConcepts().get(0);
+		Concept concept = Context.getConceptService().getAllConcepts().getFirst();
 		List<Program> programs = pws.getProgramsByConcept(concept);
 		assertEquals(programs.size(), 0);
 	}
 
 	@Test
 	public void programWorkflowsByConcept_shouldTestGetProgramWorkflowsByConcept() {
-		Concept concept = Context.getConceptService().getAllConcepts().get(0);
+		Concept concept = Context.getConceptService().getAllConcepts().getFirst();
 		List<ProgramWorkflow> programWorkflows = pws.getProgramWorkflowsByConcept(concept);
 		assertEquals(programWorkflows.size(), 0);
 	}
 
 	@Test
 	public void programWorkflowStatesByConcept_shouldTestGetProgramWorkflowStatesByConcept() {
-		Concept concept = Context.getConceptService().getAllConcepts().get(0);
+		Concept concept = Context.getConceptService().getAllConcepts().getFirst();
 		List<ProgramWorkflowState> programWorkflowStates = pws.getProgramWorkflowStatesByConcept(concept);
 		assertEquals(programWorkflowStates.size(), 0);
 	}
@@ -1049,21 +1049,21 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getConceptStateConversion_shouldGetConceptStateConversion() {
 		ProgramWorkflow programWorkflow = pws.getProgram(1).getWorkflow(2);
-		Concept concept = dao.getAllConceptStateConversions().get(0).getConcept();
+		Concept concept = dao.getAllConceptStateConversions().getFirst().getConcept();
 		ConceptStateConversion conceptStateConversion = dao.getConceptStateConversion(programWorkflow, concept);
-		assertEquals(conceptStateConversion, dao.getAllConceptStateConversions().get(0));
+		assertEquals(conceptStateConversion, dao.getAllConceptStateConversions().getFirst());
 	}
 
 	@Test
 	public void getProgram_shouldGetProgramByName() {
-		Program program = pws.getAllPrograms().get(0);
+		Program program = pws.getAllPrograms().getFirst();
 		String programName = program.getName();
 		assertEquals(Context.getProgramWorkflowService().getProgramByName(programName), program);
 	}
 
 	@Test
 	public void triggerStateConversion_shouldThrowConvertStateInvalidPatient() {
-		Concept trigger = Context.getConceptService().getAllConcepts().get(0);
+		Concept trigger = Context.getConceptService().getAllConcepts().getFirst();
 		Date dateConverted = new Date();
 		APIException exception = assertThrows(APIException.class,
 		    () -> pwsi.triggerStateConversion(null, trigger, dateConverted));
@@ -1072,7 +1072,7 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void triggerStateConversion_shouldThrowConvertStatePatientWithoutValidTrigger() {
-		Patient patient = Context.getPatientService().getAllPatients().get(0);
+		Patient patient = Context.getPatientService().getAllPatients().getFirst();
 		Date dateConverted = new Date();
 		APIException exception = assertThrows(APIException.class,
 		    () -> pwsi.triggerStateConversion(patient, null, dateConverted));
@@ -1081,8 +1081,8 @@ public class ProgramWorkflowServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void triggerStateConversion_shouldThrowConvertStateInvalidDate() {
-		Patient patient = Context.getPatientService().getAllPatients().get(0);
-		Concept trigger = Context.getConceptService().getAllConcepts().get(0);
+		Patient patient = Context.getPatientService().getAllPatients().getFirst();
+		Concept trigger = Context.getConceptService().getAllConcepts().getFirst();
 		APIException exception = assertThrows(APIException.class, () -> pwsi.triggerStateConversion(patient, trigger, null));
 		assertThat(exception.getMessage(), is("Invalid date for converting patient state"));
 	}

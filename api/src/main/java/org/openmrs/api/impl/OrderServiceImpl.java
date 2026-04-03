@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -175,7 +174,7 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		// If isRetrospective is false, but the dateActivated is prior to the current date, set isRetrospective to true
 		if (!isRetrospective) {
 			Date dateActivated = order.getDateActivated();
-			Date currentDate = new Date();
+			var currentDate = new Date();
 			isRetrospective = !dateActivated.after(currentDate) && !DateUtils.isSameDay(dateActivated, currentDate);
 		}
 
@@ -203,12 +202,12 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		}
 
 		if (DISCONTINUE != order.getAction()) {
-			Date asOfDate = new Date();
+			var asOfDate = new Date();
 			if (isRetrospective) {
 				asOfDate = order.getDateActivated();
 			}
 			List<Order> activeOrders = getActiveOrders(order.getPatient(), null, order.getCareSetting(), asOfDate);
-			List<String> parallelOrders = Collections.emptyList();
+			List<String> parallelOrders = List.of();
 			if (orderContext != null && orderContext.getAttribute(PARALLEL_ORDERS) != null) {
 				parallelOrders = Arrays.asList((String[]) orderContext.getAttribute(PARALLEL_ORDERS));
 			}
@@ -325,7 +324,7 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		if (type == null) {
 			List<OrderType> types = getOrderTypesByClassName(orderSubclass.getName(), true, false);
 			if (types.size() == 1) {
-				type = types.get(0);
+				type = types.getFirst();
 			}
 		}
 		return type;
@@ -484,8 +483,8 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	 */
 	private Class<?> getActualType(Object persistentObject) {
 		Class<?> type = persistentObject.getClass();
-		if (persistentObject instanceof HibernateProxy) {
-			type = ((HibernateProxy) persistentObject).getHibernateLazyInitializer().getPersistentClass();
+		if (persistentObject instanceof HibernateProxy proxy) {
+			type = proxy.getHibernateLazyInitializer().getPersistentClass();
 		}
 		return type;
 	}
@@ -680,10 +679,10 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		if (patient == null || concept == null) {
 			throw new IllegalArgumentException("patient and concept are required");
 		}
-		List<Concept> concepts = new ArrayList<>();
+		var concepts = new ArrayList<Concept>();
 		concepts.add(concept);
 
-		List<Patient> patients = new ArrayList<>();
+		var patients = new ArrayList<Patient>();
 		patients.add(patient);
 
 		return dao.getOrders(null, patients, concepts, new ArrayList<>(), new ArrayList<>());
@@ -704,7 +703,7 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	@Override
 	@Transactional(readOnly = true)
 	public List<Order> getOrderHistoryByOrderNumber(String orderNumber) {
-		List<Order> orders = new ArrayList<>();
+		var orders = new ArrayList<Order>();
 		Order order = dao.getOrderByOrderNumber(orderNumber);
 		while (order != null) {
 			orders.add(order);
@@ -1044,10 +1043,10 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	@Override
 	@Transactional(readOnly = true)
 	public List<OrderType> getSubtypes(OrderType orderType, boolean includeRetired) {
-		List<OrderType> allSubtypes = new ArrayList<>();
+		var allSubtypes = new ArrayList<OrderType>();
 		List<OrderType> immediateAncestors = dao.getOrderSubtypes(orderType, includeRetired);
 		while (!immediateAncestors.isEmpty()) {
-			List<OrderType> ancestorsAtNextLevel = new ArrayList<>();
+			var ancestorsAtNextLevel = new ArrayList<OrderType>();
 			for (OrderType type : immediateAncestors) {
 				allSubtypes.add(type);
 				ancestorsAtNextLevel.addAll(dao.getOrderSubtypes(type, includeRetired));
@@ -1185,7 +1184,7 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 		if (concept != null && concept.getSet()) {
 			return concept.getSetMembers();
 		}
-		return Collections.emptyList();
+		return List.of();
 	}
 
 	@Override

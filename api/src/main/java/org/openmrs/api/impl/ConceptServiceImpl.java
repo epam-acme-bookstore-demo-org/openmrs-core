@@ -14,7 +14,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -234,7 +233,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 		// 3) any synonym
 		// short name and index terms are never preferred.
 
-		Set<Locale> checkedLocales = new HashSet<>();
+		var checkedLocales = new HashSet<Locale>();
 		for (ConceptName n : concept.getNames()) {
 			Locale locale = n.getLocale();
 			if (checkedLocales.contains(locale)) {
@@ -551,7 +550,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 			if (drugs.isEmpty()) {
 				return null;
 			}
-			return drugs.get(0);
+			return drugs.getFirst();
 		}
 	}
 
@@ -588,7 +587,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	@Transactional(readOnly = true)
 	public List<Drug> getDrugs(String phrase) {
-		List<Drug> drugs = new ArrayList<>();
+		var drugs = new ArrayList<Drug>();
 		// trying to treat search phrase as drug id
 		try {
 			Integer drugId = Integer.parseInt(phrase);
@@ -654,7 +653,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 			log.warn("More than one ConceptClass found with name: " + name);
 		}
 		if (ccList.size() == 1) {
-			return ccList.get(0);
+			return ccList.getFirst();
 		}
 		return null;
 	}
@@ -743,8 +742,8 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	@Transactional(readOnly = true)
 	public List<Concept> getConceptsByConceptSet(Concept c) {
-		Set<Integer> alreadySeen = new HashSet<>();
-		List<Concept> ret = new ArrayList<>();
+		var alreadySeen = new HashSet<Integer>();
+		var ret = new ArrayList<Concept>();
 		explodeConceptSetHelper(c, ret, alreadySeen);
 		return ret;
 	}
@@ -756,7 +755,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Transactional(readOnly = true)
 	public List<ConceptSet> getSetsContainingConcept(Concept concept) {
 		if (concept.getConceptId() == null) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		return dao.getSetsContainingConcept(concept);
@@ -859,7 +858,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 		cp.setMappedConcept(mappedConcept);
 
 		if (cp.getObsConcept() != null) {
-			Obs ob = new Obs();
+			var ob = new Obs();
 			ob.setEncounter(cp.getEncounter());
 			ob.setConcept(cp.getObsConcept());
 			ob.setValueCoded(cp.getMappedConcept());
@@ -897,7 +896,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Transactional(readOnly = true)
 	public List<Concept> getConceptsByAnswer(Concept concept) throws APIException {
 		if (concept.getConceptId() == null) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		return dao.getConceptsByAnswer(concept);
@@ -1208,7 +1207,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 		else if (concepts.size() > 1 && !concepts.get(1).getRetired()) {
 			throw new APIException("Concept.error.multiple.non.retired", new Object[] { code, sourceName });
 		} else {
-			return concepts.get(0);
+			return concepts.getFirst();
 		}
 	}
 
@@ -1228,7 +1227,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	@Transactional(readOnly = true)
 	public List<Concept> getConceptsByMapping(String code, String sourceName, boolean includeRetired) throws APIException {
-		List<Concept> concepts = new ArrayList<>();
+		var concepts = new ArrayList<Concept>();
 		for (Integer conceptId : Context.getConceptService().getConceptIdsByMapping(code, sourceName, includeRetired)) {
 			concepts.add(getConcept(conceptId));
 		}
@@ -1402,7 +1401,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	@Transactional(readOnly = true)
 	public boolean hasAnyObservation(Concept concept) {
-		List<Concept> concepts = new ArrayList<>();
+		var concepts = new ArrayList<Concept>();
 		concepts.add(concept);
 		Integer count = Context.getObsService().getObservationCount(null, null, concepts, null, null, null, null, null, null,
 		    true);
@@ -1432,7 +1431,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	@Transactional(readOnly = true)
 	public boolean hasAnyObservation(ConceptName conceptName) throws APIException {
-		List<ConceptName> conceptNames = new ArrayList<>();
+		var conceptNames = new ArrayList<ConceptName>();
 		conceptNames.add(conceptName);
 		Integer count = Context.getObsService().getObservationCount(conceptNames, true);
 		return count > 0;
@@ -1458,7 +1457,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 * @return the cloned conceptName
 	 */
 	private ConceptName cloneConceptName(ConceptName conceptName) {
-		ConceptName copy = new ConceptName();
+		var copy = new ConceptName();
 		try {
 			copy = (ConceptName) BeanUtils.cloneBean(conceptName);
 			// Create a new tags collection to avoid sharing the same Hibernate
@@ -1481,7 +1480,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Transactional(readOnly = true)
 	public List<ConceptSearchResult> findConceptAnswers(String phrase, Locale locale, Concept concept) throws APIException {
 
-		return getConcepts(phrase, Collections.singletonList(locale), false, null, null, null, null, concept, null, null);
+		return getConcepts(phrase, List.of(locale), false, null, null, null, null, concept, null, null);
 	}
 
 	/**
@@ -1615,7 +1614,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Override
 	@Transactional(readOnly = true)
 	public List<ConceptSearchResult> getConcepts(String phrase, Locale locale, boolean includeRetired) throws APIException {
-		List<Locale> locales = new ArrayList<>();
+		var locales = new ArrayList<Locale>();
 		if (locale != null) {
 			locales.add(locale);
 		}
@@ -1926,8 +1925,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	@Transactional(readOnly = true)
 	public List<Drug> getDrugsByMapping(String code, ConceptSource conceptSource,
 	        Collection<ConceptMapType> withAnyOfTheseTypes, boolean includeRetired) throws APIException {
-		Collection<ConceptMapType> tmpWithAnyOfTheseTypes = withAnyOfTheseTypes == null ? Collections.emptyList()
-		        : withAnyOfTheseTypes;
+		Collection<ConceptMapType> tmpWithAnyOfTheseTypes = withAnyOfTheseTypes == null ? List.of() : withAnyOfTheseTypes;
 
 		if (conceptSource == null) {
 			throw new APIException("ConceptSource.is.required", (Object[]) null);
@@ -1945,7 +1943,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	public Drug getDrugByMapping(String code, ConceptSource conceptSource,
 	        Collection<ConceptMapType> withAnyOfTheseTypesOrOrderOfPreference) throws APIException {
 		Collection<ConceptMapType> tmpWithAnyOfTheseTypesOrOrderOfPreference = withAnyOfTheseTypesOrOrderOfPreference == null
-		        ? Collections.emptyList()
+		        ? List.of()
 		        : withAnyOfTheseTypesOrOrderOfPreference;
 
 		if (conceptSource == null) {
@@ -1965,15 +1963,15 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	        Integer start, Integer length) {
 		List<ConceptClass> mappedClasses = getConceptClassesOfOrderTypes();
 		if (mappedClasses.isEmpty()) {
-			return Collections.emptyList();
+			return List.of();
 		}
 		List<Locale> tmpLocales = locales;
 		if (tmpLocales == null) {
 			tmpLocales = new ArrayList<>();
 			tmpLocales.add(Context.getLocale());
 		}
-		return dao.getConcepts(phrase, tmpLocales, false, mappedClasses, Collections.emptyList(), Collections.emptyList(),
-		    Collections.emptyList(), null, start, length);
+		return dao.getConcepts(phrase, tmpLocales, false, mappedClasses, List.of(), List.of(), List.of(), null, start,
+		    length);
 	}
 
 	/**
@@ -2121,8 +2119,8 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 			return getDefaultReferenceRange(conceptNumeric);
 		}
 
-		ConceptReferenceRangeUtility referenceRangeUtility = new ConceptReferenceRangeUtility();
-		List<ConceptReferenceRange> validRanges = new ArrayList<>();
+		var referenceRangeUtility = new ConceptReferenceRangeUtility();
+		var validRanges = new ArrayList<ConceptReferenceRange>();
 
 		for (ConceptReferenceRange referenceRange : referenceRanges) {
 			if (referenceRangeUtility.evaluateCriteria(StringEscapeUtils.unescapeHtml4(referenceRange.getCriteria()),
@@ -2153,7 +2151,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 			return null;
 		}
 
-		ConceptReferenceRange defaultReferenceRange = new ConceptReferenceRange();
+		var defaultReferenceRange = new ConceptReferenceRange();
 		defaultReferenceRange.setConceptNumeric(conceptNumeric);
 		defaultReferenceRange.setHiAbsolute(conceptNumeric.getHiAbsolute());
 		defaultReferenceRange.setHiCritical(conceptNumeric.getHiCritical());
@@ -2171,11 +2169,11 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 */
 	private static ConceptReferenceRange findStrictestReferenceRange(List<ConceptReferenceRange> conceptReferenceRanges) {
 		if (conceptReferenceRanges.size() == 1) {
-			return conceptReferenceRanges.get(0);
+			return conceptReferenceRanges.getFirst();
 		}
 
-		ConceptReferenceRange strictestRange = new ConceptReferenceRange();
-		strictestRange.setConceptNumeric(conceptReferenceRanges.get(0).getConceptNumeric());
+		var strictestRange = new ConceptReferenceRange();
+		strictestRange.setConceptNumeric(conceptReferenceRanges.getFirst().getConceptNumeric());
 
 		for (ConceptReferenceRange conceptReferenceRange : conceptReferenceRanges) {
 			if (conceptReferenceRange.getLowAbsolute() != null && (strictestRange.getLowAbsolute() == null
@@ -2249,7 +2247,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	}
 
 	private List<ConceptClass> getConceptClassesOfOrderTypes() {
-		List<ConceptClass> mappedClasses = new ArrayList<>();
+		var mappedClasses = new ArrayList<ConceptClass>();
 		AdministrationService administrationService = Context.getAdministrationService();
 		List<List<Object>> result = administrationService
 		        .executeSQL("SELECT DISTINCT concept_class_id FROM order_type_class_map", true);

@@ -96,7 +96,7 @@ public class HttpClient {
 			rd = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 			String line;
 			while ((line = rd.readLine()) != null) {
-				response = String.format("%s%s%n", response, line);
+				response = "%s%s%n".formatted(response, line);
 			}
 
 		} catch (Exception e) {

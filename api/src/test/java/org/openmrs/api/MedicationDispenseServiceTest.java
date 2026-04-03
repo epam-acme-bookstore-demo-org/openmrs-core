@@ -87,7 +87,7 @@ public class MedicationDispenseServiceTest extends BaseContextSensitiveTest {
 		b.setPatient(patientService.getPatient(2));
 		List<MedicationDispense> l = medicationDispenseService.getMedicationDispenseByCriteria(b.build());
 		assertThat(l.size(), is(1));
-		HibernateMedicationDispenseDAOTest.testMedicationDispense1(l.get(0));
+		HibernateMedicationDispenseDAOTest.testMedicationDispense1(l.getFirst());
 
 		b.setPatient(patientService.getPatient(7));
 		l = medicationDispenseService.getMedicationDispenseByCriteria(b.build());
@@ -107,7 +107,7 @@ public class MedicationDispenseServiceTest extends BaseContextSensitiveTest {
 		b.setEncounter(encounterService.getEncounter(6));
 		List<MedicationDispense> l = medicationDispenseService.getMedicationDispenseByCriteria(b.build());
 		assertThat(l.size(), is(1));
-		HibernateMedicationDispenseDAOTest.testMedicationDispense1(l.get(0));
+		HibernateMedicationDispenseDAOTest.testMedicationDispense1(l.getFirst());
 
 		b.setEncounter(encounterService.getEncounter(3));
 		l = medicationDispenseService.getMedicationDispenseByCriteria(b.build());
@@ -127,7 +127,7 @@ public class MedicationDispenseServiceTest extends BaseContextSensitiveTest {
 		b.setDrugOrder((DrugOrder) orderService.getOrder(2));
 		List<MedicationDispense> l = medicationDispenseService.getMedicationDispenseByCriteria(b.build());
 		assertThat(l.size(), is(1));
-		HibernateMedicationDispenseDAOTest.testMedicationDispense1(l.get(0));
+		HibernateMedicationDispenseDAOTest.testMedicationDispense1(l.getFirst());
 
 		b.setDrugOrder((DrugOrder) orderService.getOrder(1));
 		l = medicationDispenseService.getMedicationDispenseByCriteria(b.build());

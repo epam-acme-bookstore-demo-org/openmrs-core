@@ -146,7 +146,7 @@ public class ModuleExtensionsTest extends BaseContextMockTest {
 
 		List<Extension> result = module.getExtensions();
 		assertThat(result.size(), is(1));
-		Extension extension = result.get(0);
+		Extension extension = result.getFirst();
 		assertThat(extension, is(instanceOf(AccessibleExtension.class)));
 		assertThat(extension.getPointId(), is(EXTENSION_POINT_ID_PATIENT_DASHBOARD));
 		assertThat(extension.getModuleId(), is(module.getModuleId()));
@@ -162,11 +162,11 @@ public class ModuleExtensionsTest extends BaseContextMockTest {
 
 		List<Extension> result = module.getExtensions();
 		assertThat(result.size(), is(1));
-		Extension extension = result.get(0);
+		Extension extension = result.getFirst();
 
 		result = module.getExtensions();
 		assertThat(result.size(), is(1));
-		assertThat(result.get(0), is(sameInstance(extension)));
+		assertThat(result.getFirst(), is(sameInstance(extension)));
 	}
 
 	@Test
@@ -184,7 +184,7 @@ public class ModuleExtensionsTest extends BaseContextMockTest {
 
 		result = module.getExtensions();
 		assertThat(result.size(), is(1));
-		Extension extension = result.get(0);
+		Extension extension = result.getFirst();
 		assertThat(extension, is(instanceOf(AnotherAccessibleExtension.class)));
 		assertThat(extension.getPointId(), is(EXTENSION_POINT_ID_PATIENT_DASHBOARD));
 		assertThat(extension.getModuleId(), is(module.getModuleId()));

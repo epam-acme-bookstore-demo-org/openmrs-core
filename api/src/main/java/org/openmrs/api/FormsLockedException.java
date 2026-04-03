@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 import org.openmrs.util.OpenmrsConstants;
 
 /**
@@ -19,6 +21,7 @@ import org.openmrs.util.OpenmrsConstants;
  */
 public class FormsLockedException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

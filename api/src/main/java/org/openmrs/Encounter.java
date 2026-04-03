@@ -204,7 +204,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 	 * @return Returns a Set&lt;Obs&gt; of all non-voided, non-obsGroup children Obs of this Encounter
 	 */
 	public Set<Obs> getObs() {
-		Set<Obs> ret = new LinkedHashSet<>();
+		var ret = new LinkedHashSet<Obs>();
 
 		if (this.obs != null) {
 			for (Obs o : this.obs) {
@@ -223,7 +223,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 	 * @return list of leaf obs
 	 */
 	private List<Obs> getObsLeaves(Obs obsParent) {
-		List<Obs> leaves = new ArrayList<>();
+		var leaves = new ArrayList<Obs>();
 
 		if (obsParent.hasGroupMembers()) {
 			for (Obs child : obsParent.getGroupMembers()) {
@@ -252,7 +252,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 	 * @since 2.2.1
 	 */
 	private Set<Obs> getFlattenedObsLeaves(Obs obsParent, boolean includedVoided) {
-		Set<Obs> leaves = new LinkedHashSet<>();
+		var leaves = new LinkedHashSet<Obs>();
 
 		if (includedVoided || (!obsParent.getVoided())) {
 			leaves.add(obsParent);
@@ -310,7 +310,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 	 */
 	public Set<Obs> getAllFlattenedObs(boolean includeVoided) {
 
-		Set<Obs> ret = new LinkedHashSet<>();
+		var ret = new LinkedHashSet<Obs>();
 
 		if (this.obs != null) {
 			for (Obs o : this.obs) {
@@ -375,7 +375,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 			obsToUpdate.add(observation);
 
 			//prevent infinite recursion if an obs is its own group member
-			Set<Obs> seenIt = new LinkedHashSet<>();
+			var seenIt = new LinkedHashSet<Obs>();
 
 			while (!obsToUpdate.isEmpty()) {
 				Obs o = obsToUpdate.removeFirst();
@@ -777,7 +777,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 				return;
 			}
 		}
-		EncounterProvider encounterProvider = new EncounterProvider();
+		var encounterProvider = new EncounterProvider();
 		encounterProvider.setEncounter(this);
 		encounterProvider.setEncounterRole(role);
 		encounterProvider.setProvider(provider);
@@ -849,7 +849,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 	 * @return copied encounter
 	 */
 	public Encounter copyAndAssignToAnotherPatient(Patient patient) {
-		Encounter target = new Encounter();
+		var target = new Encounter();
 
 		target.setChangedBy(getChangedBy());
 		target.setCreator(getCreator());
@@ -894,7 +894,7 @@ public class Encounter extends BaseChangeableOpenmrsData {
 	 * @return list of orderGroups
 	 */
 	public List<OrderGroup> getOrderGroups() {
-		Map<String, OrderGroup> orderGroups = new HashMap<>();
+		var orderGroups = new HashMap<String, OrderGroup>();
 		for (Order order : orders) {
 			if (order.getOrderGroup() != null) {
 				orderGroups.computeIfAbsent(order.getOrderGroup().getUuid(), k -> order.getOrderGroup());

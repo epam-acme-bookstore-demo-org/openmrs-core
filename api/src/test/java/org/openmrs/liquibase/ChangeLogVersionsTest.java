@@ -101,7 +101,7 @@ public class ChangeLogVersionsTest {
 	private List<String> getChangelogNamesFromVersions(List<String> versions, String baseName) {
 		List<String> changeLogNames = new ArrayList<>();
 		for (String version : versions) {
-			changeLogNames.add(String.format("%s%s.xml", baseName, version));
+			changeLogNames.add("%s%s.xml".formatted(baseName, version));
 		}
 		return changeLogNames;
 	}

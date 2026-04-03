@@ -209,8 +209,8 @@ class CookieClearingFilterTest {
 
 		@Override
 		public void service(ServletRequest req, ServletResponse res) {
-			if (req instanceof HttpServletRequest) {
-				((HttpServletRequest) req).getSession().invalidate();
+			if (req instanceof HttpServletRequest servletRequest) {
+				servletRequest.getSession().invalidate();
 			}
 		}
 	}

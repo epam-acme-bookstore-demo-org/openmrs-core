@@ -142,7 +142,7 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldFailIfThereIsADuplicateUnretiredConceptNameInTheLocale() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 		concept = cd4Count;
 		String duplicateName = concept.getFullySpecifiedName(Context.getLocale()).getName();
 		ConceptName newName = new ConceptName(duplicateName, Context.getLocale());
@@ -175,7 +175,7 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldFailIfThereIsADuplicateUnretiredFullySpecifiedNameInTheSameLocale() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 		assertTrue(cd4Count.getFullySpecifiedName(getLocale()).isFullySpecifiedName());
 		String duplicateName = cd4Count.getFullySpecifiedName(Context.getLocale()).getName();
 		Concept anotherConcept = weight;
@@ -191,7 +191,7 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldFailIfThereIsADuplicateUnretiredPreferredNameInTheSameLocale() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 		Concept concept = cd4Count;
 		ConceptName preferredName = new ConceptName("preferred name", Context.getLocale());
 		concept.setPreferredName(preferredName);
@@ -250,7 +250,7 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldPassIfTheDuplicateConceptNameIsNeitherPreferredNorFullySpecified() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 		Concept concept = cd4Count;
 		//use a synonym as the duplicate name
 		ConceptName duplicateName = concept.getSynonyms(Context.getLocale()).iterator().next();
@@ -267,7 +267,7 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldPassIfTheConceptWithADuplicateNameIsRetired() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 		Concept concept = cd4Count;
 		concept.setRetired(true);
 		conceptService.saveConcept(concept);
@@ -284,7 +284,7 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldPassIfTheConceptBeingValidatedIsRetiredAndHasADuplicateName() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 		Concept concept = cd4Count;
 		conceptService.saveConcept(concept);
 		String duplicateName = concept.getFullySpecifiedName(Context.getLocale()).getName();
@@ -361,8 +361,8 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void validate_shouldFailIfThereIsADuplicateUnretiredConceptNameInTheSameLocaleDifferentThanTheSystemLocale() {
-		Context.setLocale(new Locale("pl"));
-		Locale en = new Locale("en", "GB");
+		Context.setLocale(Locale.of("pl"));
+		Locale en = Locale.of("en", "GB");
 		Concept concept = cd4Count;
 		assertTrue(concept.getFullySpecifiedName(en).isFullySpecifiedName());
 		String duplicateName = concept.getFullySpecifiedName(en).getName();
@@ -455,9 +455,9 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldPassIfFullySpecifiedNameIsTheSameAsShortName() {
 
-		ConceptName conceptFullySpecifiedName = new ConceptName("YES", new Locale("pl"));
+		ConceptName conceptFullySpecifiedName = new ConceptName("YES", Locale.of("pl"));
 		conceptFullySpecifiedName.setConceptNameType(ConceptNameType.FULLY_SPECIFIED);
-		ConceptName conceptShortName = new ConceptName("yes", new Locale("pl"));
+		ConceptName conceptShortName = new ConceptName("yes", Locale.of("pl"));
 		conceptShortName.setConceptNameType(ConceptNameType.SHORT);
 		concept.addName(conceptFullySpecifiedName);
 		concept.addName(conceptShortName);
@@ -473,11 +473,11 @@ public class ConceptValidatorTest extends BaseContextSensitiveTest {
 	@Test
 	public void validate_shouldPassIfDifferentConceptsHaveTheSameShortNames() {
 
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 
 		List<Concept> concepts = conceptService.getConceptsByName("HSM");
 		assertEquals(1, concepts.size());
-		assertTrue(concepts.get(0).getShortNameInLocale(getLocale()).getName().equalsIgnoreCase("HSM"));
+		assertTrue(concepts.getFirst().getShortNameInLocale(getLocale()).getName().equalsIgnoreCase("HSM"));
 
 		concept.setConceptClass(new ConceptClass());
 		concept.setDatatype(new ConceptDatatype());

@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -115,12 +114,12 @@ public class VisitServiceTest extends BaseContextSensitiveTest {
 		List<VisitType> visitTypes = visitService.getVisitTypes("HIV Clinic");
 		assertNotNull(visitTypes);
 		assertEquals(1, visitTypes.size());
-		assertEquals("Initial HIV Clinic Visit", visitTypes.get(0).getName());
+		assertEquals("Initial HIV Clinic Visit", visitTypes.getFirst().getName());
 
 		visitTypes = visitService.getVisitTypes("Clinic Visit");
 		assertNotNull(visitTypes);
 		assertEquals(2, visitTypes.size());
-		assertEquals("Initial HIV Clinic Visit", visitTypes.get(0).getName());
+		assertEquals("Initial HIV Clinic Visit", visitTypes.getFirst().getName());
 		assertEquals("Return TB Clinic Visit", visitTypes.get(1).getName());
 	}
 
@@ -472,8 +471,8 @@ public class VisitServiceTest extends BaseContextSensitiveTest {
 
 	@Test
 	public void getVisits_shouldGetVisitsByIndications() {
-		assertEquals(1, visitService.getVisits(null, null, null, Collections.singletonList(new Concept(5497)), null, null,
-		    null, null, null, true, false).size());
+		assertEquals(1, visitService
+		        .getVisits(null, null, null, List.of(new Concept(5497)), null, null, null, null, null, true, false).size());
 	}
 
 	@Test
@@ -703,7 +702,7 @@ public class VisitServiceTest extends BaseContextSensitiveTest {
 		attrs.put(visitService.getVisitAttributeType(1), new SimpleDateFormat("yyyy-MM-dd").parse("2011-04-25"));
 		List<Visit> visits = visitService.getVisits(null, null, null, null, null, null, null, null, attrs, true, false);
 		assertEquals(1, visits.size());
-		assertEquals(Integer.valueOf(1), visits.get(0).getVisitId());
+		assertEquals(Integer.valueOf(1), visits.getFirst().getVisitId());
 	}
 
 	@Test
@@ -859,7 +858,7 @@ public class VisitServiceTest extends BaseContextSensitiveTest {
 		VisitAttributeType attrType = visitService.getVisitAttributeType(1);
 		List<VisitAttribute> attributes = visit.getActiveAttributes(attrType);
 		assertTrue(attributes.size() > 0);
-		VisitAttribute attribute = attributes.get(0);
+		VisitAttribute attribute = attributes.getFirst();
 		attribute.setVoided(true);
 		visitService.saveVisit(visit);
 		assertNotNull(attribute.getVoidedBy());

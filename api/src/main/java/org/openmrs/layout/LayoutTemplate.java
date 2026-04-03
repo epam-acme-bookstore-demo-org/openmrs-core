@@ -10,7 +10,6 @@
 package org.openmrs.layout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +60,7 @@ public abstract class LayoutTemplate {
 	 * @param simpleTemplate first template line
 	 */
 	public LayoutTemplate(String simpleTemplate) {
-		setLineByLineFormat(Collections.singletonList(simpleTemplate));
+		setLineByLineFormat(List.of(simpleTemplate));
 	}
 
 	public abstract String getLayoutToken();
@@ -94,7 +93,7 @@ public abstract class LayoutTemplate {
 
 				if (i == 0 && idxCurr > 0) {
 					// this means there is a token at the beginning - we'll have to grab it
-					Map<String, String> currToken = new HashMap<>();
+					var currToken = new HashMap<String, String>();
 					currToken.put("isToken", getLayoutToken());
 					String realToken = line.substring(0, idxCurr);
 					currToken.put("displayText", this.getNameMappings().get(realToken));
@@ -107,11 +106,11 @@ public abstract class LayoutTemplate {
 					// this means we are still not at the last non-token, so let's add this non-token AND this token
 					int idxNext = line.indexOf(nonTokens[i + 1], idxCurr + 1);
 
-					Map<String, String> currNonToken = new HashMap<>();
+					var currNonToken = new HashMap<String, String>();
 					currNonToken.put("isToken", getNonLayoutToken());
 					currNonToken.put("displayText", nonToken);
 
-					Map<String, String> currToken = new HashMap<>();
+					var currToken = new HashMap<String, String>();
 					currToken.put("isToken", getLayoutToken());
 					//HERE:  real Token is wrong...
 					String realToken = line.substring(idxCurr + nonToken.length(), idxNext);
@@ -122,14 +121,14 @@ public abstract class LayoutTemplate {
 					ret.add(currToken);
 				} else {
 					// we are on the last non-token, so check if it is the end
-					Map<String, String> currNonToken = new HashMap<>();
+					var currNonToken = new HashMap<String, String>();
 					currNonToken.put("isToken", getNonLayoutToken());
 					currNonToken.put("displayText", nonToken);
 
 					ret.add(currNonToken);
 					if (idxCurr + nonToken.length() < line.length()) {
 						// we need to add one last token at the end
-						Map<String, String> currToken = new HashMap<>();
+						var currToken = new HashMap<String, String>();
 						currToken.put("isToken", getLayoutToken());
 						String realToken = line.substring(idxCurr + nonToken.length());
 						currToken.put("displayText", this.getNameMappings().get(realToken));
@@ -144,10 +143,10 @@ public abstract class LayoutTemplate {
 			if (ret == null) {
 				ret = new ArrayList<>();
 			}
-			Map<String, String> currToken = new HashMap<>();
+			var currToken = new HashMap<String, String>();
 
 			// adding a nontoken to match the code that does "more than a single token on a line"
-			Map<String, String> currNonToken = new HashMap<>();
+			var currNonToken = new HashMap<String, String>();
 			currNonToken.put("isToken", getNonLayoutToken());
 			currNonToken.put("displayText", "");
 			ret.add(currNonToken);
@@ -363,7 +362,7 @@ public abstract class LayoutTemplate {
 	public List<String> nonUniqueStringsGoLast(List<String> strListArg) {
 		List<String> dup = new ArrayList<>();
 		// copy the list so we don't get concurrentmodification exceptions
-		List<String> strList = new ArrayList<>(strListArg);
+		var strList = new ArrayList<String>(strListArg);
 		for (String s : strList) {
 			for (String sInner : strList) {
 				if (sInner.contains(s) && s.length() < sInner.length() && !dup.contains(s)) {

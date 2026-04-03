@@ -9,6 +9,7 @@
  */
 package org.openmrs.api.context;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UserContext implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -806631231941890648L;
 
 	/**

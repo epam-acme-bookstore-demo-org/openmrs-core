@@ -54,8 +54,8 @@ public class LiquibaseUtil {
 			log.info("Now updating the database to the latest version");
 
 			String version = changeLogVersionFinder.getLatestSnapshotVersion().get();
-			log.info(String.format("updating the database with versions of liquibase-update-to-latest files greater than %s",
-			    version));
+			log.info("updating the database with versions of liquibase-update-to-latest files greater than %s"
+			        .formatted(version));
 
 			List<String> changelogs = changeLogVersionFinder
 			        .getUpdateFileNames(changeLogVersionFinder.getUpdateVersionsGreaterThan(version));

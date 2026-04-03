@@ -54,7 +54,7 @@ public class CustomResourceLoader {
 		this.availablelocales = new HashSet<>();
 
 		try {
-			PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
+			var patternResolver = new PathMatchingResourcePatternResolver();
 			Resource[] localResources = patternResolver.getResources("classpath*:messages*.properties");
 			for (Resource localeResource : localResources) {
 				Locale locale = parseLocaleFrom(localeResource.getFilename(), PREFIX);

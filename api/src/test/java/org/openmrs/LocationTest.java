@@ -10,8 +10,8 @@
 package org.openmrs;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -54,8 +54,8 @@ public class LocationTest {
 		//make child-parent relations
 		rootLocation.setChildLocations(new HashSet<>(Arrays.asList(locationOne, locationTwo)));
 
-		locationOne.setChildLocations(new HashSet<>(Collections.singletonList(childOflocationOne)));
-		locationTwo.setChildLocations(new HashSet<>(Collections.singletonList(childOnfLocationTwo)));
+		locationOne.setChildLocations(new HashSet<>(List.of(childOflocationOne)));
+		locationTwo.setChildLocations(new HashSet<>(List.of(childOnfLocationTwo)));
 
 		childOflocationOne.setChildLocations(new HashSet<>());
 		childOnfLocationTwo.setChildLocations(new HashSet<>());
@@ -87,7 +87,7 @@ public class LocationTest {
 
 		nonRetiredLocation.setChildLocations(
 		    new HashSet<>(Arrays.asList(firstChildOfNonRetiredLocation, secondChildOfNonRetiredLocation)));
-		retiredLocation.setChildLocations(new HashSet<>(Collections.singletonList(firstChildOfRetiredLocation)));
+		retiredLocation.setChildLocations(new HashSet<>(List.of(firstChildOfRetiredLocation)));
 
 		firstChildOfNonRetiredLocation.setChildLocations(new HashSet<>());
 		secondChildOfNonRetiredLocation.setChildLocations(new HashSet<>());

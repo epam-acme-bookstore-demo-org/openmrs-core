@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.util.Date;
 
 import jakarta.persistence.AssociationOverride;
@@ -47,6 +48,7 @@ import org.openmrs.util.OpenmrsUtil;
 @Audited
 public class Condition extends BaseFormRecordableOpenmrsData {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

@@ -144,7 +144,7 @@ public class FormServiceTest extends BaseContextSensitiveTest {
 		Concept concept1 = conceptService.getConcept(1);
 		String name1 = "name1";
 		String descript1 = "descript1";
-		FieldType fieldtype1 = formService.getAllFieldTypes().get(0);
+		FieldType fieldtype1 = formService.getAllFieldTypes().getFirst();
 		String table1 = "table1";
 		String attr1 = "attr1";
 		Boolean multi1 = true;
@@ -298,7 +298,7 @@ public class FormServiceTest extends BaseContextSensitiveTest {
 
 		assertEquals(1, forms.size());
 
-		Form form = forms.get(0);
+		Form form = forms.getFirst();
 		Collection<FormField> formFields = form.getFormFields();
 		Set<Integer> formFieldIds = formFields.stream().map(FormField::getFormFieldId).collect(Collectors.toSet());
 

@@ -10,6 +10,7 @@
 package org.openmrs.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -369,7 +370,7 @@ public class LocationServiceTest extends BaseContextSensitiveTest {
 		// Check that only location #1 is returned
 		List<Location> locations = Context.getLocationService().getLocations(null, null, attrValues, false, null, null);
 		assertEquals(1, locations.size());
-		assertEquals(location1, locations.get(0));
+		assertEquals(location1, locations.getFirst());
 	}
 
 	/**
@@ -448,7 +449,7 @@ public class LocationServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void getLocationsHavingAnyTag_shouldReturnEmptyListWhenNoLocationHasTheGivenTags() {
 		LocationService ls = Context.getLocationService();
-		assertEquals(0, ls.getLocationsHavingAnyTag(Collections.singletonList(ls.getLocationTagByName("Retired"))).size());
+		assertEquals(0, ls.getLocationsHavingAnyTag(Arrays.asList(ls.getLocationTagByName("Retired"))).size());
 	}
 
 	/**
@@ -960,11 +961,11 @@ public class LocationServiceTest extends BaseContextSensitiveTest {
 	public void getAllLocations_shouldPushRetiredLocationsToTheEndOfTheListWhenIncludeRetiredIsTrue() {
 		LocationService ls = Context.getLocationService();
 		//retire the first location
-		ls.retireLocation(ls.getAllLocations().get(0), "Just Testing");
+		ls.retireLocation(ls.getAllLocations().getFirst(), "Just Testing");
 		// Get all locations.
 		List<Location> locations = ls.getAllLocations();
 		//The 2 retired locations should be always be at the end
-		assertTrue(locations.get(locations.size() - 1).getRetired(), "Retired locations should be at the end of the list");
+		assertTrue(locations.getLast().getRetired(), "Retired locations should be at the end of the list");
 		assertTrue(locations.get(locations.size() - 2).getRetired(), "Retired locations should be at the end of the list");
 	}
 

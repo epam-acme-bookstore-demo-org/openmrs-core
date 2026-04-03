@@ -149,7 +149,7 @@ public class ProgramWorkflowServiceImpl extends BaseOpenmrsService implements Pr
 		if (programs.size() > 1) {
 			throw new ProgramNameDuplicatedException(name);
 		}
-		return programs.isEmpty() ? null : programs.get(0);
+		return programs.isEmpty() ? null : programs.getFirst();
 	}
 
 	/**

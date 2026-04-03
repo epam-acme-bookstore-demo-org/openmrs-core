@@ -85,11 +85,11 @@ public class Graph<T> {
 	 * @return set of nodes
 	 */
 	private Set<T> getNodesWithNoIncomingEdges() {
-		Set<T> nodesWithIncomingEdges = new HashSet<>();
+		var nodesWithIncomingEdges = new HashSet<T>();
 		for (Edge edge : edges) {
 			nodesWithIncomingEdges.add(edge.getToNode());
 		}
-		Set<T> nodesWithoutIncomingEdges = new HashSet<>(nodes);
+		var nodesWithoutIncomingEdges = new HashSet<T>(nodes);
 		for (T node : nodesWithIncomingEdges) {
 			nodesWithoutIncomingEdges.remove(node);
 		}
@@ -118,7 +118,7 @@ public class Graph<T> {
 	 * @return set of edges
 	 */
 	private Set<Edge> getEdgesStartingWith(T aNode) {
-		Set<Edge> edgesPointing = new HashSet<>();
+		var edgesPointing = new HashSet<Edge>();
 		for (Edge edge : edges) {
 			if (edge.getFromNode().equals(aNode)) {
 				edgesPointing.add(edge);
@@ -134,7 +134,7 @@ public class Graph<T> {
 	 * @return set of edges
 	 */
 	public Set<Edge> getEdgesEndingWith(T aNode) {
-		Set<Edge> edgesPointing = new HashSet<>();
+		var edgesPointing = new HashSet<Edge>();
 		for (Edge edge : edges) {
 			if (edge.getToNode().equals(aNode)) {
 				edgesPointing.add(edge);
@@ -152,10 +152,10 @@ public class Graph<T> {
 	public List<T> topologicalSort() throws CycleException {
 
 		Set<T> queue = getNodesWithNoIncomingEdges();
-		List<T> result = new ArrayList<>();
+		var result = new ArrayList<T>();
 
 		// The initial edges are stored.
-		List<Edge> initialEdges = new ArrayList<>(edges);
+		var initialEdges = new ArrayList<Edge>(edges);
 		while (!queue.isEmpty()) {
 			T node = queue.iterator().next();
 			queue.remove(node);

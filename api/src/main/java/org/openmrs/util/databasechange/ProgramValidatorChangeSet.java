@@ -77,10 +77,10 @@ public class ProgramValidatorChangeSet implements CustomTaskChange {
 		results = DatabaseUtil.executeSQL(conn, query.toString(), true);
 		List<Integer> missingInitial = new ArrayList<>();
 		for (List<Object> row : results) {
-			missingInitial.add(Integer.valueOf(row.get(0).toString()));
+			missingInitial.add(Integer.valueOf(row.getFirst().toString()));
 		}
 		for (List<Object> row : results) {
-			Integer conceptId = Integer.valueOf(row.get(0).toString());
+			Integer conceptId = Integer.valueOf(row.getFirst().toString());
 			boolean isInitial = "1".equals(row.get(1).toString());
 			int num = Integer.parseInt(row.get(2).toString());
 			if (isInitial && num > 0) {
@@ -92,7 +92,7 @@ public class ProgramValidatorChangeSet implements CustomTaskChange {
 		} else {
 			for (Integer conceptId : missingInitial) {
 				String sql = "select min(name) from concept_name where concept_id = " + conceptId;
-				String name = DatabaseUtil.executeSQL(conn, sql, true).get(0).get(0).toString();
+				String name = DatabaseUtil.executeSQL(conn, sql, true).getFirst().getFirst().toString();
 				message.append(name).append("<br/>");
 			}
 		}

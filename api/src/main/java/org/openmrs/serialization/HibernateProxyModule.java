@@ -95,8 +95,7 @@ class HibernateProxyModule extends Module {
 			try {
 				if (delegate.getMember() != null) {
 					java.lang.reflect.Member member = delegate.getMember().getMember();
-					if (member instanceof java.lang.reflect.Field) {
-						java.lang.reflect.Field field = (java.lang.reflect.Field) member;
+					if (member instanceof java.lang.reflect.Field field) {
 						field.setAccessible(true);
 						value = field.get(bean);
 					} else {
@@ -112,7 +111,7 @@ class HibernateProxyModule extends Module {
 			}
 
 			// Skip uninitialized lazy collections - omit the field from serialized output
-			if (value instanceof PersistentCollection && !((PersistentCollection<?>) value).wasInitialized()) {
+			if (value instanceof PersistentCollection<?> collection && !collection.wasInitialized()) {
 				return;
 			}
 			// Skip uninitialized lazy proxies - omit the field from serialized output

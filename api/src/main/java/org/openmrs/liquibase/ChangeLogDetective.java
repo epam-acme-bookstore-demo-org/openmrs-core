@@ -196,12 +196,10 @@ public class ChangeLogDetective {
 		Liquibase liquibase = liquibaseProvider.getLiquibase(filename);
 
 		List<ChangeSet> unrunChangeSets;
-		try {
+		try (liquibase) {
 			unrunChangeSets = new StatusCommandStep().listUnrunChangeSets(context, new LabelExpression(),
 			    liquibase.getDatabaseChangeLog(), liquibase.getDatabase());
 
-		} finally {
-			liquibase.close();
 		}
 
 		return unrunChangeSets;

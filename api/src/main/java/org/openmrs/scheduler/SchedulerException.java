@@ -9,11 +9,14 @@
  */
 package org.openmrs.scheduler;
 
+import java.io.Serial;
+
 public class SchedulerException extends Exception {
 
 	/**
 	 *
 	 */
+	@Serial
 	private static final long serialVersionUID = 4462693049954360187L;
 
 	public SchedulerException() {

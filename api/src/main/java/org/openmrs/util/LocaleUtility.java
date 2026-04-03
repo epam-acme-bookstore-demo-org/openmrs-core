@@ -137,7 +137,7 @@ public class LocaleUtility implements GlobalPropertyListener {
 	public static Locale fromSpecification(String localeSpecification) {
 		Locale createdLocale;
 
-		localeSpecification = localeSpecification.trim();
+		localeSpecification = localeSpecification.strip();
 
 		try {
 			createdLocale = LocaleUtils.toLocale(localeSpecification);
@@ -157,12 +157,12 @@ public class LocaleUtility implements GlobalPropertyListener {
 
 		String[] localeComponents = localeSpecification.split("_");
 		if (localeComponents.length == 1) {
-			createdLocale = new Locale(localeComponents[0]);
+			createdLocale = Locale.of(localeComponents[0]);
 		} else if (localeComponents.length == 2) {
-			createdLocale = new Locale(localeComponents[0], localeComponents[1]);
+			createdLocale = Locale.of(localeComponents[0], localeComponents[1]);
 		} else if (localeComponents.length > 2) {
 			String variant = localeSpecification.substring(localeSpecification.indexOf(localeComponents[2]));
-			createdLocale = new Locale(localeComponents[0], localeComponents[1], variant);
+			createdLocale = Locale.of(localeComponents[0], localeComponents[1], variant);
 		}
 
 		return createdLocale;

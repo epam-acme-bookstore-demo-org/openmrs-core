@@ -11,6 +11,7 @@ package org.openmrs.util;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Array;
@@ -37,6 +38,7 @@ import java.util.function.Predicate;
  */
 public class ThreadSafeCircularFifoQueue<E> extends AbstractQueue<E> implements Queue<E>, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = -89162358098721L;
 
 	// queue capacity

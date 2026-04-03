@@ -66,7 +66,7 @@ public class PatientIdentifierValidatorTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void validateIdentifier_shouldPassValidationIfPatientIdentifierIsVoided() {
-		PatientIdentifier pi = getPatientService().getPatientIdentifiers("7TU-8", null, null, null, null).get(0);
+		PatientIdentifier pi = getPatientService().getPatientIdentifiers("7TU-8", null, null, null, null).getFirst();
 		pi.setIdentifier("7TU-4");
 		// First, make sure this fails
 		assertThrows(Exception.class, () -> validateIdentifier(pi));
@@ -82,7 +82,7 @@ public class PatientIdentifierValidatorTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void validateIdentifier_shouldFailValidationIfAnotherPatientHasAMatchingIdentifierOfTheSameType() {
-		PatientIdentifier pi = Context.getPatientService().getPatientIdentifiers("7TU-8", null, null, null, null).get(0);
+		PatientIdentifier pi = Context.getPatientService().getPatientIdentifiers("7TU-8", null, null, null, null).getFirst();
 		pi.setIdentifier("101-6");
 		assertThrows(IdentifierNotUniqueException.class, () -> PatientIdentifierValidator.validateIdentifier(pi));
 	}

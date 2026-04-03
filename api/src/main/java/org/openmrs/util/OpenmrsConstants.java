@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,8 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import liquibase.GlobalConfiguration;
-
-import static java.util.Arrays.asList;
 
 /**
  * Constants used in OpenMRS. Contents built from build properties (version, version_short, and
@@ -112,7 +109,7 @@ public final class OpenmrsConstants {
 		}
 
 		try {
-			Properties props = new Properties();
+			var props = new Properties();
 			props.load(file);
 
 			file.close();
@@ -181,7 +178,7 @@ public final class OpenmrsConstants {
 	 * @return Collection&lt;String&gt; of words that are ignored
 	 */
 	public static final Collection<String> STOP_WORDS() {
-		List<String> stopWords = new ArrayList<>();
+		var stopWords = new ArrayList<String>();
 		stopWords.add("A");
 		stopWords.add("AND");
 		stopWords.add("AT");
@@ -206,7 +203,7 @@ public final class OpenmrsConstants {
 	@Deprecated
 	@SuppressWarnings("squid:S00100")
 	public static final Map<String, String> GENDER() {
-		Map<String, String> genders = new LinkedHashMap<>();
+		var genders = new LinkedHashMap<String, String>();
 		genders.put("M", "Male");
 		genders.put("F", "Female");
 		return genders;
@@ -215,7 +212,7 @@ public final class OpenmrsConstants {
 	/**
 	 * A list of 1-letter strings representing genders
 	 */
-	public static final List<String> GENDERS = Collections.unmodifiableList(asList("M", "F"));
+	public static final List<String> GENDERS = List.of("M", "F");
 
 	/**
 	 * These roles are given to a user automatically and cannot be assigned
@@ -223,7 +220,7 @@ public final class OpenmrsConstants {
 	 * @return <code>Collection&lt;String&gt;</code> of the auto-assigned roles
 	 */
 	public static final Collection<String> AUTO_ROLES() {
-		List<String> roles = new ArrayList<>();
+		var roles = new ArrayList<String>();
 
 		roles.add(RoleConstants.ANONYMOUS);
 		roles.add(RoleConstants.AUTHENTICATED);
@@ -375,21 +372,30 @@ public final class OpenmrsConstants {
 
 	public static final String GLOBAL_PROPERTY_DRUG_ORDER_REQUIRE_OUTPATIENT_QUANTITY = "drugOrder.requireOutpatientQuantity";
 
-	public static final String DEFAULT_ADDRESS_TEMPLATE = "<org.openmrs.layout.address.AddressTemplate>\n"
-	        + "    <nameMappings class=\"properties\">\n"
-	        + "      <property name=\"postalCode\" value=\"Location.postalCode\"/>\n"
-	        + "      <property name=\"address2\" value=\"Location.address2\"/>\n"
-	        + "      <property name=\"address1\" value=\"Location.address1\"/>\n"
-	        + "      <property name=\"country\" value=\"Location.country\"/>\n"
-	        + "      <property name=\"stateProvince\" value=\"Location.stateProvince\"/>\n"
-	        + "      <property name=\"cityVillage\" value=\"Location.cityVillage\"/>\n" + "    </nameMappings>\n"
-	        + "    <sizeMappings class=\"properties\">\n" + "      <property name=\"postalCode\" value=\"10\"/>\n"
-	        + "      <property name=\"address2\" value=\"40\"/>\n" + "      <property name=\"address1\" value=\"40\"/>\n"
-	        + "      <property name=\"country\" value=\"10\"/>\n" + "      <property name=\"stateProvince\" value=\"10\"/>\n"
-	        + "      <property name=\"cityVillage\" value=\"10\"/>\n" + "    </sizeMappings>\n" + "    <lineByLineFormat>\n"
-	        + "      <string>address1</string>\n" + "      <string>address2</string>\n"
-	        + "      <string>cityVillage stateProvince country postalCode</string>\n" + "    </lineByLineFormat>\n"
-	        + "   <requiredElements>\\n\" + \" </requiredElements>\\n\" + \" </org.openmrs.layout.address.AddressTemplate>";
+	public static final String DEFAULT_ADDRESS_TEMPLATE = """
+	        <org.openmrs.layout.address.AddressTemplate>
+	            <nameMappings class="properties">
+	              <property name="postalCode" value="Location.postalCode"/>
+	              <property name="address2" value="Location.address2"/>
+	              <property name="address1" value="Location.address1"/>
+	              <property name="country" value="Location.country"/>
+	              <property name="stateProvince" value="Location.stateProvince"/>
+	              <property name="cityVillage" value="Location.cityVillage"/>
+	            </nameMappings>
+	            <sizeMappings class="properties">
+	              <property name="postalCode" value="10"/>
+	              <property name="address2" value="40"/>
+	              <property name="address1" value="40"/>
+	              <property name="country" value="10"/>
+	              <property name="stateProvince" value="10"/>
+	              <property name="cityVillage" value="10"/>
+	            </sizeMappings>
+	            <lineByLineFormat>
+	              <string>address1</string>
+	              <string>address2</string>
+	              <string>cityVillage stateProvince country postalCode</string>
+	            </lineByLineFormat>
+	           <requiredElements>\\n" + " </requiredElements>\\n" + " </org.openmrs.layout.address.AddressTemplate>""";
 
 	/**
 	 * Global property name that allows specification of whether user passwords must contain both upper
@@ -659,7 +665,7 @@ public final class OpenmrsConstants {
 	 * @return List&lt;GlobalProperty&gt; of the core global properties
 	 */
 	public static final List<GlobalProperty> CORE_GLOBAL_PROPERTIES() {
-		List<GlobalProperty> props = new ArrayList<>();
+		var props = new ArrayList<GlobalProperty>();
 
 		props.add(new GlobalProperty("use_patient_attribute.healthCenter", "false",
 		        "Indicates whether or not the 'health center' attribute is shown when viewing/searching for patients",
@@ -1048,7 +1054,7 @@ public final class OpenmrsConstants {
 	public static final String CONCEPT_PROPOSAL_REJECT = "REJECT";
 
 	public static final Collection<String> CONCEPT_PROPOSAL_STATES() {
-		Collection<String> states = new ArrayList<>();
+		var states = new ArrayList<String>();
 
 		states.add(CONCEPT_PROPOSAL_UNMAPPED);
 		states.add(CONCEPT_PROPOSAL_CONCEPT);
@@ -1058,11 +1064,11 @@ public final class OpenmrsConstants {
 		return states;
 	}
 
-	public static final Locale SPANISH_LANGUAGE = new Locale("es");
+	public static final Locale SPANISH_LANGUAGE = Locale.of("es");
 
-	public static final Locale PORTUGUESE_LANGUAGE = new Locale("pt");
+	public static final Locale PORTUGUESE_LANGUAGE = Locale.of("pt");
 
-	public static final Locale ITALIAN_LANGUAGE = new Locale("it");
+	public static final Locale ITALIAN_LANGUAGE = Locale.of("it");
 
 	/*
 	 * User property names

@@ -11,7 +11,6 @@ package org.openmrs.api.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -196,7 +195,7 @@ public class PatientServiceImplTest extends BaseContextMockTest {
 
 	@Test
 	public void getDuplicatePatientsByAttributes_shouldThrowErrorGivenEmptyAttributes() throws Exception {
-		assertThrows(APIException.class, () -> patientService.getDuplicatePatientsByAttributes(Collections.emptyList()));
+		assertThrows(APIException.class, () -> patientService.getDuplicatePatientsByAttributes(List.of()));
 	}
 
 	@Test
@@ -206,8 +205,7 @@ public class PatientServiceImplTest extends BaseContextMockTest {
 
 	@Test
 	public void getDuplicatePatientsByAttributes_shouldCallDaoGivenAttributes() throws Exception {
-		when(patientDaoMock.getDuplicatePatientsByAttributes(anyList()))
-		        .thenReturn(Collections.singletonList(mock(Patient.class)));
+		when(patientDaoMock.getDuplicatePatientsByAttributes(anyList())).thenReturn(List.of(mock(Patient.class)));
 		final List<Patient> duplicatePatients = patientService
 		        .getDuplicatePatientsByAttributes(Arrays.asList("some attribute", "another attribute"));
 		verify(patientDaoMock, times(1)).getDuplicatePatientsByAttributes(anyList());
@@ -228,8 +226,8 @@ public class PatientServiceImplTest extends BaseContextMockTest {
 
 		// then
 		verify(patientDaoMock, times(1)).getPatientIdentifierTypes("a name", "a format", true, false);
-		assertEquals(expectedIdentifierTypes.get(0).getPatientIdentifierTypeId(),
-		    actualIdentifierTypes.get(0).getPatientIdentifierTypeId());
+		assertEquals(expectedIdentifierTypes.getFirst().getPatientIdentifierTypeId(),
+		    actualIdentifierTypes.getFirst().getPatientIdentifierTypeId());
 	}
 
 	@Test

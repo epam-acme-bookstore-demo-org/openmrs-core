@@ -81,7 +81,7 @@ public class JacksonSerializerTest extends BaseContextSensitiveTest {
 
 		List<String> newList = foo.getAttributeList();
 		assertThat(newList, hasSize(2));
-		assertTrue(newList.get(0).equals("fooBar"));
+		assertTrue(newList.getFirst().equals("fooBar"));
 		assertTrue(newList.get(1).equals("bar"));
 
 		Map<Integer, String> newMap = foo.getAttributeMap();

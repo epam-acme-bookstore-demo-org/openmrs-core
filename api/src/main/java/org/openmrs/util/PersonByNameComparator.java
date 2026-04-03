@@ -9,6 +9,7 @@
  */
 package org.openmrs.util;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -23,6 +24,7 @@ import org.openmrs.PersonName;
  */
 public class PersonByNameComparator implements Comparator<Person>, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

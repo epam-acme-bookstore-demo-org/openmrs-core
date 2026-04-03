@@ -593,7 +593,7 @@ public class DrugOrder extends Order {
 	 * @since 1.12 sets drugNonCoded
 	 */
 	public void setDrugNonCoded(String drugNonCoded) {
-		this.drugNonCoded = StringUtils.isNotBlank(drugNonCoded) ? drugNonCoded.trim() : drugNonCoded;
+		this.drugNonCoded = StringUtils.isNotBlank(drugNonCoded) ? drugNonCoded.strip() : drugNonCoded;
 	}
 
 	/**

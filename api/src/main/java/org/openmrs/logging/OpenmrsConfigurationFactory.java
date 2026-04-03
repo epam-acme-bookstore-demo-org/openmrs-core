@@ -76,15 +76,15 @@ public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 			List<File> configurationFiles = getConfigurationFiles();
 			if (!configurationFiles.isEmpty()) {
 				if (configurationFiles.size() == 1) {
-					System.out.println("Adding log4j2 configuration file: " + configurationFiles.get(0).getPath());
-					return super.getConfiguration(loggerContext, name, configurationFiles.get(0).toURI());
+					System.out.println("Adding log4j2 configuration file: " + configurationFiles.getFirst().getPath());
+					return super.getConfiguration(loggerContext, name, configurationFiles.getFirst().toURI());
 				} else {
 					List<AbstractConfiguration> abstractConfigurations = new ArrayList<>();
 					for (File configFile : configurationFiles) {
 						Configuration configuration = super.getConfiguration(loggerContext, name, configFile.toURI());
-						if (configuration instanceof AbstractConfiguration) {
+						if (configuration instanceof AbstractConfiguration abstractConfiguration) {
 							System.out.println("Adding log4j2 configuration file: " + configFile.getPath());
-							abstractConfigurations.add((AbstractConfiguration) configuration);
+							abstractConfigurations.add(abstractConfiguration);
 						} else {
 							System.err.println("Unable to add log4j2 configuration file: " + configFile.getPath());
 						}
@@ -169,9 +169,9 @@ public class OpenmrsConfigurationFactory extends ConfigurationFactory {
 			if (classAndLevel.length == 0) {
 				break;
 			} else if (classAndLevel.length == 1) {
-				applyLogLevel(configuration, OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].trim());
+				applyLogLevel(configuration, OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].strip());
 			} else {
-				applyLogLevel(configuration, classAndLevel[0].trim(), classAndLevel[1].trim());
+				applyLogLevel(configuration, classAndLevel[0].strip(), classAndLevel[1].strip());
 			}
 		}
 	}

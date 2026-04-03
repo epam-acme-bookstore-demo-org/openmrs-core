@@ -17,8 +17,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -216,7 +214,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 		// create an empty ignoreFormFields list if none was passed in
 		Collection<FormField> tmpIgnoreFormFields = ignoreFormFields;
 		if (tmpIgnoreFormFields == null) {
-			tmpIgnoreFormFields = Collections.emptyList();
+			tmpIgnoreFormFields = List.of();
 		}
 
 		return dao.getFormField(form, concept, tmpIgnoreFormFields, force);
@@ -330,15 +328,13 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	        Collection<FieldAnswer> containsAllAnswers, Collection<FieldAnswer> containsAnyAnswer, Boolean retired)
 	        throws APIException {
 
-		Collection<Form> tmpForms = forms == null ? Collections.emptyList() : forms;
-		Collection<Concept> tmpConcepts = concepts == null ? Collections.emptyList() : concepts;
-		Collection<FieldType> tmpFieldTypes = fieldTypes == null ? Collections.emptyList() : fieldTypes;
-		Collection<String> tmpTableNames = tableNames == null ? Collections.emptyList() : tableNames;
-		Collection<String> tmpAttributeNames = attributeNames == null ? Collections.emptyList() : attributeNames;
-		Collection<FieldAnswer> tmpContainsAllAnswers = containsAllAnswers == null ? Collections.emptyList()
-		        : containsAllAnswers;
-		Collection<FieldAnswer> tmpContainsAnyAnswer = containsAnyAnswer == null ? Collections.emptyList()
-		        : containsAnyAnswer;
+		Collection<Form> tmpForms = forms == null ? List.of() : forms;
+		Collection<Concept> tmpConcepts = concepts == null ? List.of() : concepts;
+		Collection<FieldType> tmpFieldTypes = fieldTypes == null ? List.of() : fieldTypes;
+		Collection<String> tmpTableNames = tableNames == null ? List.of() : tableNames;
+		Collection<String> tmpAttributeNames = attributeNames == null ? List.of() : attributeNames;
+		Collection<FieldAnswer> tmpContainsAllAnswers = containsAllAnswers == null ? List.of() : containsAllAnswers;
+		Collection<FieldAnswer> tmpContainsAnyAnswer = containsAnyAnswer == null ? List.of() : containsAnyAnswer;
 
 		return dao.getFields(tmpForms, tmpFieldTypes, tmpConcepts, tmpTableNames, tmpAttributeNames, selectMultiple,
 		    tmpContainsAllAnswers, tmpContainsAnyAnswer, retired);
@@ -358,7 +354,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 		if (forms == null || forms.isEmpty()) {
 			return null;
 		} else {
-			return forms.get(0);
+			return forms.getFirst();
 		}
 	}
 
@@ -380,7 +376,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 		// get all forms including unpublished and including retired
 		List<Form> forms = Context.getFormService().getForms(fuzzyName, null, null, null, null, null, null);
 
-		Set<String> namesAlreadySeen = new HashSet<>();
+		var namesAlreadySeen = new HashSet<String>();
 		for (Iterator<Form> i = forms.iterator(); i.hasNext();) {
 			Form form = i.next();
 			if (namesAlreadySeen.contains(form.getName())) {
@@ -403,12 +399,12 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	        Boolean retired, Collection<FormField> containingAnyFormField, Collection<FormField> containingAllFormFields,
 	        Collection<Field> fields) {
 
-		Collection<EncounterType> tmpEncounterTypes = encounterTypes == null ? Collections.emptyList() : encounterTypes;
-		Collection<FormField> tmpContainingAllFormFields = containingAllFormFields == null ? Collections.emptyList()
+		Collection<EncounterType> tmpEncounterTypes = encounterTypes == null ? List.of() : encounterTypes;
+		Collection<FormField> tmpContainingAllFormFields = containingAllFormFields == null ? List.of()
 		        : containingAllFormFields;
-		Collection<FormField> tmpContainingAnyFormField = containingAnyFormField == null ? Collections.emptyList()
+		Collection<FormField> tmpContainingAnyFormField = containingAnyFormField == null ? List.of()
 		        : containingAnyFormField;
-		Collection<Field> tmpFields = fields == null ? Collections.emptyList() : fields;
+		Collection<Field> tmpFields = fields == null ? List.of() : fields;
 
 		return dao.getForms(partialName, published, tmpEncounterTypes, retired, tmpContainingAnyFormField,
 		    tmpContainingAllFormFields, tmpFields);
@@ -425,12 +421,12 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	        Boolean retired, Collection<FormField> containingAnyFormField, Collection<FormField> containingAllFormFields,
 	        Collection<Field> fields) {
 
-		Collection<EncounterType> tmpEncounterTypes = encounterTypes == null ? Collections.emptyList() : encounterTypes;
-		Collection<FormField> tmpContainingAllFormFields = containingAllFormFields == null ? Collections.emptyList()
+		Collection<EncounterType> tmpEncounterTypes = encounterTypes == null ? List.of() : encounterTypes;
+		Collection<FormField> tmpContainingAllFormFields = containingAllFormFields == null ? List.of()
 		        : containingAllFormFields;
-		Collection<FormField> tmpContainingAnyFormField = containingAnyFormField == null ? Collections.emptyList()
+		Collection<FormField> tmpContainingAnyFormField = containingAnyFormField == null ? List.of()
 		        : containingAnyFormField;
-		Collection<Field> tmpFields = fields == null ? Collections.emptyList() : fields;
+		Collection<Field> tmpFields = fields == null ? List.of() : fields;
 
 		return dao.getFormCount(partialName, published, tmpEncounterTypes, retired, tmpContainingAnyFormField,
 		    tmpContainingAllFormFields, tmpFields);
@@ -526,7 +522,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	@Override
 	public Form saveForm(Form form) throws APIException {
 		checkIfFormsAreLocked();
-		BindException errors = new BindException(form, "form");
+		var errors = new BindException(form, "form");
 		formValidator.validate(form, errors);
 		if (errors.hasErrors()) {
 			throw new APIException(errors);
@@ -572,8 +568,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 		Concept concept = tmpFormField.getField().getConcept();
 		if (concept != null && concept.isComplex()) {
 			ComplexObsHandler handler = Context.getObsService().getHandler(((ConceptComplex) concept).getHandler());
-			if (handler instanceof SerializableComplexObsHandler) {
-				SerializableComplexObsHandler sHandler = (SerializableComplexObsHandler) handler;
+			if (handler instanceof SerializableComplexObsHandler sHandler) {
 				if (sHandler.getFormFields() != null) {
 					for (FormField ff : sHandler.getFormFields()) {
 						ff.setParent(tmpFormField);
@@ -627,7 +622,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	@Transactional(readOnly = true)
 	public List<Form> getFormsContainingConcept(Concept concept) throws APIException {
 		if (concept.getConceptId() == null) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		return dao.getFormsContainingConcept(concept);
@@ -656,9 +651,9 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	public int mergeDuplicateFields() throws APIException {
 
 		List<Field> fields = dao.getAllFields(true);
-		Set<Field> fieldsToDelete = new HashSet<>();
+		var fieldsToDelete = new HashSet<Field>();
 
-		Map<String, Integer> fieldNameAsKeyAndFieldIdAsValueMap = new HashMap<>();
+		var fieldNameAsKeyAndFieldIdAsValueMap = new HashMap<String, Integer>();
 
 		for (Field field : fields) {
 			if (fieldNameAsKeyAndFieldIdAsValueMap.containsKey(field.getName())) {
@@ -786,7 +781,7 @@ public class FormServiceImpl extends BaseOpenmrsService implements FormService, 
 	private void duplicateFormResources(Form source, Form destination, Collection<FormResource> formResources) {
 		FormService service = Context.getFormService();
 		for (FormResource resource : formResources) {
-			FormResource newResource = new FormResource(resource);
+			var newResource = new FormResource(resource);
 			newResource.setForm(destination);
 			service.saveFormResource(newResource);
 		}

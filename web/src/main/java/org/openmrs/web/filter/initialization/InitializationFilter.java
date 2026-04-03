@@ -22,11 +22,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -195,9 +193,9 @@ public class InitializationFilter extends StartupFilter {
 	// the actual driver loaded by the DatabaseUpdater class
 	private String loadedDriverString;
 
-	private static final Set<String> NON_NORMALIZED_KEYS = new HashSet<>(
-	        Arrays.asList("INSTALL_METHOD", "DATABASE_NAME", "HAS_CURRENT_OPENMRS_DATABASE", "CREATE_DATABASE_USER",
-	            "CREATE_TABLES", "ADD_DEMO_DATA", "MODULE_WEB_ADMIN", "AUTO_UPDATE_DATABASE", "ADMIN_USER_PASSWORD"));
+	private static final Set<String> NON_NORMALIZED_KEYS = Set.of("INSTALL_METHOD", "DATABASE_NAME",
+	    "HAS_CURRENT_OPENMRS_DATABASE", "CREATE_DATABASE_USER", "CREATE_TABLES", "ADD_DEMO_DATA", "MODULE_WEB_ADMIN",
+	    "AUTO_UPDATE_DATABASE", "ADMIN_USER_PASSWORD");
 
 	/**
 	 * Variable set at the end of the wizard when spring is being restarted
@@ -331,7 +329,7 @@ public class InitializationFilter extends StartupFilter {
 	 * the {@link InitializationWizardModel}.
 	 */
 	protected void initializeWizardFromResolvedPropertiesIfPresent() {
-		Properties script = new Properties();
+		var script = new Properties();
 
 		Properties installScript = getInstallationScript();
 		script.putAll(installScript);
@@ -1399,9 +1397,9 @@ public class InitializationFilter extends StartupFilter {
 				public void run() {
 					try {
 						String connectionUsername;
-						StringBuilder connectionPassword = new StringBuilder();
+						var connectionPassword = new StringBuilder();
 						ChangeLogDetective changeLogDetective = ChangeLogDetective.getInstance();
-						ChangeLogVersionFinder changeLogVersionFinder = new ChangeLogVersionFinder();
+						var changeLogVersionFinder = new ChangeLogVersionFinder();
 
 						if (!wizardModel.hasCurrentOpenmrsDatabase) {
 							setMessage("Create database");
@@ -1937,7 +1935,7 @@ public class InitializationFilter extends StartupFilter {
 	 * @throws RuntimeException if path to installation script is invalid
 	 */
 	protected Properties getInstallationScript() {
-		Properties prop = new Properties();
+		var prop = new Properties();
 
 		String fileName = System.getProperty("OPENMRS_INSTALLATION_SCRIPT");
 		if (fileName == null) {

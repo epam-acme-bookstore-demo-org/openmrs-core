@@ -22,7 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Enumeration;
@@ -66,14 +66,13 @@ public class TestInstallUtil {
 	protected static boolean addTestData(String host, int port, String databaseName, String user, String pwd,
 	        String filePath) {
 		Process proc;
-		BufferedReader br = null;
 		String errorMsg = null;
 		String[] command = new String[] { "mysql", "--host=" + host, "--port=" + port, "--user=" + user, "--password=" + pwd,
 		        "--database=" + databaseName, "-e", "source " + filePath };
 
 		//For stand-alone, use explicit path to the mysql executable.
 		String runDirectory = System.getProperties().getProperty("user.dir");
-		File file = Paths.get(runDirectory, "database", "bin", "mysql").toFile();
+		var file = Path.of(runDirectory, "database", "bin", "mysql").toFile();
 
 		if (file.exists()) {
 			command[0] = file.getAbsolutePath();
@@ -81,10 +80,9 @@ public class TestInstallUtil {
 
 		try {
 			proc = Runtime.getRuntime().exec(command);
-			try {
-				br = new BufferedReader(new InputStreamReader(proc.getErrorStream(), StandardCharsets.UTF_8));
+			try (var br = new BufferedReader(new InputStreamReader(proc.getErrorStream(), StandardCharsets.UTF_8))) {
 				String line;
-				StringBuilder sb = new StringBuilder();
+				var sb = new StringBuilder();
 				while ((line = br.readLine()) != null) {
 					sb.append(System.getProperty("line.separator"));
 					sb.append(line);
@@ -92,14 +90,6 @@ public class TestInstallUtil {
 				errorMsg = sb.toString();
 			} catch (IOException e) {
 				log.error("Failed to add test data:", e);
-			} finally {
-				if (br != null) {
-					try {
-						br.close();
-					} catch (Exception e) {
-						log.error("Failed to close the inputstream:", e);
-					}
-				}
 			}
 
 			//print out the error messages from the process

@@ -33,7 +33,7 @@ public class GlobalLocaleList implements GlobalPropertyListener {
 	public void globalPropertyChanged(GlobalProperty newValue) {
 		allowedLocales = new LinkedHashSet<>();
 		for (String allowedLocaleString : newValue.getPropertyValue().split(",")) {
-			Locale allowedLocale = LocaleUtility.fromSpecification(allowedLocaleString.trim());
+			Locale allowedLocale = LocaleUtility.fromSpecification(allowedLocaleString.strip());
 			if (allowedLocale != null) {
 				allowedLocales.add(allowedLocale);
 			}

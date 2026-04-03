@@ -13,7 +13,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -225,7 +224,7 @@ public class DatabaseUpdater {
 			lockHandler = LockServiceFactory.getInstance().getLockService(database);
 			lockHandler.waitForLock();
 
-			Map<String, Object> scopeValues = new HashMap<>();
+			var scopeValues = new HashMap<String, Object>();
 			scopeValues.put(Scope.Attr.resourceAccessor.name(), getCompositeResourceAccessor(null));
 			String scopeId = null;
 			try {
@@ -367,11 +366,10 @@ public class DatabaseUpdater {
 		}
 
 		// load in the default hibernate properties from hibernate.default.properties
-		InputStream propertyStream = null;
-		try {
-			Properties props = new Properties();
+		try (var propertyStream = DatabaseUpdater.class.getClassLoader()
+		        .getResourceAsStream("hibernate.default.properties")) {
+			var props = new Properties();
 			// TODO: This is a dumb requirement to have hibernate in here.  Clean this up
-			propertyStream = DatabaseUpdater.class.getClassLoader().getResourceAsStream("hibernate.default.properties");
 			OpenmrsUtil.loadProperties(props, propertyStream);
 			// add in all default properties that don't exist in the runtime
 			// properties yet
@@ -380,12 +378,8 @@ public class DatabaseUpdater {
 					runtimeProperties.put(entry.getKey(), entry.getValue());
 				}
 			}
-		} finally {
-			try {
-				propertyStream.close();
-			} catch (Exception e) {
-				// pass
-			}
+		} catch (Exception e) {
+			// pass
 		}
 	}
 
@@ -620,7 +614,7 @@ public class DatabaseUpdater {
 		if (Context.isSessionOpen()) { // Do not check privileges if not run in webapp context (e.g. in tests)
 			Context.requirePrivilege(PrivilegeConstants.GET_DATABASE_CHANGES);
 		}
-		List<OpenMRSChangeSet> result = new ArrayList<>();
+		var result = new ArrayList<OpenMRSChangeSet>();
 
 		String initialSnapshotVersion = changeLogDetective.getInitialLiquibaseSnapshotVersion(CONTEXT,
 		    new DatabaseUpdaterLiquibaseProvider());
@@ -628,7 +622,7 @@ public class DatabaseUpdater {
 
 		Map<String, List<String>> snapshotCombinations = changeLogVersionFinder.getSnapshotCombinations();
 
-		List<String> changeLogFileNames = new ArrayList<>();
+		var changeLogFileNames = new ArrayList<String>();
 		changeLogFileNames.addAll(snapshotCombinations.get(initialSnapshotVersion));
 		changeLogFileNames.addAll(changeLogVersionFinder.getUpdateFileNames(updateVersions));
 
@@ -700,7 +694,7 @@ public class DatabaseUpdater {
 				throw new IllegalArgumentException("changeLogFilenames can neither null nor an empty array");
 			}
 
-			List<OpenMRSChangeSet> results = new ArrayList<>();
+			var results = new ArrayList<OpenMRSChangeSet>();
 
 			for (String changelogFile : changeLogFilenames) {
 				Liquibase liquibase = getLiquibase(changelogFile, null);
@@ -710,7 +704,7 @@ public class DatabaseUpdater {
 				    new LabelExpression(), liquibase.getDatabaseChangeLog(), liquibase.getDatabase());
 
 				for (ChangeSet changeSet : changeSets) {
-					OpenMRSChangeSet omrschangeset = new OpenMRSChangeSet(changeSet, database);
+					var omrschangeset = new OpenMRSChangeSet(changeSet, database);
 					results.add(omrschangeset);
 				}
 			}
@@ -865,7 +859,7 @@ public class DatabaseUpdater {
 			if (callback != null) {
 				callback.executing(changeSet, numChangeSetsToRun);
 			}
-			Map<String, Object> scopeValues = new HashMap<>();
+			var scopeValues = new HashMap<String, Object>();
 			scopeValues.put(Scope.Attr.resourceAccessor.name(), getCompositeResourceAccessor(null));
 			String scopeId = null;
 			try {

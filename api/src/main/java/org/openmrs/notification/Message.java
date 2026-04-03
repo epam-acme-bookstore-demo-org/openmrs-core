@@ -9,6 +9,7 @@
  */
 package org.openmrs.notification;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,6 +18,7 @@ public class Message implements Serializable {
 	/**
 	 *
 	 */
+	@Serial
 	private static final long serialVersionUID = -5392076713513109152L;
 
 	private Integer id;

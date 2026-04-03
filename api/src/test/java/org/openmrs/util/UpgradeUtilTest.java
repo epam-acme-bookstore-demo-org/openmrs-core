@@ -28,8 +28,10 @@ public class UpgradeUtilTest extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getConceptIdForUnits_shouldReturnConcept_idForDrug_order_quantity_units() throws IOException {
-		Database1_9_7UpgradeIT.createOrderEntryUpgradeFileWithTestData(
-		    "mg=5401" + "\n" + "drug_order_quantity_units=5403" + "\n" + "ounces=5402");
+		Database1_9_7UpgradeIT.createOrderEntryUpgradeFileWithTestData("""
+		        mg=5401
+		        drug_order_quantity_units=5403
+		        ounces=5402""");
 
 		Integer conceptId = UpgradeUtil.getConceptIdForUnits("drug_order_quantity_units");
 

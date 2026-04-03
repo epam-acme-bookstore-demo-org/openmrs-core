@@ -40,7 +40,7 @@ public class EncounterRoleValidator extends RequireNameValidator {
 		super.validate(obj, errors);
 		EncounterRole encounterRole = (EncounterRole) obj;
 		if (!errors.hasErrors()) {
-			EncounterRole duplicate = Context.getEncounterService().getEncounterRoleByName(encounterRole.getName().trim());
+			EncounterRole duplicate = Context.getEncounterService().getEncounterRoleByName(encounterRole.getName().strip());
 			if (duplicate != null && duplicate.getUuid() != null
 			        && !OpenmrsUtil.nullSafeEquals(encounterRole.getUuid(), duplicate.getUuid())) {
 				errors.rejectValue("name", "encounterRole.duplicate.name",

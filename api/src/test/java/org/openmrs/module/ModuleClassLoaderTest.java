@@ -12,8 +12,8 @@ package org.openmrs.module;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -298,7 +298,7 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath(conditionalResourcePath);
 		resource.setOpenmrsPlatformVersion("1.7-1.8,1.10-1.11");
-		resource.setModules(Collections.singletonList(moduleIdAndVersion));
+		resource.setModules(List.of(moduleIdAndVersion));
 		mockModuleV2_0.getConditionalResources().add(resource);
 
 		ModuleFactory.getStartedModulesMap().put(conditionalResourceModuleId,
@@ -331,7 +331,7 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath(conditionalResourcePath);
 		resource.setOpenmrsPlatformVersion(commonPlatformVersion);
-		resource.setModules(Collections.singletonList(moduleIdAndVersion));
+		resource.setModules(List.of(moduleIdAndVersion));
 		mockModuleV2_0.getConditionalResources().add(resource);
 
 		ModuleFactory.getStartedModulesMap().put(conditionalResourceModuleId,
@@ -365,7 +365,7 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath(conditionalResourcePath);
 		resource.setOpenmrsPlatformVersion(commonPlatformVersion);
-		resource.setModules(Collections.singletonList(moduleIdAndVersion));
+		resource.setModules(List.of(moduleIdAndVersion));
 		mockModuleV2_0.getConditionalResources().add(resource);
 
 		ModuleFactory.getStartedModulesMap().put(conditionalResourceModuleId,
@@ -401,7 +401,7 @@ public class ModuleClassLoaderTest extends BaseContextSensitiveTest {
 		ModuleConditionalResource resource = new ModuleConditionalResource();
 		resource.setPath(conditionalResourcePath);
 		resource.setOpenmrsPlatformVersion(conditionalResourcePlatformVersion);
-		resource.setModules(Collections.singletonList(moduleIdAndVersion));
+		resource.setModules(List.of(moduleIdAndVersion));
 		mockModuleV2_0.getConditionalResources().add(resource);
 
 		ModuleFactory.getStartedModulesMap().put(conditionalResourceModuleId,

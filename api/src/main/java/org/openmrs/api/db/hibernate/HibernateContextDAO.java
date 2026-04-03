@@ -186,7 +186,7 @@ public class HibernateContextDAO implements ContextDAO {
 				try {
 					Context.addProxyPrivilege(PrivilegeConstants.GET_GLOBAL_PROPERTIES);
 					allowedFailedLoginCount = Integer.parseInt(Context.getAdministrationService()
-					        .getGlobalProperty(OpenmrsConstants.GP_ALLOWED_FAILED_LOGINS_BEFORE_LOCKOUT).trim());
+					        .getGlobalProperty(OpenmrsConstants.GP_ALLOWED_FAILED_LOGINS_BEFORE_LOCKOUT).strip());
 				} catch (Exception ex) {
 					log.error("Unable to convert the global property {} to a valid integer. Using default value of 7.",
 					    OpenmrsConstants.GP_ALLOWED_FAILED_LOGINS_BEFORE_LOCKOUT);
@@ -337,8 +337,8 @@ public class HibernateContextDAO implements ContextDAO {
 			if (TransactionSynchronizationManager.hasResource(sessionFactory)) {
 				Object value = TransactionSynchronizationManager.unbindResource(sessionFactory);
 				try {
-					if (value instanceof SessionHolder) {
-						Session session = ((SessionHolder) value).getSession();
+					if (value instanceof SessionHolder holder) {
+						Session session = holder.getSession();
 						session.close();
 					}
 				} catch (RuntimeException e) {

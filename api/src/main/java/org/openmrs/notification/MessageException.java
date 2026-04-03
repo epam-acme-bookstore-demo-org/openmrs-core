@@ -9,11 +9,14 @@
  */
 package org.openmrs.notification;
 
+import java.io.Serial;
+
 public class MessageException extends Exception {
 
 	/**
 	 *
 	 */
+	@Serial
 	private static final long serialVersionUID = -5421053761024878322L;
 
 	public MessageException() {

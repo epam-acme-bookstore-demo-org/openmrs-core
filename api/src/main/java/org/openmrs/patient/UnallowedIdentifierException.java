@@ -9,6 +9,8 @@
  */
 package org.openmrs.patient;
 
+import java.io.Serial;
+
 import org.openmrs.api.APIException;
 
 /**
@@ -22,6 +24,7 @@ public class UnallowedIdentifierException extends APIException {
 	/**
 	 * Compiler generated serial version uid.
 	 */
+	@Serial
 	private static final long serialVersionUID = -1460246384367910860L;
 
 	public UnallowedIdentifierException() {

@@ -129,7 +129,7 @@ public class ObsTest {
 		} else if (field.getType().equals(Obs.Status.class)) {
 			fieldValue = setAlternateValue ? Obs.Status.AMENDED : Obs.Status.PRELIMINARY;
 		} else {
-			fieldValue = field.getType().newInstance();
+			fieldValue = field.getType().getDeclaredConstructor().newInstance();
 		}
 		assertNotNull("Failed to generate a value for field: Obs." + field.getName());
 
@@ -360,8 +360,6 @@ public class ObsTest {
 
 		Obs obs = new Obs();
 		obs.setConcept(c);
-		;
-
 		assertThrows(RuntimeException.class, () -> obs.setValueAsString("\r\n"));
 	}
 
@@ -935,7 +933,7 @@ public class ObsTest {
 		obs.setAccessionNumber("4849RDD");
 		obs.setValueCoded(new Concept());
 		obs.setValueDrug(new Drug());
-		obs.setValueGroupId(new Integer(23));
+		obs.setValueGroupId(Integer.valueOf(23));
 		obs.setValueDatetime(new Date());
 		obs.setValueModifier("djfsihdihd");
 		obs.setValueText("xyzABC");

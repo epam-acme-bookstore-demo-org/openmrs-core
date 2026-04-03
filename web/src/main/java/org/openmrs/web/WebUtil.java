@@ -296,7 +296,7 @@ public class WebUtil implements GlobalPropertyListener {
 		if (localeString == null) {
 			return null;
 		}
-		localeString = localeString.trim();
+		localeString = localeString.strip();
 		if (localeString.isEmpty() || "_".equals(localeString)) {
 			return null;
 		}
@@ -340,7 +340,7 @@ public class WebUtil implements GlobalPropertyListener {
 			return null;
 		}
 
-		StringBuilder outputString = new StringBuilder();
+		var outputString = new StringBuilder();
 
 		boolean first = true;
 

@@ -9,8 +9,11 @@
  */
 package org.openmrs.util;
 
+import java.io.Serial;
+
 public class CycleException extends Exception {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private Object extraData;

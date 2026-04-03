@@ -175,7 +175,7 @@ public class HibernateConceptDAOTest extends BaseContextSensitiveTest {
 	@Test //TRUNK-4967
 	public void isConceptNameDuplicate_shouldNotFailIfConceptDoesNotHaveADefaultNameForLocale() {
 		//given
-		ConceptClass diagnosis = dao.getConceptClasses("Diagnosis").get(0);
+		ConceptClass diagnosis = dao.getConceptClasses("Diagnosis").getFirst();
 		ConceptDatatype na = dao.getConceptDatatypeByName("N/A");
 
 		Concept tuberculosis = new Concept();
@@ -204,7 +204,7 @@ public class HibernateConceptDAOTest extends BaseContextSensitiveTest {
 		assertNotNull(source);
 		List<Integer> conceptIds = dao.getConceptIdsByMapping("WGT234", source.getName(), true);
 		assertEquals(1, conceptIds.size());
-		assertEquals(weightConcept.getConceptId(), conceptIds.get(0));
+		assertEquals(weightConcept.getConceptId(), conceptIds.getFirst());
 
 		// Add another mapping that matches
 		ConceptReferenceTerm term = new ConceptReferenceTerm(source, "wgt234", null);
@@ -214,7 +214,7 @@ public class HibernateConceptDAOTest extends BaseContextSensitiveTest {
 		// Querying by this mapping should only return the weight concept id once, even if 2 of its terms match
 		conceptIds = dao.getConceptIdsByMapping("WGT234", source.getName(), true);
 		assertEquals(1, conceptIds.size());
-		assertEquals(weightConcept.getConceptId(), conceptIds.get(0));
+		assertEquals(weightConcept.getConceptId(), conceptIds.getFirst());
 	}
 
 	/**

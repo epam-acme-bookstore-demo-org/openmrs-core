@@ -9,6 +9,8 @@
  */
 package org.openmrs.api;
 
+import java.io.Serial;
+
 import org.openmrs.User;
 import org.openmrs.util.OpenmrsUtil;
 
@@ -25,6 +27,7 @@ import org.openmrs.util.OpenmrsUtil;
  */
 public class PasswordException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = 31620091001L;
 
 	public PasswordException() {

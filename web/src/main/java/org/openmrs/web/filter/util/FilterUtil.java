@@ -270,8 +270,8 @@ public class FilterUtil {
 			connection = DatabaseUpdater.getConnection();
 			List<List<Object>> results = DatabaseUtil.executeSQL(connection,
 			    "select property_value from global_property where property = '" + globalPropertyName + "'", true);
-			if (results.size() == 1 && results.get(0).size() == 1) {
-				propertyValue = results.get(0).get(0).toString();
+			if (results.size() == 1 && results.getFirst().size() == 1) {
+				propertyValue = results.getFirst().getFirst().toString();
 			}
 		} catch (Exception e) {
 			log.error("Error while retrieving value for global property:" + globalPropertyName, e);

@@ -98,8 +98,8 @@ public class ValidateUtil {
 			ObjectError error = (ObjectError) objerr;
 			String message = Context.getMessageSourceService().getMessage(error.getCode(), error.getArguments(),
 			    Context.getLocale());
-			if (error instanceof FieldError) {
-				message = ((FieldError) error).getField() + ": " + message;
+			if (error instanceof FieldError fieldError) {
+				message = fieldError.getField() + ": " + message;
 			}
 			uniqueErrorMessages.add(message);
 		}

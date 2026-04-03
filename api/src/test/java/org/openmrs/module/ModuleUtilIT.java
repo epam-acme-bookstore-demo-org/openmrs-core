@@ -10,6 +10,7 @@
 package org.openmrs.module;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Disabled;
@@ -36,7 +37,7 @@ public class ModuleUtilIT extends BaseContextSensitiveTest {
 	 */
 	@Test
 	public void getURLStream_shouldReturnAValidInputStreamForOldModuleUrls() throws Exception {
-		ModuleUtil.getURLStream(new URL("https://dev.openmrs.org/modules/download/formentry/update.rdf"));
+		ModuleUtil.getURLStream(URI.create("https://dev.openmrs.org/modules/download/formentry/update.rdf").toURL());
 	}
 
 	/**
@@ -48,7 +49,7 @@ public class ModuleUtilIT extends BaseContextSensitiveTest {
 	@Disabled
 	public void getURL_shouldReturnAnUpdateRdfPageForOldHttpsDevUrls() throws Exception {
 		String url = "https://dev.openmrs.org/modules/download/formentry/update.rdf";
-		String updateRdf = ModuleUtil.getURL(new URL(url));
+		String updateRdf = ModuleUtil.getURL(URI.create(url).toURL());
 		assertTrue(updateRdf.contains("<updates"), "Unable to fetch module update url: " + url);
 	}
 
@@ -61,7 +62,7 @@ public class ModuleUtilIT extends BaseContextSensitiveTest {
 	@Disabled
 	public void getURL_shouldReturnAnUpdateRdfPageForOldHttpsModuleUrls() throws Exception {
 		String url = "https://modules.openmrs.org/modules/download/formentry/update.rdf";
-		String updateRdf = ModuleUtil.getURL(new URL(url));
+		String updateRdf = ModuleUtil.getURL(URI.create(url).toURL());
 		assertTrue(updateRdf.contains("<updates"), "Unable to fetch module update url: " + url);
 	}
 
@@ -74,7 +75,7 @@ public class ModuleUtilIT extends BaseContextSensitiveTest {
 	@Disabled
 	public void getURL_shouldReturnAnUpdateRdfPageForModuleUrls() throws Exception {
 		String url = "http://modules.openmrs.org/modules/download/formentry/update.rdf";
-		String updateRdf = ModuleUtil.getURL(new URL(url));
+		String updateRdf = ModuleUtil.getURL(URI.create(url).toURL());
 		assertTrue(updateRdf.contains("<updates"), "Unable to fetch module update url: " + url);
 	}
 
@@ -94,7 +95,7 @@ public class ModuleUtilIT extends BaseContextSensitiveTest {
 	public void getMandatoryModules_shouldReturnMandatoryModuleIds() throws Exception {
 		executeDataSet("org/openmrs/module/include/mandatoryModulesGlobalProperties.xml");
 		assertEquals(1, ModuleUtil.getMandatoryModules().size());
-		assertEquals("firstmodule", ModuleUtil.getMandatoryModules().get(0));
+		assertEquals("firstmodule", ModuleUtil.getMandatoryModules().getFirst());
 	}
 
 	/**

@@ -128,7 +128,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		if (types.isEmpty()) {
 			return null;
 		} else {
-			return types.get(0);
+			return types.getFirst();
 		}
 	}
 
@@ -151,7 +151,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		if (type.getSortWeight() == null) {
 			List<PersonAttributeType> allTypes = Context.getPersonService().getAllPersonAttributeTypes();
 			if (!allTypes.isEmpty()) {
-				type.setSortWeight(allTypes.get(allTypes.size() - 1).getSortWeight() + 1);
+				type.setSortWeight(allTypes.getLast().getSortWeight() + 1);
 			} else {
 				type.setSortWeight(1.0);
 			}
@@ -166,7 +166,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 			String newTypeName = type.getName();
 
 			if (!oldTypeName.equals(newTypeName)) {
-				List<GlobalProperty> props = new ArrayList<>();
+				var props = new ArrayList<GlobalProperty>();
 
 				AdministrationService as = Context.getAdministrationService();
 
@@ -287,7 +287,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		if (types.isEmpty()) {
 			return null;
 		} else {
-			return types.get(0);
+			return types.getFirst();
 		}
 	}
 
@@ -577,7 +577,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 		}
 
 		List<String> attrNames = getAttributeTypesFromGlobalProperties(viewType, personType);
-		List<PersonAttributeType> result = new ArrayList<>();
+		var result = new ArrayList<PersonAttributeType>();
 		for (String nameOrId : attrNames) {
 			if (nameOrId.matches("\\d")) {
 				result.add(getPersonAttributeType(Integer.valueOf(nameOrId)));
@@ -604,11 +604,11 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 			log.error(MarkerFactory.getMarker("FATAL"), "Should not be here.");
 		}
 
-		List<String> attrTypes = new ArrayList<>();
+		var attrTypes = new ArrayList<String>();
 		for (String res : result) {
 			for (String attrType : res.split(",")) {
 				if (attrType != null) {
-					attrType = attrType.trim();
+					attrType = attrType.strip();
 					if (!attrType.isEmpty()) {
 						attrTypes.add(attrType);
 					}
@@ -636,12 +636,12 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 	}
 
 	private List<String> getGlobalProperties(String... properties) {
-		List<String> result = new ArrayList<>();
+		var result = new ArrayList<String>();
 		AdministrationService as = Context.getAdministrationService();
 		for (String p : properties) {
 			String id = as.getGlobalProperty(p, "");
 			if (StringUtils.isNotBlank(id)) {
-				result.add(id.trim());
+				result.add(id.strip());
 			}
 		}
 		return result;
@@ -653,7 +653,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 	@Override
 	public PersonName parsePersonName(String name) throws APIException {
 		// strip beginning/ending whitespace
-		name = name.trim();
+		name = name.strip();
 
 		// trim off all trailing commas
 		while (name.endsWith(",")) {
@@ -671,7 +671,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 
 			// trim whitespace on each part of the name
 			for (int x = 0; x < names.length; x++) {
-				names[x] = names[x].trim();
+				names[x] = names[x].strip();
 			}
 
 			String[] firstNames = names[1].split(" ");
@@ -705,7 +705,7 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 			}
 		}
 
-		PersonName pn = new PersonName(firstName, middleName, lastName);
+		var pn = new PersonName(firstName, middleName, lastName);
 		pn.setFamilyName2(lastName2);
 
 		return pn;

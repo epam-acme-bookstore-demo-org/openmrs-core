@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -696,10 +695,10 @@ public class UpdateFilter extends StartupFilter {
 								setMessage("Updating the database to the latest version");
 
 								ChangeLogDetective changeLogDetective = ChangeLogDetective.getInstance();
-								ChangeLogVersionFinder changeLogVersionFinder = new ChangeLogVersionFinder();
+								var changeLogVersionFinder = new ChangeLogVersionFinder();
 
-								List<String> changelogs = new ArrayList<>();
-								List<String> warnings = new ArrayList<>();
+								var changelogs = new ArrayList<String>();
+								var warnings = new ArrayList<String>();
 
 								String version = changeLogDetective.getInitialLiquibaseSnapshotVersion(
 								    DatabaseUpdater.CONTEXT, new DatabaseUpdaterLiquibaseProvider());
@@ -741,7 +740,7 @@ public class UpdateFilter extends StartupFilter {
 							log.error("Unable to update the database", e);
 							Map<String, Object[]> databaseUpdateErrors = new HashMap<>();
 							databaseUpdateErrors.put(ErrorMessageConstants.UPDATE_ERROR_UNABLE, null);
-							for (String errorMessage : Arrays.asList(e.getMessage().split("\n"))) {
+							for (String errorMessage : List.of(e.getMessage().split("\n"))) {
 								databaseUpdateErrors.put(errorMessage, null);
 							}
 							updateFilterModel.updateChanges();

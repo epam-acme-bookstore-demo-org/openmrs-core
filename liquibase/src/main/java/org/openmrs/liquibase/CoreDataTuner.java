@@ -10,7 +10,6 @@
 package org.openmrs.liquibase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,10 +33,10 @@ public class CoreDataTuner extends AbstractSnapshotTuner {
 
 	private static final String USERNAME = "";
 
-	private static final List<String> firstTableNames = Arrays.asList("person", "users", "care_setting", "concept_class",
+	private static final List<String> firstTableNames = List.of("person", "users", "care_setting", "concept_class",
 	    "concept_datatype", "concept");
 
-	private static final List<String> liquibaseTableNames = Arrays.asList("liquibasechangelog", "liquibasechangeloglock");
+	private static final List<String> liquibaseTableNames = List.of("liquibasechangelog", "liquibasechangeloglock");
 
 	private Map<String, Node> changeSetsByTableName;
 
@@ -105,7 +104,7 @@ public class CoreDataTuner extends AbstractSnapshotTuner {
 		List<Node> changeSets = xPath.selectNodes(document);
 		assert changeSets.size() == 0 : "aborting as document already contains changeSets";
 
-		Element databaseChangeLog = getDatabaseChangeLogElement(document);
+		var databaseChangeLog = getDatabaseChangeLogElement(document);
 
 		/*
 		 * start by adding change sets for tables that need to come first
@@ -132,7 +131,7 @@ public class CoreDataTuner extends AbstractSnapshotTuner {
 		xPath.setNamespaceURIs(getNamespaceUris());
 
 		Node columnNode = xPath.selectSingleNode(document);
-		Element insertNode = columnNode.getParent();
+		var insertNode = columnNode.getParent();
 
 		for (Iterator<Element> it = insertNode.elementIterator(); it.hasNext();) {
 			Element element = it.next();

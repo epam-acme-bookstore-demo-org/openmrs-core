@@ -84,7 +84,7 @@ public class OrderTest extends BaseContextSensitiveTest {
 				} else if (field.getType().equals(Double.class)) {
 					fieldValue = 5.0;
 				} else {
-					fieldValue = field.getType().newInstance();
+					fieldValue = field.getType().getDeclaredConstructor().newInstance();
 				}
 				field.set(original, fieldValue);
 			}

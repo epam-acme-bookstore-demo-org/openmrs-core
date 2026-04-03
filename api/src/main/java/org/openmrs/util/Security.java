@@ -115,7 +115,7 @@ public class Security {
 	 * @return Hexadecimal string encoding the byte array
 	 */
 	private static String hexString(byte[] block) {
-		StringBuilder buf = new StringBuilder();
+		var buf = new StringBuilder();
 		char[] hexChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 		int high;
 		int low;
@@ -154,7 +154,7 @@ public class Security {
 		if (b == null || b.length < 1) {
 			return "";
 		}
-		StringBuilder s = new StringBuilder();
+		var s = new StringBuilder();
 		for (byte aB : b) {
 			s.append(Integer.toHexString(aB & 0xFF));
 		}
@@ -184,8 +184,8 @@ public class Security {
 	 * @since 1.9
 	 */
 	public static String encrypt(String text, byte[] initVector, byte[] secretKey) {
-		IvParameterSpec initVectorSpec = new IvParameterSpec(initVector);
-		SecretKeySpec secret = new SecretKeySpec(secretKey, OpenmrsConstants.ENCRYPTION_KEY_SPEC);
+		var initVectorSpec = new IvParameterSpec(initVector);
+		var secret = new SecretKeySpec(secretKey, OpenmrsConstants.ENCRYPTION_KEY_SPEC);
 		byte[] encrypted;
 		String result;
 
@@ -229,8 +229,8 @@ public class Security {
 	 * @since 1.9
 	 */
 	public static String decrypt(String text, byte[] initVector, byte[] secretKey) {
-		IvParameterSpec initVectorSpec = new IvParameterSpec(initVector);
-		SecretKeySpec secret = new SecretKeySpec(secretKey, OpenmrsConstants.ENCRYPTION_KEY_SPEC);
+		var initVectorSpec = new IvParameterSpec(initVector);
+		var secret = new SecretKeySpec(secretKey, OpenmrsConstants.ENCRYPTION_KEY_SPEC);
 		String decrypted;
 
 		try {

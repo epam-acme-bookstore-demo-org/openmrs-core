@@ -9,6 +9,8 @@
  */
 package org.openmrs.api.db;
 
+import java.io.Serial;
+
 import org.openmrs.api.APIException;
 
 /**
@@ -16,6 +18,7 @@ import org.openmrs.api.APIException;
  */
 public class DAOException extends APIException {
 
+	@Serial
 	private static final long serialVersionUID = -185144340435149253L;
 
 	public DAOException() {

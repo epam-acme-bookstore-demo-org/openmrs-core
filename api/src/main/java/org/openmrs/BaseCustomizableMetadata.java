@@ -119,7 +119,7 @@ public abstract class BaseCustomizableMetadata<A extends Attribute> extends Base
 		}
 
 		if (getActiveAttributes(attribute.getAttributeType()).size() == 1) {
-			A existing = getActiveAttributes(attribute.getAttributeType()).get(0);
+			A existing = getActiveAttributes(attribute.getAttributeType()).getFirst();
 			if (!existing.getValue().equals(attribute.getValue())) {
 				if (existing.getId() != null) {
 					existing.setVoided(true);

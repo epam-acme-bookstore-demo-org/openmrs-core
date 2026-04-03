@@ -70,7 +70,7 @@ public class MigrateConceptReferenceTermChangeSet implements CustomTaskChange {
 			ResultSet selectTypeResult = selectTypes.getResultSet();
 
 			while (selectTypeResult.next()) {
-				typesToIds.put(selectTypeResult.getString("name").trim().toUpperCase(),
+				typesToIds.put(selectTypeResult.getString("name").strip().toUpperCase(),
 				    selectTypeResult.getInt("concept_map_type_id"));
 			}
 			selectTypes.close();
@@ -224,7 +224,7 @@ public class MigrateConceptReferenceTermChangeSet implements CustomTaskChange {
 			comment = comment.toUpperCase();
 
 			if (comment.startsWith("MAP TYPE:")) {
-				comment = comment.substring(9).trim();
+				comment = comment.substring(9).strip();
 
 				if ("SAME-AS FROM RXNORM".equals(comment)) {
 					comment = "SAME-AS";

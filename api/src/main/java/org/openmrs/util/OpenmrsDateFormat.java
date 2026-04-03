@@ -9,6 +9,7 @@
  */
 package org.openmrs.util;
 
+import java.io.Serial;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
  */
 public class OpenmrsDateFormat extends SimpleDateFormat {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public OpenmrsDateFormat(SimpleDateFormat sdf, Locale locale) {

@@ -9,6 +9,8 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 
@@ -26,6 +28,7 @@ import org.openmrs.api.APIException;
 @Audited
 public abstract class BaseFormRecordableOpenmrsData extends BaseChangeableOpenmrsData implements FormRecordable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	protected static final String FORM_NAMESPACE_PATH_SEPARATOR = "^";

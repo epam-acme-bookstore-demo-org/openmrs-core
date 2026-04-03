@@ -58,7 +58,7 @@ public class EncounterTypeValidator implements Validator {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.name");
 
 			if (!errors.hasErrors()) {
-				EncounterType duplicate = Context.getEncounterService().getEncounterType(encounterType.getName().trim());
+				EncounterType duplicate = Context.getEncounterService().getEncounterType(encounterType.getName().strip());
 				if (duplicate != null && !OpenmrsUtil.nullSafeEquals(encounterType.getUuid(), duplicate.getUuid())
 				        && !duplicate.getRetired()) {
 					errors.rejectValue("name", "EncounterType.error.duplicateEncounterTypeNameSpecified",

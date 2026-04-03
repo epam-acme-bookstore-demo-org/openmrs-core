@@ -12,7 +12,6 @@ package org.openmrs.liquibase;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +39,14 @@ import static org.mockito.ArgumentMatchers.any;
 
 public class SchemaOnlyTunerTest {
 
-	private static final String LIQUIBASE_SCHEMA_ONLY_SNAPSHOT_XML = Paths
-	        .get("org", "openmrs", "liquibase", "snapshots", "schema-only", "liquibase-schema-only-SNAPSHOT.xml").toString();
+	private static final String LIQUIBASE_SCHEMA_ONLY_SNAPSHOT_XML = Path
+	        .of("org", "openmrs", "liquibase", "snapshots", "schema-only", "liquibase-schema-only-SNAPSHOT.xml").toString();
 
-	private static final String LIQUIBASE_SCHEMA_ONLY_UPDATED_SNAPSHOT_XML = Paths
-	        .get("org", "openmrs", "liquibase", "snapshots", "schema-only", "liquibase-schema-only-UPDATED-SNAPSHOT.xml")
+	private static final String LIQUIBASE_SCHEMA_ONLY_UPDATED_SNAPSHOT_XML = Path
+	        .of("org", "openmrs", "liquibase", "snapshots", "schema-only", "liquibase-schema-only-UPDATED-SNAPSHOT.xml")
 	        .toString();
 
-	private static String PATH_TO_TEST_RESOURCES = Paths.get("src", "test", "resources").toString();
+	private static String PATH_TO_TEST_RESOURCES = Path.of("src", "test", "resources").toString();
 
 	private Document document;
 

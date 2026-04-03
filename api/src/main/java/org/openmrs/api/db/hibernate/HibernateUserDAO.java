@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -107,7 +106,7 @@ public class HibernateUserDAO implements UserDAO {
 		// Ensure referenced Roles are managed. The User->Role cascade includes
 		// PERSIST, so detached Roles would cause constraint violations in Hibernate 7.
 		if (user.getRoles() != null) {
-			Set<Role> managedRoles = new LinkedHashSet<>();
+			var managedRoles = new LinkedHashSet<Role>();
 			for (Role role : user.getRoles()) {
 				if (!currentSession.contains(role)) {
 					Role managedRole = currentSession.get(Role.class, role.getRole());
@@ -158,7 +157,7 @@ public class HibernateUserDAO implements UserDAO {
 			return null;
 		}
 
-		return users.get(0);
+		return users.getFirst();
 	}
 
 	/**
@@ -579,7 +578,7 @@ public class HibernateUserDAO implements UserDAO {
 		Join<User, Person> personJoin = root.join("person");
 		Join<Person, PersonName> nameJoin = personJoin.join("names");
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(cb.equal(nameJoin.get("givenName"), givenName));
 		predicates.add(cb.equal(nameJoin.get("familyName"), familyName));
 		predicates.add(cb.notEqual(root.get("uuid"), Daemon.getDaemonUserUuid()));
@@ -617,7 +616,7 @@ public class HibernateUserDAO implements UserDAO {
 		User ret = null;
 
 		if (uuid != null) {
-			uuid = uuid.trim();
+			uuid = uuid.strip();
 			ret = HibernateUtil.getUniqueEntityByUUID(sessionFactory, User.class, uuid);
 		}
 
@@ -640,7 +639,7 @@ public class HibernateUserDAO implements UserDAO {
 		if (uuid == null) {
 			return null;
 		} else {
-			return HibernateUtil.getUniqueEntityByUUID(sessionFactory, LoginCredential.class, uuid.trim());
+			return HibernateUtil.getUniqueEntityByUUID(sessionFactory, LoginCredential.class, uuid.strip());
 		}
 	}
 
@@ -676,7 +675,7 @@ public class HibernateUserDAO implements UserDAO {
 		CriteriaQuery<User> cq = cb.createQuery(User.class);
 		Root<User> root = cq.from(User.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		predicates.add(cb.notEqual(root.get("uuid"), Daemon.getDaemonUserUuid()));
 
 		if (person != null) {
@@ -725,9 +724,9 @@ public class HibernateUserDAO implements UserDAO {
 		//	 and role in :roleList
 		//   and user.retired = false
 		// order by username asc
-		List<String> criteria = new ArrayList<>();
+		var criteria = new ArrayList<String>();
 		int counter = 0;
-		Map<String, String> namesMap = new HashMap<>();
+		var namesMap = new HashMap<String, String>();
 		if (name != null) {
 			name = name.replace(", ", " ");
 			String[] names = name.split(" ");
@@ -751,7 +750,7 @@ public class HibernateUserDAO implements UserDAO {
 		}
 
 		// build the hql query
-		StringBuilder hql = new StringBuilder(hqlSelectStart);
+		var hql = new StringBuilder(hqlSelectStart);
 		boolean searchOnRoles = false;
 
 		if (CollectionUtils.isNotEmpty(roles)) {

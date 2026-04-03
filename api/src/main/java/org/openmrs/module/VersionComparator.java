@@ -9,6 +9,7 @@
  */
 package org.openmrs.module;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -19,6 +20,7 @@ import java.util.Comparator;
  */
 public class VersionComparator implements Comparator<String>, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	String TOKEN = ".";

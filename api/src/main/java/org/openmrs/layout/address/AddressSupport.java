@@ -94,7 +94,7 @@ public class AddressSupport extends LayoutSupport<AddressTemplate> implements Gl
 	 */
 	public void setAddressTemplate(List<AddressTemplate> addressTemplates) {
 		this.layoutTemplates = addressTemplates;
-		setDefaultLayoutFormat(layoutTemplates.get(0).getCodeName());
+		setDefaultLayoutFormat(layoutTemplates.getFirst().getCodeName());
 
 	}
 

@@ -484,7 +484,7 @@ public class VisitValidatorTest extends BaseContextSensitiveTest {
 		assertFalse(visits.isEmpty());
 
 		// Existing visit: starts on 2014-01-04 10:00:00 and ends on 2014-01-10 14:00:00 (see VisitValidatorTest.xml)
-		Visit visit = visits.get(0);
+		Visit visit = visits.getFirst();
 
 		Errors errors = new BindException(visit, "visit");
 		new VisitValidator().validate(visit, errors);

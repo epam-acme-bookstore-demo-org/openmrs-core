@@ -20,7 +20,7 @@ import java.net.URLStreamHandlerFactory;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class ModuleClassLoader extends URLClassLoader {
 				if (!file.isDirectory()) {
 					continue;
 				}
-				File dir = Paths.get(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
+				File dir = Path.of(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
 				if (dir.exists()) {
 					Collection<File> files = FileUtils.listFiles(dir, new String[] { "class" }, true);
 					addClassFilePackages(files, dir.getAbsolutePath().length() + 1);
@@ -197,10 +197,10 @@ public class ModuleClassLoader extends URLClassLoader {
 	 * @return List&lt;URL&gt; of all urls found (and cached) in the module
 	 */
 	private static List<URL> getModuleUrls(final Module module) {
-		List<URL> result = new LinkedList<>();
+		var result = new LinkedList<URL>();
 
 		//if in dev mode, add development folder to the classpath
-		List<String> devFolderNames = new ArrayList<>();
+		var devFolderNames = new ArrayList<String>();
 		File devDir = ModuleUtil.getDevelopmentDirectory(module.getModuleId());
 		try {
 			if (devDir != null) {
@@ -210,7 +210,7 @@ public class ModuleClassLoader extends URLClassLoader {
 						if (!file.isDirectory()) {
 							continue;
 						}
-						File dir = Paths.get(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
+						File dir = Path.of(devDir.getAbsolutePath(), file.getName(), "target", "classes").toFile();
 						if (dir.exists()) {
 							result.add(dir.toURI().toURL());
 							devFolderNames.add(file.getName());
@@ -269,10 +269,10 @@ public class ModuleClassLoader extends URLClassLoader {
 			log.debug("Expanding /lib folder in module");
 
 			ModuleUtil.expandJar(module.getFile(), tmpModuleDir, "lib", true);
-			File libdir = new File(tmpModuleDir, "lib");
+			var libdir = new File(tmpModuleDir, "lib");
 
 			if (libdir != null && libdir.exists()) {
-				Map<String, String> startedRelatedModules = new HashMap<>();
+				var startedRelatedModules = new HashMap<String, String>();
 				for (Module requiredModule : collectRequiredModuleImports(module)) {
 					startedRelatedModules.put(requiredModule.getModuleId(), requiredModule.getVersion());
 				}
@@ -396,9 +396,8 @@ public class ModuleClassLoader extends URLClassLoader {
 	static boolean isMatchingConditionalResource(Module module, URL fileUrl, ModuleConditionalResource conditionalResource) {
 		FileSystem fileSystem = FileSystems.getDefault();
 		if (ModuleUtil.matchRequiredVersions(module.getConfigVersion(), "2.0")) {
-			return fileSystem
-			        .getPathMatcher(String.format("glob:**/%s", preprocessGlobPattern(conditionalResource.getPath())))
-			        .matches(Paths.get(fileUrl.getPath()));
+			return fileSystem.getPathMatcher("glob:**/%s".formatted(preprocessGlobPattern(conditionalResource.getPath())))
+			        .matches(Path.of(fileUrl.getPath()));
 		}
 		return fileUrl.getPath().matches(".*" + conditionalResource.getPath() + "$");
 	}
@@ -454,7 +453,7 @@ public class ModuleClassLoader extends URLClassLoader {
 			File tmpModuleDir = new File(OpenmrsClassLoader.getLibCacheFolder(), module.getModuleId());
 
 			long moduleLastModified = module.getFile().lastModified();
-			File moduleLastModifiedFile = new File(tmpModuleDir, ".moduleLastModified");
+			var moduleLastModifiedFile = new File(tmpModuleDir, ".moduleLastModified");
 
 			if (Context.isOptimizedStartup() && moduleLastModifiedFile.exists()) {
 				// Re-create tmpModuleDir if module changed
@@ -499,7 +498,7 @@ public class ModuleClassLoader extends URLClassLoader {
 	 */
 	private static List<URL> getModuleUrls(final Module module, final URL[] existingUrls) {
 		List<URL> urls = Arrays.asList(existingUrls);
-		List<URL> result = new LinkedList<>();
+		var result = new LinkedList<URL>();
 		for (URL url : getModuleUrls(module)) {
 			if (!urls.contains(url)) {
 				result.add(url);
@@ -556,7 +555,7 @@ public class ModuleClassLoader extends URLClassLoader {
 		}
 
 		if (log.isDebugEnabled()) {
-			StringBuilder buf = new StringBuilder();
+			var buf = new StringBuilder();
 			buf.append("New code URL's populated for module ").append(getModule()).append(":\r\n");
 			for (URL u : newUrls) {
 				buf.append("\t");
@@ -648,7 +647,7 @@ public class ModuleClassLoader extends URLClassLoader {
 		if (log.isTraceEnabled()) {
 			log.trace("Loading " + name + " " + getModule() + ", seenModules: " + seenModules + ", requestor: " + requestor
 			        + ", resolve? " + resolve);
-			StringBuilder output = new StringBuilder();
+			var output = new StringBuilder();
 			for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
 				if (element.getClassName().contains("openmrs")) {
 					output.append("+ ");
@@ -703,7 +702,7 @@ public class ModuleClassLoader extends URLClassLoader {
 		// Add this module to the list of modules we've tried already
 		seenModules.add(getModule().getModuleId());
 
-		List<Module> importedModules = new ArrayList<>();
+		var importedModules = new ArrayList<Module>();
 		if (requiredModules != null) {
 			Collections.addAll(importedModules, requiredModules);
 		}
@@ -770,7 +769,7 @@ public class ModuleClassLoader extends URLClassLoader {
 	 */
 	@Override
 	protected String findLibrary(final String name) {
-		if ((name == null) || "".equals(name.trim())) {
+		if ((name == null) || name.isBlank()) {
 			return null;
 		}
 
@@ -806,7 +805,7 @@ public class ModuleClassLoader extends URLClassLoader {
 	 */
 	@Override
 	public Enumeration<URL> findResources(final String name) throws IOException {
-		List<URL> result = new LinkedList<>();
+		var result = new LinkedList<URL>();
 		findResources(result, name, this, null);
 
 		// expand all of the "jar" urls

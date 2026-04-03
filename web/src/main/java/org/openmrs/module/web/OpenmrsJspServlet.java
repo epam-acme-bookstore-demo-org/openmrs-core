@@ -76,8 +76,7 @@ public class OpenmrsJspServlet extends JspServlet {
 				log.info("TldCache updated on ServletContext");
 				try {
 					Options options = (Options) FieldUtils.readField(this, "options", true);
-					if (options instanceof EmbeddedServletOptions) {
-						EmbeddedServletOptions embeddedServletOptions = (EmbeddedServletOptions) options;
+					if (options instanceof EmbeddedServletOptions embeddedServletOptions) {
 						embeddedServletOptions.setTldCache(tldCache);
 						log.info("TldCache updated on JspServlet");
 					}

@@ -72,8 +72,8 @@ public class GZIPFilterTest extends BaseWebContextSensitiveTest {
 		HttpServletRequest requestArgument = argumentCaptor.getValue();
 		try {
 			InputStream iStream = requestArgument.getInputStream();
-			InputStreamReader iReader = new InputStreamReader(iStream);
-			BufferedReader bufReader = new BufferedReader(iReader);
+			var iReader = new InputStreamReader(iStream);
+			var bufReader = new BufferedReader(iReader);
 			String outputMessage = bufReader.readLine();
 
 			assertThat(outputMessage, is("message string"));

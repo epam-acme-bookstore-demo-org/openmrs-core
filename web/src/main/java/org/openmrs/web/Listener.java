@@ -18,12 +18,11 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -176,7 +175,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 * @see HttpSessionListener#sessionDestroyed(HttpSessionEvent)
 	 */
 	private List<HttpSessionListener> getHttpSessionListeners() {
-		List<HttpSessionListener> httpSessionListeners = Collections.emptyList();
+		List<HttpSessionListener> httpSessionListeners = List.of();
 
 		if (openmrsStarted) {
 			try {
@@ -262,8 +261,8 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	}
 
 	private void loadCsrfGuardProperties(ServletContext servletContext) throws IOException {
-		File csrfGuardFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "csrfguard.properties");
-		Properties csrfGuardProperties = new Properties();
+		var csrfGuardFile = new File(OpenmrsUtil.getApplicationDataDirectory(), "csrfguard.properties");
+		var csrfGuardProperties = new Properties();
 		if (csrfGuardFile.exists()) {
 			try (InputStream csrfGuardInputStream = Files.newInputStream(csrfGuardFile.toPath())) {
 				csrfGuardProperties.load(csrfGuardInputStream);
@@ -273,7 +272,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 			}
 		} else {
 			String fileName = servletContext.getRealPath("/WEB-INF/csrfguard.properties");
-			try (InputStream csrfGuardInputStream = Files.newInputStream(Paths.get(fileName))) {
+			try (InputStream csrfGuardInputStream = Files.newInputStream(Path.of(fileName))) {
 				csrfGuardProperties.load(csrfGuardInputStream);
 			} catch (Exception e) {
 				log.error("Error loading csrfguard.properties file at " + fileName, e);
@@ -391,7 +390,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 			OpenmrsUtil.setApplicationDataDirectory(appDataDir);
 		} else if (!"openmrs".equalsIgnoreCase(WebConstants.WEBAPP_NAME)) {
 			OpenmrsUtil.setApplicationDataDirectory(
-			    Paths.get(OpenmrsUtil.getApplicationDataDirectory(), WebConstants.WEBAPP_NAME).toString());
+			    Path.of(OpenmrsUtil.getApplicationDataDirectory(), WebConstants.WEBAPP_NAME).toString());
 		}
 	}
 
@@ -417,7 +416,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 * @param servletContext
 	 */
 	private void clearDWRFile(ServletContext servletContext) {
-		File dwrFile = Paths.get(servletContext.getRealPath(""), "WEB-INF", "dwr-modules.xml").toFile();
+		File dwrFile = Path.of(servletContext.getRealPath(""), "WEB-INF", "dwr-modules.xml").toFile();
 
 		try {
 			DocumentBuilder db = createDocumentBuilder();
@@ -524,29 +523,10 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 * @return true/false whether the copy was a success
 	 */
 	private boolean copyFile(String fromPath, String toPath) {
-		FileInputStream inputStream = null;
-		FileOutputStream outputStream = null;
-		try {
-			inputStream = new FileInputStream(fromPath);
-			outputStream = new FileOutputStream(toPath);
+		try (var inputStream = new FileInputStream(fromPath); var outputStream = new FileOutputStream(toPath)) {
 			OpenmrsUtil.copyFile(inputStream, outputStream);
 		} catch (IOException io) {
 			return false;
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException io) {
-				log.warn("Unable to close input stream", io);
-			}
-			try {
-				if (outputStream != null) {
-					outputStream.close();
-				}
-			} catch (IOException io) {
-				log.warn("Unable to close input stream", io);
-			}
 		}
 		return true;
 	}
@@ -560,7 +540,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 * @param servletContext the current servlet context for the webapp
 	 */
 	public static void loadBundledModules(ServletContext servletContext) {
-		File folder = Paths.get(servletContext.getRealPath(""), "WEB-INF", "bundledModules").toFile();
+		File folder = Path.of(servletContext.getRealPath(""), "WEB-INF", "bundledModules").toFile();
 
 		if (!folder.exists()) {
 			log.warn("Bundled module folder doesn't exist: " + folder.getAbsolutePath());
@@ -668,7 +648,7 @@ public final class Listener extends ContextLoader implements ServletContextListe
 	 *             {@link MandatoryModuleException}
 	 */
 	public static void performWebStartOfModules(ServletContext servletContext) throws ModuleMustStartException, Exception {
-		List<Module> startedModules = new ArrayList<>(ModuleFactory.getStartedModules());
+		var startedModules = new ArrayList<>(ModuleFactory.getStartedModules());
 		performWebStartOfModules(startedModules, servletContext);
 	}
 

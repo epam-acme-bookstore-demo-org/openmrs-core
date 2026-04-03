@@ -10,6 +10,8 @@
 
 package org.openmrs;
 
+import java.io.Serial;
+
 import org.hibernate.envers.Audited;
 import org.openmrs.attribute.Attribute;
 import org.openmrs.attribute.BaseAttribute;
@@ -23,6 +25,7 @@ import org.openmrs.attribute.BaseAttribute;
 @Audited
 public class OrderSetAttribute extends BaseAttribute<OrderSetAttributeType, OrderSet> implements Attribute<OrderSetAttributeType, OrderSet> {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private Integer orderSetAttributeId;

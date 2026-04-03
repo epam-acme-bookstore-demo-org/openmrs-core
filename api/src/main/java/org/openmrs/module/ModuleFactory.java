@@ -275,7 +275,7 @@ public class ModuleFactory {
 	 * @return list of modules
 	 */
 	private static List<Module> getModulesThatShouldStart() {
-		List<Module> modules = new ArrayList<>();
+		var modules = new ArrayList<Module>();
 
 		AdministrationService adminService = Context.getAdministrationService();
 
@@ -387,7 +387,7 @@ public class ModuleFactory {
 	 *         1.8, org.rg.patientmatching"
 	 */
 	private static List<String> getMissingRequiredModules(Module module) {
-		List<String> ret = new ArrayList<>();
+		var ret = new ArrayList<String>();
 		for (String moduleName : module.getRequiredModules()) {
 			boolean started = false;
 			for (Module mod : getStartedModules()) {
@@ -439,7 +439,7 @@ public class ModuleFactory {
 	 * @return map&lt;PackageName, Module&gt;
 	 */
 	public static Map<String, Module> getLoadedModulesMapPackage() {
-		Map<String, Module> map = new HashMap<>();
+		var map = new HashMap<String, Module>();
 		for (Module loadedModule : getLoadedModulesMap().values()) {
 			map.put(loadedModule.getPackageName(), loadedModule);
 		}
@@ -460,7 +460,7 @@ public class ModuleFactory {
 	}
 
 	public static List<Module> getStartedModulesInOrder() {
-		List<Module> modules = new ArrayList<>();
+		var modules = new ArrayList<Module>();
 		if (actualStartupOrder != null) {
 			for (String moduleId : actualStartupOrder) {
 				modules.add(getStartedModulesMap().get(moduleId));
@@ -773,7 +773,7 @@ public class ModuleFactory {
 
 	private static void registerProvidedPackages(ModuleClassLoader moduleClassLoader) {
 		for (String providedPackage : moduleClassLoader.getProvidedPackages()) {
-			Set<ModuleClassLoader> newSet = new HashSet<>();
+			var newSet = new HashSet<ModuleClassLoader>();
 
 			Set<ModuleClassLoader> set = providedPackages.get(providedPackage);
 			if (set != null) {
@@ -787,7 +787,7 @@ public class ModuleFactory {
 
 	private static void unregisterProvidedPackages(ModuleClassLoader moduleClassLoader) {
 		for (String providedPackage : moduleClassLoader.getProvidedPackages()) {
-			Set<ModuleClassLoader> newSet = new HashSet<>();
+			var newSet = new HashSet<ModuleClassLoader>();
 
 			Set<ModuleClassLoader> set = providedPackages.get(providedPackage);
 			if (set != null) {
@@ -842,9 +842,9 @@ public class ModuleFactory {
 			try {
 				cls = Context.loadClass(advice.getPoint());
 				Object aopObject = advice.getClassInstance();
-				if (aopObject instanceof Advisor) {
+				if (aopObject instanceof Advisor advisor) {
 					log.debug("adding advisor [{}]", aopObject.getClass());
-					Context.addAdvisor(cls, (Advisor) aopObject);
+					Context.addAdvisor(cls, advisor);
 				} else if (aopObject != null) {
 					log.debug("adding advice [{}]", aopObject.getClass());
 					Context.addAdvice(cls, (Advice) aopObject);
@@ -893,7 +893,7 @@ public class ModuleFactory {
 				log.debug("Executing sql: " + sql);
 				String[] sqlStatements = sql.split(";");
 				for (String sqlStatement : sqlStatements) {
-					if (sqlStatement.trim().length() > 0) {
+					if (!sqlStatement.isBlank()) {
 						as.executeSQL(sqlStatement, false);
 					}
 				}
@@ -1010,7 +1010,7 @@ public class ModuleFactory {
 	public static List<Module> stopModule(Module mod, boolean skipOverStartedProperty, boolean isFailedStartup)
 	        throws ModuleMustStartException {
 
-		List<Module> dependentModulesStopped = new ArrayList<>();
+		var dependentModulesStopped = new ArrayList<Module>();
 
 		if (mod != null) {
 
@@ -1072,9 +1072,9 @@ public class ModuleFactory {
 						try {
 							cls = Context.loadClass(advice.getPoint());
 							Object aopObject = advice.getClassInstance();
-							if (aopObject instanceof Advisor) {
+							if (aopObject instanceof Advisor advisor) {
 								log.debug("adding advisor: " + aopObject.getClass());
-								Context.removeAdvisor(cls, (Advisor) aopObject);
+								Context.removeAdvisor(cls, advisor);
 							} else {
 								log.debug("Adding advice: " + aopObject.getClass());
 								Context.removeAdvice(cls, (Advice) aopObject);
@@ -1260,7 +1260,7 @@ public class ModuleFactory {
 	 */
 	public static List<Privilege> getPrivileges() {
 
-		List<Privilege> privileges = new ArrayList<>();
+		var privileges = new ArrayList<Privilege>();
 
 		for (Module mod : getStartedModules()) {
 			privileges.addAll(mod.getPrivileges());
@@ -1278,7 +1278,7 @@ public class ModuleFactory {
 	 */
 	public static List<GlobalProperty> getGlobalProperties() {
 
-		List<GlobalProperty> globalProperties = new ArrayList<>();
+		var globalProperties = new ArrayList<GlobalProperty>();
 
 		for (Module mod : getStartedModules()) {
 			globalProperties.addAll(mod.getGlobalProperties());

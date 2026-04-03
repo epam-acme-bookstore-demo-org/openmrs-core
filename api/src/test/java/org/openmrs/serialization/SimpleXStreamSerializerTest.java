@@ -61,14 +61,29 @@ public class SimpleXStreamSerializerTest {
 
 		String serializedFoo = serializer.serialize(foo);
 
-		assertTrue(StringUtils.deleteWhitespace(serializedFoo).equals(
-		    StringUtils.deleteWhitespace("<org.openmrs.serialization.Foo>\n" + "  <attributeString>test</attributeString>\n"
-		            + "  <attributeInt>1</attributeInt>\n" + "  <attributeList>\n" + "    <string>foo</string>\n"
-		            + "    <string>bar</string>\n" + "  </attributeList>\n" + "  <attributeMap>\n" + "    <entry>\n"
-		            + "      <int>1</int>\n" + "      <string>foo</string>\n" + "    </entry>\n" + "    <entry>\n"
-		            + "      <int>2</int>\n" + "      <string>fooBar</string>\n" + "    </entry>\n" + "    <entry>\n"
-		            + "      <int>3</int>\n" + "      <string>bar</string>\n" + "    </entry>\n" + "  </attributeMap>\n"
-		            + "  </org.openmrs.serialization.Foo>")));
+		assertTrue(StringUtils.deleteWhitespace(serializedFoo).equals(StringUtils.deleteWhitespace("""
+		        <org.openmrs.serialization.Foo>
+		          <attributeString>test</attributeString>
+		          <attributeInt>1</attributeInt>
+		          <attributeList>
+		            <string>foo</string>
+		            <string>bar</string>
+		          </attributeList>
+		          <attributeMap>
+		            <entry>
+		              <int>1</int>
+		              <string>foo</string>
+		            </entry>
+		            <entry>
+		              <int>2</int>
+		              <string>fooBar</string>
+		            </entry>
+		            <entry>
+		              <int>3</int>
+		              <string>bar</string>
+		            </entry>
+		          </attributeMap>
+		          </org.openmrs.serialization.Foo>""")));
 
 	}
 
@@ -78,13 +93,29 @@ public class SimpleXStreamSerializerTest {
 	 */
 	@Test
 	public void deserialize_shouldDeserializeStringToClassInstance() throws SerializationException {
-		String serializedFoo = "<org.openmrs.serialization.Foo>\n" + "  <attributeString>Testing</attributeString>\n"
-		        + "  <attributeInt>4</attributeInt>\n" + "  <attributeList>\n" + "    <string>fooBar</string>\n"
-		        + "    <string>bar</string>\n" + "  </attributeList>\n" + "  <attributeMap>\n" + "    <entry>\n"
-		        + "      <int>10</int>\n" + "      <string>foo</string>\n" + "    </entry>\n" + "    <entry>\n"
-		        + "      <int>20</int>\n" + "      <string>fooBar</string>\n" + "    </entry>\n" + "    <entry>\n"
-		        + "      <int>30</int>\n" + "      <string>bar</string>\n" + "    </entry>\n" + "  </attributeMap>\n"
-		        + "</org.openmrs.serialization.Foo>";
+		String serializedFoo = """
+		        <org.openmrs.serialization.Foo>
+		          <attributeString>Testing</attributeString>
+		          <attributeInt>4</attributeInt>
+		          <attributeList>
+		            <string>fooBar</string>
+		            <string>bar</string>
+		          </attributeList>
+		          <attributeMap>
+		            <entry>
+		              <int>10</int>
+		              <string>foo</string>
+		            </entry>
+		            <entry>
+		              <int>20</int>
+		              <string>fooBar</string>
+		            </entry>
+		            <entry>
+		              <int>30</int>
+		              <string>bar</string>
+		            </entry>
+		          </attributeMap>
+		        </org.openmrs.serialization.Foo>""";
 
 		SimpleXStreamSerializer serializer = new SimpleXStreamSerializer();
 
@@ -97,7 +128,7 @@ public class SimpleXStreamSerializerTest {
 
 		List<String> newList = foo.getAttributeList();
 		assertThat(newList, hasSize(2));
-		assertTrue(newList.get(0).equals("fooBar"));
+		assertTrue(newList.getFirst().equals("fooBar"));
 		assertTrue(newList.get(1).equals("bar"));
 
 		Map<Integer, String> newMap = foo.getAttributeMap();

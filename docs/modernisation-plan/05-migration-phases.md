@@ -142,6 +142,8 @@ Foundation
 
 **Purpose:** deliver broadly safe Java 9-21 syntax and library improvements without changing public behaviour.
 
+**Status:** Completed on `phase/1-java21-modernisation` and currently in review for merge to `master`.
+
 **Depends on:** Phase 0  
 **Can run in parallel with:** Phase 2
 
@@ -189,6 +191,14 @@ Apply changes in this order to contain risk and simplify review:
 - No SpotBugs regression relative to Phase 0 baseline
 - Reviewer approval confirms the change is behavioural no-op unless explicitly documented
 - Phase 1 module sequence is complete
+
+**Current status**
+
+- **Met:** Phase 1 delivery is complete in **3 commits** on `phase/1-java21-modernisation`.
+- **Met:** The branch contains **~380 files changed overall**, combining OpenRewrite automation with targeted manual cleanup.
+- **Met:** All planned modules were reviewed; `api`, `web`, and `liquibase` received code changes, while `tools`, `test`, `test-suite`, and `webapp` were closed as **N/A** because they contain no Java source.
+- **Met:** Compilation was verified successfully.
+- **Tracking:** 12 active Phase 1 issues are now **In Review** and Epic **#5** remains **In Progress**.
 
 **GitHub Issues**
 

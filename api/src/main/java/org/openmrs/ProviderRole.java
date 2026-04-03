@@ -9,6 +9,7 @@
  */
 package org.openmrs;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
@@ -31,6 +32,7 @@ import org.hibernate.envers.Audited;
 @Audited
 public class ProviderRole extends BaseOpenmrsMetadata implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@Id

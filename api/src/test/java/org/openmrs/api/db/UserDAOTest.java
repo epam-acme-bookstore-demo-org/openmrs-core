@@ -94,7 +94,7 @@ public class UserDAOTest extends BaseContextSensitiveTest {
 			assertEquals(1, size);
 
 			//if actually the search returned the matching name or system id
-			String userName = (dao.getUsers(wildcard + "ca", null, false, null, null).get(0).getUsername());
+			String userName = (dao.getUsers(wildcard + "ca", null, false, null, null).getFirst().getUsername());
 			assertEquals(wildcard + "test" + wildcard, userName,
 			    "Test failed since no user containing the character " + wildcard + " was found, ");
 

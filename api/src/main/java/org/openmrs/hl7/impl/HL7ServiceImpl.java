@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -449,7 +448,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 			try {
 				List<User> users = Context.getUserService().getUsersByName(givenName, familyName, true);
 				if (users.size() == 1) {
-					return users.get(0).getUserId();
+					return users.getFirst().getUserId();
 				} else if (users.size() > 1) {
 					//Return null if that user ambiguous
 					log.error(getFindingUserErrorMessage(idNumber, familyName, givenName) + ": Found " + users.size()
@@ -457,7 +456,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 					return null;
 				} else {
 					// legacy behavior is looking up by username
-					StringBuilder username = new StringBuilder();
+					var username = new StringBuilder();
 					if (familyName != null) {
 						username.append(familyName);
 					}
@@ -503,7 +502,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 		} else {
 			List<Person> persons = Context.getPersonService().getPeople(givenName + " " + familyName, null);
 			if (persons.size() == 1) {
-				return persons.get(0).getPersonId();
+				return persons.getFirst().getPersonId();
 			} else if (persons.isEmpty()) {
 				log.error("Couldn't find a person named " + givenName + " " + familyName);
 				return null;
@@ -642,13 +641,13 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 						continue; // skip identifiers with unknown type
 					}
 					List<PatientIdentifier> matchingIds = Context.getPatientService().getPatientIdentifiers(hl7PersonId,
-					    Collections.singletonList(pit), null, null, null);
+					    List.of(pit), null, null, null);
 					if (matchingIds == null || matchingIds.isEmpty()) {
 						// no matches
 						log.warn("NO matches found for " + hl7PersonId);
 					} else if (matchingIds.size() == 1) {
 						// unique match -- we're done
-						return matchingIds.get(0).getPatient();
+						return matchingIds.getFirst().getPatient();
 					} else {
 						// ambiguous identifier
 						log.debug("Ambiguous identifier in PID. " + matchingIds.size() + " matches for identifier '"
@@ -751,7 +750,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 	 * to aborting
 	 */
 	private void setFatalError(HL7InQueue hl7InQueue, String error, Throwable cause) {
-		HL7InError hl7InError = new HL7InError(hl7InQueue);
+		var hl7InError = new HL7InError(hl7InQueue);
 		hl7InError.setError(error);
 		if (cause == null) {
 			hl7InError.setErrorDetails("");
@@ -853,7 +852,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 		// ADTA28Handler
 		// TODO: generalize this for use with both PID and NK1 segments
 
-		Person person = new Person();
+		var person = new Person();
 
 		// UUID
 		CX[] identifiers = nk1.getNextOfKinAssociatedPartySIdentifiers();
@@ -864,7 +863,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 		person.setUuid(uuid);
 
 		// Patient Identifiers
-		List<PatientIdentifier> goodIdentifiers = new ArrayList<>();
+		var goodIdentifiers = new ArrayList<PatientIdentifier>();
 		for (CX id : identifiers) {
 
 			String assigningAuthority = id.getAssigningAuthority().getNamespaceID().getValue();
@@ -883,7 +882,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 						}
 						continue; // skip identifiers with unknown type
 					}
-					PatientIdentifier pi = new PatientIdentifier();
+					var pi = new PatientIdentifier();
 					pi.setIdentifierType(pit);
 					pi.setIdentifier(hl7PatientId);
 
@@ -913,7 +912,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 		if (!goodIdentifiers.isEmpty()) {
 			//If we have one identifier, set it as the preferred to make the validator happy.
 			if (goodIdentifiers.size() == 1) {
-				goodIdentifiers.get(0).setPreferred(true);
+				goodIdentifiers.getFirst().setPreferred(true);
 			}
 
 			// cast the person as a Patient and add identifiers
@@ -923,7 +922,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 
 		// Person names
 		for (XPN patientNameX : nk1.getNKName()) {
-			PersonName name = new PersonName();
+			var name = new PersonName();
 			name.setFamilyName(patientNameX.getFamilyName().getSurname().getValue());
 			name.setGivenName(patientNameX.getGivenName().getValue());
 			name.setMiddleName(patientNameX.getSecondAndFurtherGivenNamesOrInitialsThereof().getValue());
@@ -960,8 +959,8 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 		}
 
 		// save the new person or patient
-		if (person instanceof Patient) {
-			Context.getPatientService().savePatient((Patient) person);
+		if (person instanceof Patient patient) {
+			Context.getPatientService().savePatient(patient);
 		} else {
 			Context.getPersonService().savePerson(person);
 		}
@@ -1099,7 +1098,7 @@ public class HL7ServiceImpl extends BaseOpenmrsService implements HL7Service, Re
 		File destinationDir = HL7Util.getHl7ArchivesDirectory();
 		try {
 			// number formatter used to format month and day with zero padding
-			DecimalFormat df = new DecimalFormat("00");
+			var df = new DecimalFormat("00");
 
 			//write the archive to a separate file while grouping them according to
 			//the year, month and date of month when they were stored in the archives table

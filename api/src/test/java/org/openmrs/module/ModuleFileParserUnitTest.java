@@ -548,8 +548,8 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 
 		registerModuleClassloader(module);
 		assertThat(module.getExtensions().size(), is(1));
-		assertThat(module.getExtensions().get(0).getPointId(), is("org.openmrs.admin.list"));
-		assertThat(module.getExtensions().get(0), is(instanceOf(AccessibleExtension.class)));
+		assertThat(module.getExtensions().getFirst().getPointId(), is("org.openmrs.admin.list"));
+		assertThat(module.getExtensions().getFirst(), is(instanceOf(AccessibleExtension.class)));
 	}
 
 	@Test
@@ -621,8 +621,8 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getPrivileges().size(), is(2));
-		assertThat(module.getPrivileges().get(0).getPrivilege(), is(p1.getPrivilege()));
-		assertThat(module.getPrivileges().get(0).getDescription(), is(p1.getDescription()));
+		assertThat(module.getPrivileges().getFirst().getPrivilege(), is(p1.getPrivilege()));
+		assertThat(module.getPrivileges().getFirst().getDescription(), is(p1.getDescription()));
 		assertThat(module.getPrivileges().get(1).getPrivilege(), is(p2.getPrivilege()));
 		assertThat(module.getPrivileges().get(1).getDescription(), is(p2.getDescription()));
 	}
@@ -637,8 +637,8 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getPrivileges().size(), is(1));
-		assertThat(module.getPrivileges().get(0).getPrivilege(), is(p1.getPrivilege()));
-		assertThat(module.getPrivileges().get(0).getDescription(), is(p1.getDescription()));
+		assertThat(module.getPrivileges().getFirst().getPrivilege(), is(p1.getPrivilege()));
+		assertThat(module.getPrivileges().getFirst().getDescription(), is(p1.getDescription()));
 	}
 
 	@Test
@@ -698,11 +698,11 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getGlobalProperties().size(), is(2));
-		assertThat(module.getGlobalProperties().get(0).getProperty(), is(gp1.getProperty()));
-		assertThat(module.getGlobalProperties().get(0).getPropertyValue(), is(gp1.getPropertyValue()));
-		assertThat(module.getGlobalProperties().get(0).getDescription(), is(gp1.getDescription()));
-		assertThat(module.getGlobalProperties().get(0).getDatatypeClassname(), is(gp1.getDatatypeClassname()));
-		assertThat(module.getGlobalProperties().get(0).getDatatypeConfig(), is(gp1.getDatatypeConfig()));
+		assertThat(module.getGlobalProperties().getFirst().getProperty(), is(gp1.getProperty()));
+		assertThat(module.getGlobalProperties().getFirst().getPropertyValue(), is(gp1.getPropertyValue()));
+		assertThat(module.getGlobalProperties().getFirst().getDescription(), is(gp1.getDescription()));
+		assertThat(module.getGlobalProperties().getFirst().getDatatypeClassname(), is(gp1.getDatatypeClassname()));
+		assertThat(module.getGlobalProperties().getFirst().getDatatypeConfig(), is(gp1.getDatatypeConfig()));
 		assertThat(module.getGlobalProperties().get(1).getProperty(), is(gp2.getProperty()));
 		assertThat(module.getGlobalProperties().get(1).getPropertyValue(), is(gp2.getPropertyValue()));
 		assertThat(module.getGlobalProperties().get(1).getDescription(), is(gp2.getDescription()));
@@ -719,7 +719,7 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getGlobalProperties().size(), is(1));
-		assertThat(module.getGlobalProperties().get(0).getDescription(), is("delete reports after hours"));
+		assertThat(module.getGlobalProperties().getFirst().getDescription(), is("delete reports after hours"));
 	}
 
 	@Test
@@ -731,8 +731,8 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getGlobalProperties().size(), is(1));
-		assertThat(module.getGlobalProperties().get(0).getProperty(), is("report.deleteReportsAgeInHours"));
-		assertThat(module.getGlobalProperties().get(0).getDescription(), is(""));
+		assertThat(module.getGlobalProperties().getFirst().getProperty(), is("report.deleteReportsAgeInHours"));
+		assertThat(module.getGlobalProperties().getFirst().getDescription(), is(""));
 	}
 
 	@Test
@@ -746,9 +746,9 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getGlobalProperties().size(), is(1));
-		assertThat(module.getGlobalProperties().get(0).getProperty(), is(gp1.getProperty()));
-		assertThat(module.getGlobalProperties().get(0).getPropertyValue(), is(gp1.getPropertyValue()));
-		assertThat(module.getGlobalProperties().get(0).getDescription(), is(gp1.getDescription()));
+		assertThat(module.getGlobalProperties().getFirst().getProperty(), is(gp1.getProperty()));
+		assertThat(module.getGlobalProperties().getFirst().getPropertyValue(), is(gp1.getPropertyValue()));
+		assertThat(module.getGlobalProperties().getFirst().getDescription(), is(gp1.getDescription()));
 	}
 
 	@Test
@@ -1043,8 +1043,8 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		assertThat(module.getAdvicePoints().size(), is(2));
-		assertThat(module.getAdvicePoints().get(0).getPoint(), is(a1.getPoint()));
-		assertThat(module.getAdvicePoints().get(0).getClassName(), is("String"));
+		assertThat(module.getAdvicePoints().getFirst().getPoint(), is(a1.getPoint()));
+		assertThat(module.getAdvicePoints().getFirst().getClassName(), is("String"));
 		assertThat(module.getAdvicePoints().get(1).getPoint(), is(a2.getPoint()));
 		assertThat(module.getAdvicePoints().get(1).getClassName(), is("String"));
 	}
@@ -1112,11 +1112,11 @@ public class ModuleFileParserUnitTest extends BaseContextMockTest {
 		Module module = parser.parse(writeConfigXmlToFile(config));
 
 		// verify
-		assertThat(module.getGlobalProperties().get(0).getViewPrivilege().getPrivilege(),
+		assertThat(module.getGlobalProperties().getFirst().getViewPrivilege().getPrivilege(),
 		    is("Some Privilege For View Global Properties"));
-		assertThat(module.getGlobalProperties().get(0).getEditPrivilege().getPrivilege(),
+		assertThat(module.getGlobalProperties().getFirst().getEditPrivilege().getPrivilege(),
 		    is("Some Privilege For Edit Global Properties"));
-		assertThat(module.getGlobalProperties().get(0).getDeletePrivilege().getPrivilege(),
+		assertThat(module.getGlobalProperties().getFirst().getDeletePrivilege().getPrivilege(),
 		    is("Some Privilege For Delete Global Properties"));
 	}
 

@@ -126,7 +126,7 @@ public class HibernateOrderDAO implements OrderDAO {
 		CriteriaQuery<Order> cq = cb.createQuery(Order.class);
 		Root<Order> root = cq.from(Order.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (orderType != null) {
 			predicates.add(cb.equal(root.get("orderType"), orderType));
@@ -167,7 +167,7 @@ public class HibernateOrderDAO implements OrderDAO {
 		CriteriaQuery<Order> cq = cb.createQuery(Order.class);
 		Root<Order> root = cq.from(Order.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (searchCriteria.getPatient() != null && searchCriteria.getPatient().getPatientId() != null) {
 			predicates.add(cb.equal(root.get("patient"), searchCriteria.getPatient()));
@@ -493,7 +493,7 @@ public class HibernateOrderDAO implements OrderDAO {
 	private List<Predicate> createOrderCriteria(CriteriaBuilder cb, Root<Order> root, Patient patient, Visit visit,
 	        CareSetting careSetting, List<OrderType> orderTypes, boolean includeVoided,
 	        boolean includeDiscontinuationOrders) {
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (patient != null) {
 			predicates.add(cb.equal(root.get("patient"), patient));
@@ -627,18 +627,18 @@ public class HibernateOrderDAO implements OrderDAO {
 		Join<OrderFrequency, Concept> conceptJoin = root.join("concept");
 		Join<Concept, ConceptName> conceptNameJoin = conceptJoin.join("names");
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		Predicate searchPhrasePredicate = cb.like(cb.lower(conceptNameJoin.get("name")),
 		    MatchMode.ANYWHERE.toLowerCasePattern(searchPhrase));
 		predicates.add(searchPhrasePredicate);
 
 		if (locale != null) {
-			List<Locale> locales = new ArrayList<>(2);
+			var locales = new ArrayList<Locale>(2);
 			locales.add(locale);
 			//look in the broader locale too if exactLocale is false e.g en for en_GB
 			if (!exactLocale && StringUtils.isNotBlank(locale.getCountry())) {
-				locales.add(new Locale(locale.getLanguage()));
+				locales.add(Locale.of(locale.getLanguage()));
 			}
 			predicates.add(conceptNameJoin.get("locale").in(locales));
 		}
@@ -784,7 +784,7 @@ public class HibernateOrderDAO implements OrderDAO {
 		CriteriaQuery<OrderType> cq = cb.createQuery(OrderType.class);
 		Root<OrderType> root = cq.from(OrderType.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (!includeRetired) {
 			predicates.add(cb.isFalse(root.get("retired")));
 		}
@@ -821,7 +821,7 @@ public class HibernateOrderDAO implements OrderDAO {
 		CriteriaQuery<OrderType> cq = cb.createQuery(OrderType.class);
 		Root<OrderType> root = cq.from(OrderType.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 		if (!includeRetired) {
 			predicates.add(cb.isFalse(root.get("retired")));
 		}

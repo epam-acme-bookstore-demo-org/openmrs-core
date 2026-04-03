@@ -10,7 +10,6 @@
 package org.openmrs.web.filter.update;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +51,7 @@ public class UpdateFilterModelTest {
 	@Test
 	public void createUpdateFilterModel_shouldrequireAnUpdateAndSetChangesToUnrunDatabaseChangesIfChangesAreNonEmpty()
 	        throws Exception {
-		List<OpenMRSChangeSet> changes = Arrays.asList(mock(OpenMRSChangeSet.class));
+		List<OpenMRSChangeSet> changes = List.of(mock(OpenMRSChangeSet.class));
 
 		when(databaseUpdaterWrapper.updatesRequired()).thenReturn(true);
 		when(databaseUpdaterWrapper.getUnrunDatabaseChanges(any(LiquibaseProvider.class))).thenReturn(changes);
@@ -140,7 +139,7 @@ public class UpdateFilterModelTest {
 	@Test
 	public void createUpdateFilterModel_shouldRequireAnUpdateIfDatabaseUpdaterIsLockedAndChangesAreNotNull()
 	        throws Exception {
-		List<OpenMRSChangeSet> changes = Arrays.asList(mock(OpenMRSChangeSet.class));
+		List<OpenMRSChangeSet> changes = List.of(mock(OpenMRSChangeSet.class));
 
 		when(databaseUpdaterWrapper.updatesRequired()).thenReturn(true);
 		when(databaseUpdaterWrapper.getUnrunDatabaseChanges(any(LiquibaseProvider.class))).thenReturn(changes);

@@ -124,10 +124,10 @@ public class Cohort extends BaseChangeableOpenmrsData {
 		this(name, description, (Integer[]) null);
 		if (patientsOrIds != null) {
 			for (Object o : patientsOrIds) {
-				if (o instanceof Patient) {
-					addMembership(new CohortMembership(((Patient) o).getPatientId()));
-				} else if (o instanceof Integer) {
-					addMembership(new CohortMembership((Integer) o));
+				if (o instanceof Patient patient) {
+					addMembership(new CohortMembership(patient.getPatientId()));
+				} else if (o instanceof Integer integer) {
+					addMembership(new CohortMembership(integer));
 				}
 			}
 		}
@@ -143,7 +143,7 @@ public class Cohort extends BaseChangeableOpenmrsData {
 	public Cohort(String commaSeparatedIds) {
 		this();
 		String[] ids = StringUtils.split(commaSeparatedIds, ',');
-		Arrays.stream(ids).forEach(id -> addMembership(new CohortMembership(Integer.valueOf(id.trim()))));
+		Arrays.stream(ids).forEach(id -> addMembership(new CohortMembership(Integer.valueOf(id.strip()))));
 	}
 
 	/**

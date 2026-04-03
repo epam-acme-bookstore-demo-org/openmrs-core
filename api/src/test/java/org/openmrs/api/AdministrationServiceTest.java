@@ -491,7 +491,7 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 	@Test
 	public void saveGlobalProperty_shouldFailIfDefaultLocaleNotInAllowedLocaleList() {
 
-		Locale defaultLocale = new Locale("fr");
+		Locale defaultLocale = Locale.of("fr");
 
 		APIException exception = assertThrows(APIException.class, () -> adminService.saveGlobalProperty(
 		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_DEFAULT_LOCALE, defaultLocale.toString())));
@@ -595,7 +595,7 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 
 		APIAuthenticationException exception = assertThrows(APIAuthenticationException.class,
 		    () -> adminService.getGlobalProperty(property.getProperty()));
-		assertEquals(exception.getMessage(), String.format("Privileges required: %s", property.getViewPrivilege()));
+		assertEquals(exception.getMessage(), "Privileges required: %s".formatted(property.getViewPrivilege()));
 	}
 
 	/**
@@ -630,7 +630,7 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 
 		APIException exception = assertThrows(APIException.class,
 		    () -> adminService.getGlobalPropertyObject(property.getProperty()));
-		assertEquals(exception.getMessage(), String.format("Privileges required: %s", property.getViewPrivilege()));
+		assertEquals(exception.getMessage(), "Privileges required: %s".formatted(property.getViewPrivilege()));
 	}
 
 	/**
@@ -668,7 +668,7 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 
 		APIException exception = assertThrows(APIException.class,
 		    () -> adminService.updateGlobalProperty(property.getProperty(), "new-value"));
-		assertEquals(exception.getMessage(), String.format("Privileges required: %s", property.getEditPrivilege()));
+		assertEquals(exception.getMessage(), "Privileges required: %s".formatted(property.getEditPrivilege()));
 	}
 
 	/**
@@ -713,8 +713,8 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.addProxyPrivilege(PrivilegeConstants.MANAGE_GLOBAL_PROPERTIES);
 
 		APIException exception = assertThrows(APIException.class, () -> adminService.saveGlobalProperty(property));
-		assertEquals(exception.getMessage(), String.format("Privilege: %s, required to edit globalProperty: %s",
-		    property.getEditPrivilege(), property.getProperty()));
+		assertEquals(exception.getMessage(), "Privilege: %s, required to edit globalProperty: %s"
+		        .formatted(property.getEditPrivilege(), property.getProperty()));
 	}
 
 	/**
@@ -732,8 +732,8 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.addProxyPrivilege(PrivilegeConstants.PURGE_GLOBAL_PROPERTIES);
 
 		APIException exception = assertThrows(APIException.class, () -> adminService.purgeGlobalProperty(property));
-		assertEquals(exception.getMessage(), String.format("Privilege: %s, required to purge globalProperty: %s",
-		    property.getDeletePrivilege(), property.getProperty()));
+		assertEquals(exception.getMessage(), "Privilege: %s, required to purge globalProperty: %s"
+		        .formatted(property.getDeletePrivilege(), property.getProperty()));
 	}
 
 	/**
@@ -871,10 +871,10 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		List<Locale> searchLocales = adminService.getSearchLocales();
 
 		//then
-		assertTrue(searchLocales.contains(new Locale("en", "US")), "en_US");
-		assertTrue(searchLocales.contains(new Locale("pl")), "pl");
-		assertTrue(searchLocales.contains(new Locale("es")), "es");
-		assertFalse(searchLocales.contains(new Locale("es", "CL")), "es_CL");
+		assertTrue(searchLocales.contains(Locale.of("en", "US")), "en_US");
+		assertTrue(searchLocales.contains(Locale.of("pl")), "pl");
+		assertTrue(searchLocales.contains(Locale.of("es")), "es");
+		assertFalse(searchLocales.contains(Locale.of("es", "CL")), "es_CL");
 	}
 
 	@Test
@@ -884,14 +884,14 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		User user = Context.getAuthenticatedUser();
 		user.setUserProperty(OpenmrsConstants.USER_PROPERTY_PROFICIENT_LOCALES, "");
 		Context.getUserService().saveUser(user);
-		Context.setLocale(new Locale("en", "GB"));
+		Context.setLocale(Locale.of("en", "GB"));
 
 		//when
 		List<Locale> searchLocales = adminService.getSearchLocales();
 
 		//then
-		assertEquals(Context.getLocale(), searchLocales.get(0));
-		assertEquals(new Locale(Context.getLocale().getLanguage()), searchLocales.get(1));
+		assertEquals(Context.getLocale(), searchLocales.getFirst());
+		assertEquals(Locale.of(Context.getLocale().getLanguage()), searchLocales.get(1));
 	}
 
 	@Test
@@ -908,9 +908,9 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		List<Locale> searchLocales = adminService.getSearchLocales();
 
 		//then
-		assertTrue(searchLocales.contains(new Locale("en", "GB")), "en_GB");
-		assertTrue(searchLocales.contains(new Locale("en", "US")), "en_US");
-		assertFalse(searchLocales.contains(new Locale("pl")), "pl");
+		assertTrue(searchLocales.contains(Locale.of("en", "GB")), "en_GB");
+		assertTrue(searchLocales.contains(Locale.of("en", "US")), "en_US");
+		assertFalse(searchLocales.contains(Locale.of("pl")), "pl");
 	}
 
 	@Test
@@ -925,10 +925,10 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_LOCALE_ALLOWED_LIST, "en_GB, es, es_CL"));
 
 		List<Locale> locales = new ArrayList<>();
-		locales.add(new Locale("pl", "PL"));
-		locales.add(new Locale("en"));
-		locales.add(new Locale("es"));
-		locales.add(new Locale("es", "CL"));
+		locales.add(Locale.of("pl", "PL"));
+		locales.add(Locale.of("en"));
+		locales.add(Locale.of("es"));
+		locales.add(Locale.of("es", "CL"));
 
 		MutableResourceBundleMessageSource mutableResourceBundleMessageSource = Mockito
 		        .mock(MutableResourceBundleMessageSource.class);
@@ -942,8 +942,8 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.getMessageSourceService().setActiveMessageSource(mutableMessageSource);
 
 		assertEquals(2, presentationLocales.size());
-		assertTrue(presentationLocales.contains(new Locale("en")), "en");
-		assertTrue(presentationLocales.contains(new Locale("es", "CL")), "es_CL");
+		assertTrue(presentationLocales.contains(Locale.of("en")), "en");
+		assertTrue(presentationLocales.contains(Locale.of("es", "CL")), "es_CL");
 	}
 
 	@Test
@@ -952,11 +952,11 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		        .saveGlobalProperty(new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_LOCALE_ALLOWED_LIST, "en_GB, es"));
 
 		List<Locale> locales = new ArrayList<>();
-		locales.add(new Locale("pl", "PL"));
-		locales.add(new Locale("en"));
-		locales.add(new Locale("es"));
-		locales.add(new Locale("es", "CL"));
-		locales.add(new Locale("es", "SN"));
+		locales.add(Locale.of("pl", "PL"));
+		locales.add(Locale.of("en"));
+		locales.add(Locale.of("es"));
+		locales.add(Locale.of("es", "CL"));
+		locales.add(Locale.of("es", "SN"));
 
 		MutableResourceBundleMessageSource mutableResourceBundleMessageSource = Mockito
 		        .mock(MutableResourceBundleMessageSource.class);
@@ -970,9 +970,9 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.getMessageSourceService().setActiveMessageSource(mutableMessageSource);
 
 		assertEquals(3, presentationLocales.size());
-		assertTrue(presentationLocales.contains(new Locale("es", "CL")), "es_CL");
-		assertTrue(presentationLocales.contains(new Locale("es", "SN")), "es_SN");
-		assertTrue(presentationLocales.contains(new Locale("en")), "en");
+		assertTrue(presentationLocales.contains(Locale.of("es", "CL")), "es_CL");
+		assertTrue(presentationLocales.contains(Locale.of("es", "SN")), "es_SN");
+		assertTrue(presentationLocales.contains(Locale.of("en")), "en");
 	}
 
 	@Test
@@ -981,9 +981,9 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		    new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_LOCALE_ALLOWED_LIST, "en_GB, es_CL"));
 
 		List<Locale> locales = new ArrayList<>();
-		locales.add(new Locale("pl", "PL"));
-		locales.add(new Locale("en"));
-		locales.add(new Locale("es"));
+		locales.add(Locale.of("pl", "PL"));
+		locales.add(Locale.of("en"));
+		locales.add(Locale.of("es"));
 
 		MutableResourceBundleMessageSource mutableResourceBundleMessageSource = Mockito
 		        .mock(MutableResourceBundleMessageSource.class);
@@ -997,8 +997,8 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.getMessageSourceService().setActiveMessageSource(mutableMessageSource);
 
 		assertEquals(2, presentationLocales.size());
-		assertTrue(presentationLocales.contains(new Locale("en")), "en");
-		assertTrue(presentationLocales.contains(new Locale("es")), "es");
+		assertTrue(presentationLocales.contains(Locale.of("en")), "en");
+		assertTrue(presentationLocales.contains(Locale.of("es")), "es");
 	}
 
 	@Test
@@ -1007,9 +1007,9 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		        .saveGlobalProperty(new GlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_LOCALE_ALLOWED_LIST, "en_GB, es"));
 
 		List<Locale> locales = new ArrayList<>();
-		locales.add(new Locale("pl", "PL"));
-		locales.add(new Locale("en"));
-		locales.add(new Locale("es"));
+		locales.add(Locale.of("pl", "PL"));
+		locales.add(Locale.of("en"));
+		locales.add(Locale.of("es"));
 
 		MutableResourceBundleMessageSource mutableResourceBundleMessageSource = Mockito
 		        .mock(MutableResourceBundleMessageSource.class);
@@ -1023,8 +1023,8 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.getMessageSourceService().setActiveMessageSource(mutableMessageSource);
 
 		assertEquals(2, presentationLocales.size());
-		assertTrue(presentationLocales.contains(new Locale("en")), "en");
-		assertTrue(presentationLocales.contains(new Locale("es")), "es");
+		assertTrue(presentationLocales.contains(Locale.of("en")), "en");
+		assertTrue(presentationLocales.contains(Locale.of("es")), "es");
 	}
 
 	@Test
@@ -1036,10 +1036,10 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 
 		List<Locale> locales = new ArrayList<>();
 		//Add data in random order and verify that order is maintained in the end by checking against order in global property
-		locales.add(new Locale("pl", "PL"));
-		locales.add(new Locale("es"));
-		locales.add(new Locale("en"));
-		locales.add(new Locale("it", "IT"));
+		locales.add(Locale.of("pl", "PL"));
+		locales.add(Locale.of("es"));
+		locales.add(Locale.of("en"));
+		locales.add(Locale.of("it", "IT"));
 
 		MutableResourceBundleMessageSource mutableResourceBundleMessageSource = Mockito
 		        .mock(MutableResourceBundleMessageSource.class);
@@ -1053,10 +1053,10 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		Context.getMessageSourceService().setActiveMessageSource(mutableMessageSource);
 
 		//Assert Locales in expected order as set by global property
-		assertEquals(new Locale("en"), presentationLocales.get(0));
-		assertEquals(new Locale("es"), presentationLocales.get(1));
-		assertEquals(new Locale("it", "IT"), presentationLocales.get(2));
-		assertEquals(new Locale("pl", "PL"), presentationLocales.get(3));
+		assertEquals(Locale.of("en"), presentationLocales.getFirst());
+		assertEquals(Locale.of("es"), presentationLocales.get(1));
+		assertEquals(Locale.of("it", "IT"), presentationLocales.get(2));
+		assertEquals(Locale.of("pl", "PL"), presentationLocales.get(3));
 	}
 
 	@Test
@@ -1076,8 +1076,8 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 
 		//then
 		assertThat(cachedSearchLocales, hasItem(Locale.ENGLISH));
-		assertThat(cachedSearchLocales, hasItem(new Locale("en", "US")));
-		assertThat(cachedSearchLocales, not(hasItem(new Locale("pl"))));
+		assertThat(cachedSearchLocales, hasItem(Locale.of("en", "US")));
+		assertThat(cachedSearchLocales, not(hasItem(Locale.of("pl"))));
 	}
 
 	@Test
@@ -1093,7 +1093,7 @@ public class AdministrationServiceTest extends BaseContextSensitiveTest {
 		//sanity check that cache has been populated
 		adminService.getSearchLocales();
 		List<Locale> cachedSearchLocales = getCachedSearchLocalesForCurrentUser();
-		assertThat(cachedSearchLocales, hasItem(new Locale("en", "US")));
+		assertThat(cachedSearchLocales, hasItem(Locale.of("en", "US")));
 
 		//evict cache
 		adminService.saveGlobalProperty(new GlobalProperty("test", "TEST"));

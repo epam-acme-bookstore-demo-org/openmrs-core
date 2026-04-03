@@ -11,7 +11,6 @@ package org.openmrs.api.db.hibernate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -191,7 +190,7 @@ public class HibernatePatientDAO implements PatientDAO {
 
 		if (StringUtils.isBlank(query) || (length != null && length < 1) || identifierTypes == null
 		        || identifierTypes.isEmpty()) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		Integer tmpStart = start;
@@ -217,7 +216,7 @@ public class HibernatePatientDAO implements PatientDAO {
 	public List<Patient> getPatients(String query, boolean includeVoided, Integer start, Integer length)
 	        throws DAOException {
 		if (StringUtils.isBlank(query) || (length != null && length < 1)) {
-			return Collections.emptyList();
+			return List.of();
 		}
 
 		Integer tmpStart = start;
@@ -287,7 +286,7 @@ public class HibernatePatientDAO implements PatientDAO {
 		Root<PatientIdentifier> root = query.from(PatientIdentifier.class);
 		Join<PatientIdentifier, Patient> patientJoin = root.join("patient");
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		predicates.add(builder.isFalse(patientJoin.get("voided")));
 		predicates.add(builder.isFalse(root.get("voided")));
@@ -360,7 +359,7 @@ public class HibernatePatientDAO implements PatientDAO {
 		CriteriaQuery<PatientIdentifierType> query = builder.createQuery(PatientIdentifierType.class);
 		Root<PatientIdentifierType> root = query.from(PatientIdentifierType.class);
 
-		List<Order> orders = new ArrayList<>();
+		var orders = new ArrayList<Order>();
 
 		if (!includeRetired) {
 			query.where(builder.isFalse(root.get("retired")));
@@ -406,7 +405,7 @@ public class HibernatePatientDAO implements PatientDAO {
 		CriteriaQuery<PatientIdentifierType> query = builder.createQuery(PatientIdentifierType.class);
 		Root<PatientIdentifierType> root = query.from(PatientIdentifierType.class);
 
-		List<Predicate> predicates = new ArrayList<>();
+		var predicates = new ArrayList<Predicate>();
 
 		if (name != null) {
 			predicates.add(builder.equal(root.get("name"), name));
@@ -426,7 +425,7 @@ public class HibernatePatientDAO implements PatientDAO {
 
 		predicates.add(builder.isFalse(root.get("retired")));
 
-		List<Order> orders = new ArrayList<>();
+		var orders = new ArrayList<Order>();
 
 		//required first
 		orders.add(builder.desc(root.get("required")));
@@ -473,21 +472,21 @@ public class HibernatePatientDAO implements PatientDAO {
 	}
 
 	private String getDuplicatePatientsSQLString(List<String> attributes) {
-		StringBuilder outerSelect = new StringBuilder("select distinct t1.patient_id from patient t1 ");
+		var outerSelect = new StringBuilder("select distinct t1.patient_id from patient t1 ");
 		final String t5 = " = t5.";
 		Set<String> patientFieldNames = OpenmrsUtil.getDeclaredFields(Patient.class);
 		Set<String> personFieldNames = OpenmrsUtil.getDeclaredFields(Person.class);
 		Set<String> personNameFieldNames = OpenmrsUtil.getDeclaredFields(PersonName.class);
 		Set<String> identifierFieldNames = OpenmrsUtil.getDeclaredFields(PatientIdentifier.class);
 
-		List<String> whereConditions = new ArrayList<>();
+		var whereConditions = new ArrayList<String>();
 
-		List<String> innerFields = new ArrayList<>();
-		StringBuilder innerSelect = new StringBuilder(" from patient p1 ");
+		var innerFields = new ArrayList<String>();
+		var innerSelect = new StringBuilder(" from patient p1 ");
 
 		for (String attribute : attributes) {
 			if (attribute != null) {
-				attribute = attribute.trim();
+				attribute = attribute.strip();
 			}
 			if (patientFieldNames.contains(attribute)) {
 
@@ -587,7 +586,7 @@ public class HibernatePatientDAO implements PatientDAO {
 
 	private void sortDuplicatePatients(List<Patient> patients, List<Integer> patientIds) {
 
-		Map<Integer, Integer> patientIdOrder = new HashMap<>();
+		var patientIdOrder = new HashMap<Integer, Integer>();
 		int startPos = 0;
 		for (Integer id : patientIds) {
 			patientIdOrder.put(id, startPos++);
@@ -739,7 +738,7 @@ public class HibernatePatientDAO implements PatientDAO {
 			return 0L;
 		}
 
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		return SearchQueryUnique.searchCount(searchSessionFactory, SearchQueryUnique
 		        .newQuery(PatientIdentifier.class, f -> newPatientIdentifierSearchPredicate(f, query, includeVoided, false),
@@ -783,7 +782,7 @@ public class HibernatePatientDAO implements PatientDAO {
 		return SearchQueryUnique.search(searchSessionFactory,
 		    SearchQueryUnique.newQuery(PatientIdentifier.class, f -> f.bool().with(b -> {
 			    b.must(getPatientIdentifierSearchPredicate(f, query, matchExactly));
-			    List<Integer> identifierTypeIds = new ArrayList<Integer>();
+			    var identifierTypeIds = new ArrayList<Integer>();
 			    for (PatientIdentifierType identifierType : identifierTypes) {
 				    identifierTypeIds.add(identifierType.getId());
 			    }
@@ -816,7 +815,7 @@ public class HibernatePatientDAO implements PatientDAO {
 			return patients;
 		}
 
-		PersonQuery personQuery = new PersonQuery();
+		var personQuery = new PersonQuery();
 
 		patients = SearchQueryUnique.search(searchSessionFactory, SearchQueryUnique
 		        .newQuery(PatientIdentifier.class, f -> newPatientIdentifierSearchPredicate(f, query, includeVoided, false),
@@ -887,7 +886,7 @@ public class HibernatePatientDAO implements PatientDAO {
 	 * @see PatientSearchCriteria
 	 */
 	private List<String> tokenizeIdentifierQuery(String query) {
-		List<String> searchPatterns = new ArrayList<>();
+		var searchPatterns = new ArrayList<String>();
 
 		String patternSearch = Context.getAdministrationService()
 		        .getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_PATIENT_IDENTIFIER_SEARCH_PATTERN, "");

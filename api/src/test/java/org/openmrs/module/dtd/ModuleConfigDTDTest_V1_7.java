@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -56,7 +55,7 @@ public class ModuleConfigDTDTest_V1_7 {
 	public void configXmlServletMissingInitParamsIsValid(String version)
 	        throws ParserConfigurationException, TransformerException, IOException, URISyntaxException {
 		Document configXml = withMinimalTags(version)
-		        .withServlet(Optional.of("ServletName"), Optional.of("ServletClass"), Collections.emptyMap()).build();
+		        .withServlet(Optional.of("ServletName"), Optional.of("ServletClass"), Map.of()).build();
 
 		try (InputStream inputStream = writeToInputStream(configXml)) {
 			assertTrue(isValidConfigXml(inputStream));

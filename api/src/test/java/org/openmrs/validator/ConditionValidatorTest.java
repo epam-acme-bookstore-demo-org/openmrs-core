@@ -75,7 +75,7 @@ public class ConditionValidatorTest {
 	@Test
 	public void shouldPassIfConditionClassIsPassedWithRequiredConditionProperties() {
 		Condition condition = new Condition();
-		condition.setCondition(new CodedOrFreeText(new Concept(), new ConceptName("name", new Locale("en")), "nonCoded"));
+		condition.setCondition(new CodedOrFreeText(new Concept(), new ConceptName("name", Locale.of("en")), "nonCoded"));
 		condition.setClinicalStatus(ConditionClinicalStatus.ACTIVE);
 		validator.validate(condition, errors);
 		assertFalse(errors.hasFieldErrors("condition"));

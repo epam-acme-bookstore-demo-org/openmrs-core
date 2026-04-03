@@ -9,7 +9,7 @@
  */
 package org.openmrs.logging;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
@@ -78,24 +78,24 @@ public final class OpenmrsLoggingUtil {
 
 		String fileName = null;
 		if (fileAppender instanceof AbstractOutputStreamAppender) {
-			if (fileAppender instanceof RollingFileAppender) {
-				fileName = ((RollingFileAppender) fileAppender).getFileName();
-			} else if (fileAppender instanceof FileAppender) {
-				fileName = ((FileAppender) fileAppender).getFileName();
-			} else if (fileAppender instanceof MemoryMappedFileAppender) {
-				fileName = ((MemoryMappedFileAppender) fileAppender).getFileName();
-			} else if (fileAppender instanceof RollingRandomAccessFileAppender) {
-				fileName = ((RollingRandomAccessFileAppender) fileAppender).getFileName();
-			} else if (fileAppender instanceof RandomAccessFileAppender) {
-				fileName = ((RandomAccessFileAppender) fileAppender).getFileName();
-			} else if (fileAppender instanceof AbstractFileAppender) {
-				fileName = ((AbstractFileAppender<?>) fileAppender).getFileName();
+			if (fileAppender instanceof RollingFileAppender appender5) {
+				fileName = appender5.getFileName();
+			} else if (fileAppender instanceof FileAppender appender4) {
+				fileName = appender4.getFileName();
+			} else if (fileAppender instanceof MemoryMappedFileAppender appender3) {
+				fileName = appender3.getFileName();
+			} else if (fileAppender instanceof RollingRandomAccessFileAppender appender2) {
+				fileName = appender2.getFileName();
+			} else if (fileAppender instanceof RandomAccessFileAppender appender1) {
+				fileName = appender1.getFileName();
+			} else if (fileAppender instanceof AbstractFileAppender<?> appender) {
+				fileName = appender.getFileName();
 			} else {
 				return null;
 			}
 		}
 
-		return fileName == null ? null : Paths.get("", fileName).toAbsolutePath().toString();
+		return fileName == null ? null : Path.of("", fileName).toAbsolutePath().toString();
 	}
 
 	/**
@@ -114,9 +114,9 @@ public final class OpenmrsLoggingUtil {
 				if (classAndLevel.length == 0) {
 					break;
 				} else if (classAndLevel.length == 1) {
-					applyLogLevelInternal(OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].trim());
+					applyLogLevelInternal(OpenmrsConstants.LOG_CLASS_DEFAULT, classAndLevel[0].strip());
 				} else {
-					applyLogLevelInternal(classAndLevel[0].trim(), classAndLevel[1].trim());
+					applyLogLevelInternal(classAndLevel[0].strip(), classAndLevel[1].strip());
 				}
 			}
 

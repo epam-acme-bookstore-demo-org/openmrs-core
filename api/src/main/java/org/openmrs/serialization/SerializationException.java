@@ -9,12 +9,15 @@
  */
 package org.openmrs.serialization;
 
+import java.io.Serial;
+
 /**
  * Represents an Exception that has occurred during object Serialization or Deserialization within
  * OpenMRS
  */
 public class SerializationException extends Exception {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

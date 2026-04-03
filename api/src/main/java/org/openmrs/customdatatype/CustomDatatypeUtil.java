@@ -10,7 +10,6 @@
 package org.openmrs.customdatatype;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +97,7 @@ public class CustomDatatypeUtil {
 			try {
 				Class<? extends CustomDatatypeHandler> clazz = (Class<? extends CustomDatatypeHandler>) Context
 				        .loadClass(preferredHandlerClassname);
-				CustomDatatypeHandler handler = clazz.newInstance();
+				CustomDatatypeHandler handler = clazz.getDeclaredConstructor().newInstance();
 				if (handlerConfig != null) {
 					handler.setHandlerConfiguration(handlerConfig);
 				}
@@ -146,7 +145,7 @@ public class CustomDatatypeUtil {
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> deserializeSimpleConfiguration(String serializedConfig) {
 		if (StringUtils.isBlank(serializedConfig)) {
-			return Collections.emptyMap();
+			return Map.of();
 		}
 		try {
 			return Context.getSerializationService().getDefaultSerializer().deserialize(serializedConfig, Map.class);
@@ -187,7 +186,7 @@ public class CustomDatatypeUtil {
 	 * @return fully-qualified classnames of all registered datatypes
 	 */
 	public static List<String> getDatatypeClassnames() {
-		List<String> ret = new ArrayList<>();
+		var ret = new ArrayList<String>();
 		for (Class<?> c : Context.getDatatypeService().getAllDatatypeClasses()) {
 			ret.add(c.getName());
 		}
@@ -198,7 +197,7 @@ public class CustomDatatypeUtil {
 	 * @return full-qualified classnames of all registered handlers
 	 */
 	public static List<String> getHandlerClassnames() {
-		List<String> ret = new ArrayList<>();
+		var ret = new ArrayList<String>();
 		for (Class<?> c : Context.getDatatypeService().getAllHandlerClasses()) {
 			ret.add(c.getName());
 		}

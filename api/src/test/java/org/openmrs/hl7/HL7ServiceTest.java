@@ -204,7 +204,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		// the application context cannot restart here to load in the moduleApplicationContext that
 		// calls the setHL7Handlers method so we're doing it manually here
 		Class<Application> c = (Class<Application>) Context.loadClass("org.openmrs.module.examplehl7handlers.ADRHandler");
-		Application classInstance = c.newInstance();
+		Application classInstance = c.getDeclaredConstructor().newInstance();
 		HashMap<String, Application> map = new HashMap<>();
 		map.put("ADR_A19", classInstance);
 		HL7ServiceImpl hl7service = (HL7ServiceImpl) Context.getHL7Service();
@@ -253,7 +253,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		// calls the setHL7Handlers method so we're doing it manually here
 		Class<Application> c = (Class<Application>) Context
 		        .loadClass("org.openmrs.module.examplehl7handlers.AlternateORUR01Handler");
-		Application classInstance = c.newInstance();
+		Application classInstance = c.getDeclaredConstructor().newInstance();
 		HashMap<String, Application> map = new HashMap<>();
 		map.put("ORU_R01", classInstance);
 		HL7ServiceImpl hl7service = (HL7ServiceImpl) Context.getHL7Service();
@@ -264,7 +264,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		hl7service.processHL7InQueue(queueItem);
 
 		List<HL7InError> errors = hl7service.getAllHL7InErrors();
-		HL7InError error = errors.get(errors.size() - 1); // get the last error, the one made by this test presumably
+		HL7InError error = errors.getLast(); // get the last error, the one made by this test presumably
 		assertTrue(error.getErrorDetails().contains("In alternate oru r01 parser"));
 
 		ModuleUtil.shutdown();
@@ -289,7 +289,8 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
 		assertEquals(1, nk1List.size(), "too many NK1s parsed out");
-		Person result = hl7service.resolvePersonFromIdentifiers(nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers());
+		Person result = hl7service
+		        .resolvePersonFromIdentifiers(nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers());
 		assertNotNull(result, "should have found a person");
 		assertEquals(2, result.getId().intValue(), "found the wrong person");
 	}
@@ -313,7 +314,8 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
 		assertEquals(1, nk1List.size(), "too many NK1s parsed out");
-		Person result = hl7service.resolvePersonFromIdentifiers(nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers());
+		Person result = hl7service
+		        .resolvePersonFromIdentifiers(nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers());
 		assertNotNull(result, "should have found a person");
 		assertEquals(2, result.getId().intValue(), "found the wrong person");
 	}
@@ -337,7 +339,8 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
 		assertEquals(1, nk1List.size(), "too many NK1s parsed out");
-		Person result = hl7service.resolvePersonFromIdentifiers(nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers());
+		Person result = hl7service
+		        .resolvePersonFromIdentifiers(nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers());
 		assertNotNull(result, "should have found a person");
 		assertEquals(2, result.getId().intValue(), "found the wrong person");
 	}
@@ -361,7 +364,8 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
 		assertEquals(1, nk1List.size(), "too many NK1s parsed out");
-		Person result = hl7service.resolvePersonFromIdentifiers(nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers());
+		Person result = hl7service
+		        .resolvePersonFromIdentifiers(nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers());
 		assertNull(result, "should not have found a person");
 	}
 
@@ -383,7 +387,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.get(0)));
+		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.getFirst()));
 	}
 
 	/**
@@ -403,7 +407,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.get(0)));
+		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.getFirst()));
 	}
 
 	/**
@@ -423,7 +427,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.get(0)));
+		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.getFirst()));
 	}
 
 	/**
@@ -443,7 +447,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.get(0)));
+		assertThrows(HL7Exception.class, () -> hl7service.createPersonFromNK1(nk1List.getFirst()));
 	}
 
 	/**
@@ -463,7 +467,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		Person result = hl7service.createPersonFromNK1(nk1List.get(0));
+		Person result = hl7service.createPersonFromNK1(nk1List.getFirst());
 		assertNotNull(result, "should have returned a person");
 		assertNotNull(Context.getPersonService().getPersonByUuid(result.getUuid()), "the person should exist");
 	}
@@ -486,7 +490,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		Person result = hl7service.createPersonFromNK1(nk1List.get(0));
+		Person result = hl7service.createPersonFromNK1(nk1List.getFirst());
 		assertNotNull(result, "should have returned something");
 		assertTrue(result instanceof Patient, "should have returned a Patient");
 	}
@@ -509,7 +513,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		CX[] identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		CX[] identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		String result = hl7service.getUuidFromIdentifiers(identifiers);
 		assertEquals("2178037d-f86b-4f12-8d8b-be3ebc220022", result);
 		result = null;
@@ -525,7 +529,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		oru = (ORU_R01) message;
 		nk1List = new ORUR01Handler().getNK1List(oru);
-		identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		result = hl7service.getUuidFromIdentifiers(identifiers);
 		assertEquals("2178037d-f86b-4f12-8d8b-be3ebc220022", result);
 		result = null;
@@ -541,7 +545,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		oru = (ORU_R01) message;
 		nk1List = new ORUR01Handler().getNK1List(oru);
-		identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		result = hl7service.getUuidFromIdentifiers(identifiers);
 		assertEquals("2178037d-f86b-4f12-8d8b-be3ebc220022", result);
 	}
@@ -563,7 +567,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		CX[] identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		CX[] identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		String result = hl7service.getUuidFromIdentifiers(identifiers);
 		assertNull(result, "should have returned null");
 	}
@@ -585,7 +589,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		CX[] identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		CX[] identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		String result = hl7service.getUuidFromIdentifiers(identifiers);
 		assertEquals("2178037d-f86b-4f12-8d8b-be3ebc220022", result);
 	}
@@ -607,7 +611,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		CX[] identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		CX[] identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		assertThrows(HL7Exception.class, () -> hl7service.getUuidFromIdentifiers(identifiers));
 	}
 
@@ -628,7 +632,7 @@ public class HL7ServiceTest extends BaseContextSensitiveTest {
 		            + "OBX|2|DT|5096^RETURN VISIT DATE^99DCT||20080229|||||||||20080212");
 		ORU_R01 oru = (ORU_R01) message;
 		List<NK1> nk1List = new ORUR01Handler().getNK1List(oru);
-		CX[] identifiers = nk1List.get(0).getNextOfKinAssociatedPartySIdentifiers();
+		CX[] identifiers = nk1List.getFirst().getNextOfKinAssociatedPartySIdentifiers();
 		assertDoesNotThrow(() -> hl7service.getUuidFromIdentifiers(identifiers));
 	}
 
