@@ -32,7 +32,7 @@ jobs:
       - name: Setup Java & Maven
         uses: ./.github/actions/setup-maven
         with:
-          java-version: '8'
+          java-version: '${{ matrix.java-version }}'
       - name: Install dependencies
         run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version --file pom.xml
       - name: Build with Maven

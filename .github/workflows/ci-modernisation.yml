@@ -45,7 +45,8 @@ jobs:
       - name: Setup Java & Maven
         uses: ./.github/actions/setup-maven
         with:
-          java-version: '21'
+          java-version: '${{ env.JAVA_VERSION }}'
+          distribution: '${{ env.JAVA_DISTRIBUTION }}'
 
       - name: Build and run tests
         run: ./mvnw verify -B -ntp -Dspotbugs.skip=true
@@ -64,7 +65,8 @@ jobs:
       - name: Setup Java & Maven
         uses: ./.github/actions/setup-maven
         with:
-          java-version: '21'
+          java-version: '${{ env.JAVA_VERSION }}'
+          distribution: '${{ env.JAVA_DISTRIBUTION }}'
 
       - name: Run Checkstyle
         run: ./mvnw checkstyle:check -B -ntp -Dcheckstyle.failOnViolation=false
@@ -84,7 +86,8 @@ jobs:
       - name: Setup Java & Maven
         uses: ./.github/actions/setup-maven
         with:
-          java-version: '21'
+          java-version: '${{ env.JAVA_VERSION }}'
+          distribution: '${{ env.JAVA_DISTRIBUTION }}'
 
       - name: Compile and run SpotBugs
         run: ./mvnw compile com.github.spotbugs:spotbugs-maven-plugin:check -B -ntp -Dspotbugs.skip=false -pl api,web,liquibase
@@ -104,7 +107,8 @@ jobs:
       - name: Setup Java & Maven
         uses: ./.github/actions/setup-maven
         with:
-          java-version: '21'
+          java-version: '${{ env.JAVA_VERSION }}'
+          distribution: '${{ env.JAVA_DISTRIBUTION }}'
 
       - name: Run tests with JaCoCo coverage
         run: ./mvnw org.jacoco:jacoco-maven-plugin:prepare-agent verify org.jacoco:jacoco-maven-plugin:report -B -ntp -Dspotbugs.skip=true
