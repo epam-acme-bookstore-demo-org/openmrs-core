@@ -21,12 +21,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import jakarta.mail.Authenticator;
-import jakarta.mail.PasswordAuthentication;
-import jakarta.mail.Session;
-
 import org.aopalliance.aop.Advice;
-import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Allergen;
 import org.openmrs.GlobalProperty;
 import org.openmrs.OpenmrsObject;
@@ -64,18 +59,11 @@ import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.ModuleMustStartException;
 import org.openmrs.module.ModuleUtil;
 import org.openmrs.notification.AlertService;
-import org.openmrs.notification.MessageException;
-import org.openmrs.notification.MessagePreparator;
-import org.openmrs.notification.MessageSender;
 import org.openmrs.notification.MessageService;
-import org.openmrs.notification.mail.MailMessageSender;
-import org.openmrs.notification.mail.velocity.VelocityMessagePreparator;
 import org.openmrs.scheduler.SchedulerService;
-import org.openmrs.util.ConfigUtil;
 import org.openmrs.util.DatabaseUpdateException;
 import org.openmrs.util.DatabaseUpdater;
 import org.openmrs.util.InputRequiredException;
-import org.openmrs.util.LocaleUtility;
 import org.openmrs.util.OpenmrsClassLoader;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
@@ -84,9 +72,6 @@ import org.openmrs.validator.ValidateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.Advisor;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 
 /**
  * Represents an OpenMRS <code>Context</code>, which may be used to authenticate to the database and
@@ -137,8 +122,6 @@ public class Context {
 	// Global resources
 	private static ContextDAO contextDAO;
 
-	private static volatile Session mailSession;
-
 	// Using "wrapper" (Object array) around UserContext to avoid ThreadLocal
 	// bug in Java 1.5
 	private static final ThreadLocal<Object[] /* UserContext */> userContextHolder = new ThreadLocal<>();
@@ -188,22 +171,7 @@ public class Context {
 	 * Spring init method that sets the authentication scheme.
 	 */
 	private static void setAuthenticationScheme() {
-
-		authenticationScheme = new UsernamePasswordAuthenticationScheme();
-
-		try {
-			authenticationScheme = Context.getServiceContext().getApplicationContext().getBean(AuthenticationScheme.class); // manual autowiring (from a module)
-			log.info(
-			    "An authentication scheme override was provided. Using this one in place of the OpenMRS default authentication scheme.");
-		} catch (NoUniqueBeanDefinitionException e) {
-			log.error(
-			    "Multiple authentication schemes overrides are being provided, this is currently not supported. Sticking to OpenMRS default authentication scheme.");
-		} catch (NoSuchBeanDefinitionException e) {
-			log.debug("No authentication scheme override was provided. Sticking to OpenMRS default authentication scheme.");
-		} catch (BeansException e) {
-			log.error(
-			    "Fatal error encountered when injecting the authentication scheme override. Sticking to OpenMRS default authentication scheme.");
-		}
+		authenticationScheme = ContextAuthenticationHelper.initAuthenticationScheme(getServiceContext());
 	}
 
 	/**
@@ -331,19 +299,7 @@ public class Context {
 	 * @since 2.3.0
 	 */
 	public static Authenticated authenticate(Credentials credentials) throws ContextAuthenticationException {
-
-		if (Daemon.isDaemonThread()) {
-			log.error("Authentication attempted while operating on a "
-			        + "daemon thread, authenticating is not necessary or allowed");
-			return new BasicAuthenticated(Daemon.getDaemonThreadUser(),
-			        "No auth scheme used by Context - Daemon user is always authenticated.");
-		}
-
-		if (credentials == null) {
-			throw new ContextAuthenticationException("Context cannot authenticate with null credentials.");
-		}
-
-		return getUserContext().authenticate(credentials);
+		return ContextAuthenticationHelper.authenticate(credentials, Daemon.isDaemonThread() ? null : getUserContext());
 	}
 
 	/**
@@ -359,9 +315,7 @@ public class Context {
 		if (Daemon.isDaemonThread()) {
 			return;
 		}
-		log.debug("Refreshing authenticated user");
-
-		getUserContext().refreshAuthenticatedUser();
+		ContextAuthenticationHelper.refreshAuthenticatedUser(getUserContext());
 	}
 
 	/**
@@ -373,9 +327,7 @@ public class Context {
 	 * @throws ContextAuthenticationException
 	 */
 	public static void becomeUser(String systemId) throws ContextAuthenticationException {
-		log.info("systemId: {}", systemId);
-
-		getUserContext().becomeUser(systemId);
+		ContextAuthenticationHelper.becomeUser(systemId, getUserContext());
 	}
 
 	/**
@@ -404,46 +356,46 @@ public class Context {
 	 * @return concept dictionary-related services
 	 */
 	public static ConceptService getConceptService() {
-		return getServiceContext().getConceptService();
+		return ContextServiceHelper.getConceptService(getServiceContext());
 	}
 
 	/**
 	 * @return encounter-related services
 	 */
 	public static EncounterService getEncounterService() {
-		return getServiceContext().getEncounterService();
+		return ContextServiceHelper.getEncounterService(getServiceContext());
 	}
 
 	/**
 	 * @return location services
 	 */
 	public static LocationService getLocationService() {
-		return getServiceContext().getLocationService();
+		return ContextServiceHelper.getLocationService(getServiceContext());
 	}
 
 	/**
 	 * @return observation services
 	 */
 	public static ObsService getObsService() {
-		return getServiceContext().getObsService();
+		return ContextServiceHelper.getObsService(getServiceContext());
 	}
 
 	/**
 	 * @return patient-related services
 	 */
 	public static PatientService getPatientService() {
-		return getServiceContext().getPatientService();
+		return ContextServiceHelper.getPatientService(getServiceContext());
 	}
 
 	public static CohortService getCohortService() {
-		return getServiceContext().getCohortService();
+		return ContextServiceHelper.getCohortService(getServiceContext());
 	}
 
 	/**
 	 * @return person-related services
 	 */
 	public static PersonService getPersonService() {
-		return getServiceContext().getPersonService();
+		return ContextServiceHelper.getPersonService(getServiceContext());
 	}
 
 	/**
@@ -451,7 +403,7 @@ public class Context {
 	 * @since 2.2
 	 */
 	public static ConditionService getConditionService() {
-		return getServiceContext().getConditionService();
+		return ContextServiceHelper.getConditionService(getServiceContext());
 	}
 
 	/**
@@ -459,7 +411,7 @@ public class Context {
 	 * @since 2.2
 	 */
 	public static DiagnosisService getDiagnosisService() {
-		return getServiceContext().getDiagnosisService();
+		return ContextServiceHelper.getDiagnosisService(getServiceContext());
 	}
 
 	/**
@@ -467,28 +419,28 @@ public class Context {
 	 * @since 2.6.0
 	 */
 	public static MedicationDispenseService getMedicationDispenseService() {
-		return getServiceContext().getMedicationDispenseService();
+		return ContextServiceHelper.getMedicationDispenseService(getServiceContext());
 	}
 
 	/**
 	 * @return Returns the hl7Service.
 	 */
 	public static HL7Service getHL7Service() {
-		return getServiceContext().getHL7Service();
+		return ContextServiceHelper.getHL7Service(getServiceContext());
 	}
 
 	/**
 	 * @return user-related services
 	 */
 	public static UserService getUserService() {
-		return getServiceContext().getUserService();
+		return ContextServiceHelper.getUserService(getServiceContext());
 	}
 
 	/**
 	 * @return order service
 	 */
 	public static OrderService getOrderService() {
-		return getServiceContext().getOrderService();
+		return ContextServiceHelper.getOrderService(getServiceContext());
 	}
 
 	/**
@@ -496,14 +448,14 @@ public class Context {
 	 * @since 1.12
 	 */
 	public static OrderSetService getOrderSetService() {
-		return getServiceContext().getOrderSetService();
+		return ContextServiceHelper.getOrderSetService(getServiceContext());
 	}
 
 	/**
 	 * @return form service
 	 */
 	public static FormService getFormService() {
-		return getServiceContext().getFormService();
+		return ContextServiceHelper.getFormService(getServiceContext());
 	}
 
 	/**
@@ -511,49 +463,49 @@ public class Context {
 	 * @since 1.5
 	 */
 	public static SerializationService getSerializationService() {
-		return getServiceContext().getSerializationService();
+		return ContextServiceHelper.getSerializationService(getServiceContext());
 	}
 
 	/**
 	 * @return logic service
 	 */
 	public static LogicService getLogicService() {
-		return getServiceContext().getLogicService();
+		return ContextServiceHelper.getLogicService(getServiceContext());
 	}
 
 	/**
 	 * @return admin-related services
 	 */
 	public static AdministrationService getAdministrationService() {
-		return getServiceContext().getAdministrationService();
+		return ContextServiceHelper.getAdministrationService(getServiceContext());
 	}
 
 	/**
 	 * @return MessageSourceService
 	 */
 	public static MessageSourceService getMessageSourceService() {
-		return getServiceContext().getMessageSourceService();
+		return ContextServiceHelper.getMessageSourceService(getServiceContext());
 	}
 
 	/**
 	 * @return scheduler service
 	 */
 	public static SchedulerService getSchedulerService() {
-		return getServiceContext().getSchedulerService();
+		return ContextServiceHelper.getSchedulerService(getServiceContext());
 	}
 
 	/**
 	 * @return alert service
 	 */
 	public static AlertService getAlertService() {
-		return getServiceContext().getAlertService();
+		return ContextServiceHelper.getAlertService(getServiceContext());
 	}
 
 	/**
 	 * @return program- and workflow-related services
 	 */
 	public static ProgramWorkflowService getProgramWorkflowService() {
-		return getServiceContext().getProgramWorkflowService();
+		return ContextServiceHelper.getProgramWorkflowService(getServiceContext());
 	}
 
 	/**
@@ -562,21 +514,7 @@ public class Context {
 	 * @return message service
 	 */
 	public static MessageService getMessageService() {
-		MessageService ms = getServiceContext().getMessageService();
-		try {
-			// Message service dependencies
-			if (ms.getMessagePreparator() == null) {
-				ms.setMessagePreparator(getMessagePreparator());
-			}
-
-			if (ms.getMessageSender() == null) {
-				ms.setMessageSender(getMessageSender());
-			}
-
-		} catch (Exception e) {
-			log.error("Unable to create message service due", e);
-		}
-		return ms;
+		return ContextServiceHelper.getMessageService(getServiceContext(), runtimeProperties);
 	}
 
 	/**
@@ -587,78 +525,7 @@ public class Context {
 	 *         properties overriding global properties.
 	 */
 	public static Properties getMailProperties() {
-		var p = new Properties();
-		String prefix = "mail.";
-		for (GlobalProperty gp : getAdministrationService().getGlobalPropertiesByPrefix(prefix)) {
-			// Historically, some mail properties defined with underscores, support these for legacy compatibility
-			if (gp.getProperty().equals("mail.transport_protocol")) {
-				p.setProperty("mail.transport.protocol", gp.getPropertyValue());
-			} else if (gp.getProperty().equals("mail.smtp_host")) {
-				p.setProperty("mail.smtp.host", gp.getPropertyValue());
-			} else if (gp.getProperty().equals("mail.smtp_port")) {
-				p.setProperty("mail.smtp.port", gp.getPropertyValue());
-			} else if (gp.getProperty().equals("mail.smtp_auth")) {
-				p.setProperty("mail.smtp.auth", gp.getPropertyValue());
-			} else {
-				p.setProperty(gp.getProperty(), gp.getPropertyValue());
-			}
-		}
-		for (String runtimeProperty : runtimeProperties.stringPropertyNames()) {
-			if (runtimeProperty.startsWith(prefix)) {
-				p.setProperty(runtimeProperty, runtimeProperties.getProperty(runtimeProperty));
-			}
-		}
-		for (String systemProperty : System.getProperties().stringPropertyNames()) {
-			if (systemProperty.startsWith(prefix)) {
-				p.setProperty(systemProperty, System.getProperty(systemProperty));
-			}
-		}
-		return p;
-	}
-
-	/**
-	 * Gets the mail session required by the mail message service. This function forces authentication
-	 * via the getAdministrationService() method call
-	 *
-	 * @return a java mail session
-	 */
-	private static Session getMailSession() {
-		if (mailSession == null) {
-			synchronized (Context.class) {
-				if (mailSession == null) {
-					Authenticator auth = new Authenticator() {
-
-						@Override
-						public PasswordAuthentication getPasswordAuthentication() {
-							return new PasswordAuthentication(ConfigUtil.getProperty("mail.user"),
-							        ConfigUtil.getProperty("mail.password"));
-						}
-					};
-					mailSession = Session.getInstance(getMailProperties(), auth);
-				}
-			}
-		}
-		return mailSession;
-	}
-
-	/**
-	 * Convenience method to allow us to change the configuration more easily. TODO Ideally, we would be
-	 * using Spring's method injection to set the dependencies for the message service.
-	 *
-	 * @return the ServiceContext
-	 */
-	private static MessageSender getMessageSender() {
-		return new MailMessageSender(getMailSession());
-	}
-
-	/**
-	 * Convenience method to allow us to change the configuration more easily. TODO See todo for message
-	 * sender.
-	 *
-	 * @return
-	 */
-	private static MessagePreparator getMessagePreparator() throws MessageException {
-		return new VelocityMessagePreparator();
+		return ContextServiceHelper.getMailProperties(getServiceContext(), runtimeProperties);
 	}
 
 	/**
@@ -668,8 +535,7 @@ public class Context {
 		if (Daemon.isDaemonThread()) {
 			return Daemon.getDaemonThreadUser();
 		}
-
-		return getUserContext().getAuthenticatedUser();
+		return ContextAuthenticationHelper.getAuthenticatedUser(getUserContext());
 	}
 
 	/**
@@ -678,15 +544,14 @@ public class Context {
 	public static boolean isAuthenticated() {
 		if (Daemon.isDaemonThread()) {
 			return true;
-		} else {
-			try {
-				return getAuthenticatedUser() != null;
-			} catch (APIException e) {
-				log.info(
-				    "Could not get authenticated user inside called to isAuthenticated(), assuming no user context has been defined",
-				    e);
-				return false;
-			}
+		}
+		try {
+			return ContextAuthenticationHelper.isAuthenticated(getUserContext());
+		} catch (APIException e) {
+			log.info(
+			    "Could not get authenticated user inside called to isAuthenticated(), assuming no user context has been defined",
+			    e);
+			return false;
 		}
 	}
 
@@ -701,9 +566,7 @@ public class Context {
 		if (!isSessionOpen()) {
 			return; // fail early if there isn't even a session open
 		}
-		log.debug("Logging out : {}", getAuthenticatedUser());
-
-		getUserContext().logout();
+		ContextAuthenticationHelper.logout(getUserContext());
 
 		// reset the UserContext object (usually cleared out by closeSession()
 		// soon after this)
@@ -714,19 +577,14 @@ public class Context {
 	 * Convenience method. Passes through to userContext.getAllRoles(User)
 	 */
 	public static Set<Role> getAllRoles(User user) throws Exception {
-		return getUserContext().getAllRoles();
+		return ContextAuthenticationHelper.getAllRoles(getUserContext());
 	}
 
 	/**
 	 * Tests whether the currently authenticated user has a particular privilege
 	 */
 	public static boolean hasPrivilege(String privilege) {
-		// the daemon threads have access to all things
-		if (Daemon.isDaemonThread()) {
-			return true;
-		}
-
-		return getUserContext().hasPrivilege(privilege);
+		return ContextAuthenticationHelper.hasPrivilege(privilege, Daemon.isDaemonThread() ? null : getUserContext());
 	}
 
 	/**
@@ -736,18 +594,7 @@ public class Context {
 	 * @throws ContextAuthenticationException
 	 */
 	public static void requirePrivilege(String privilege) throws ContextAuthenticationException {
-		if (!hasPrivilege(privilege)) {
-			String errorMessage;
-			if (StringUtils.isNotBlank(privilege)) {
-				errorMessage = Context.getMessageSourceService().getMessage("error.privilegesRequired",
-				    new Object[] { privilege }, Locale.getDefault());
-			} else {
-				//Should we even be here if the privilege is blank?
-				errorMessage = Context.getMessageSourceService().getMessage("error.privilegesRequiredNoArgs");
-			}
-
-			throw new ContextAuthenticationException(errorMessage);
-		}
+		ContextAuthenticationHelper.requirePrivilege(privilege, hasPrivilege(privilege), getMessageSourceService());
 	}
 
 	/**
@@ -776,7 +623,7 @@ public class Context {
 	 * @see #removeProxyPrivilege(String)
 	 */
 	public static void addProxyPrivilege(String privilege) {
-		getUserContext().addProxyPrivilege(privilege);
+		ContextAuthenticationHelper.addProxyPrivilege(privilege, getUserContext());
 	}
 
 	/**
@@ -806,7 +653,7 @@ public class Context {
 	 * @since 3.0.0, 2.8.2, 2.7.8
 	 */
 	public static void addProxyPrivilege(String... privileges) {
-		getUserContext().addProxyPrivilege(privileges);
+		ContextAuthenticationHelper.addProxyPrivilege(privileges, getUserContext());
 	}
 
 	/**
@@ -822,7 +669,7 @@ public class Context {
 	 * @see #addProxyPrivilege(String)
 	 */
 	public static void removeProxyPrivilege(String privilege) {
-		getUserContext().removeProxyPrivilege(privilege);
+		ContextAuthenticationHelper.removeProxyPrivilege(privilege, getUserContext());
 	}
 
 	/**
@@ -837,14 +684,14 @@ public class Context {
 	 * @see #addProxyPrivilege(String...) * @since 3.0.0, 2.8.2, 2.7.8
 	 */
 	public static void removeProxyPrivilege(String... privileges) {
-		getUserContext().removeProxyPrivilege(privileges);
+		ContextAuthenticationHelper.removeProxyPrivilege(privileges, getUserContext());
 	}
 
 	/**
 	 * Convenience method. Passes through to {@link UserContext#setLocale(Locale)}
 	 */
 	public static void setLocale(Locale locale) {
-		getUserContext().setLocale(locale);
+		ContextAuthenticationHelper.setLocale(locale, getUserContext());
 	}
 
 	/**
@@ -853,12 +700,7 @@ public class Context {
 	 * <strong>Should</strong> not fail if session hasn't been opened
 	 */
 	public static Locale getLocale() {
-		// if a session hasn't been opened, just fetch the default
-		if (!isSessionOpen()) {
-			return LocaleUtility.getDefaultLocale();
-		}
-
-		return getUserContext().getLocale();
+		return ContextAuthenticationHelper.getLocale(isSessionOpen() ? getUserContext() : null);
 	}
 
 	/**
@@ -1103,7 +945,7 @@ public class Context {
 	 * @return The requested Service
 	 */
 	public static <T> T getService(Class<? extends T> cls) {
-		return getServiceContext().getService(cls);
+		return ContextServiceHelper.getService(cls, getServiceContext());
 	}
 
 	/**
@@ -1116,7 +958,7 @@ public class Context {
 	 * @deprecated since 3.0.0 use {@link AOPConfig}
 	 */
 	public static void addAdvisor(Class cls, Advisor advisor) {
-		getServiceContext().addAdvisor(cls, advisor);
+		ContextServiceHelper.addAdvisor(cls, advisor, getServiceContext());
 	}
 
 	/**
@@ -1129,7 +971,7 @@ public class Context {
 	 * @deprecated since 3.0.0 use {@link AOPConfig}
 	 */
 	public static void addAdvice(Class cls, Advice advice) {
-		getServiceContext().addAdvice(cls, advice);
+		ContextServiceHelper.addAdvice(cls, advice, getServiceContext());
 	}
 
 	/**
@@ -1140,7 +982,7 @@ public class Context {
 	 * @deprecated since 3.0.0 use {@link AOPConfig}
 	 */
 	public static void removeAdvisor(Class cls, Advisor advisor) {
-		getServiceContext().removeAdvisor(cls, advisor);
+		ContextServiceHelper.removeAdvisor(cls, advisor, getServiceContext());
 	}
 
 	/**
@@ -1151,7 +993,7 @@ public class Context {
 	 * @deprecated since 3.0.0 use {@link AOPConfig}
 	 */
 	public static void removeAdvice(Class cls, Advice advice) {
-		getServiceContext().removeAdvice(cls, advice);
+		ContextServiceHelper.removeAdvice(cls, advice, getServiceContext());
 	}
 
 	/**
@@ -1325,7 +1167,7 @@ public class Context {
 	 * @see org.openmrs.api.context.ServiceContext#isRefreshingContext()
 	 */
 	public static boolean isRefreshingContext() {
-		return getServiceContext().isRefreshingContext();
+		return ContextServiceHelper.isRefreshingContext(getServiceContext());
 	}
 
 	/**
@@ -1333,7 +1175,7 @@ public class Context {
 	 * @see ServiceContext#getRegisteredComponents(Class)
 	 */
 	public static <T> List<T> getRegisteredComponents(Class<T> type) {
-		return getServiceContext().getRegisteredComponents(type);
+		return ContextServiceHelper.getRegisteredComponents(type, getServiceContext());
 	}
 
 	/**
@@ -1341,7 +1183,7 @@ public class Context {
 	 * @since 1.9.4
 	 */
 	public static <T> T getRegisteredComponent(String beanName, Class<T> type) throws APIException {
-		return getServiceContext().getRegisteredComponent(beanName, type);
+		return ContextServiceHelper.getRegisteredComponent(beanName, type, getServiceContext());
 	}
 
 	/**
@@ -1349,7 +1191,7 @@ public class Context {
 	 * @since 1.9
 	 */
 	public static List<OpenmrsService> getModuleOpenmrsServices(String modulePackage) {
-		return getServiceContext().getModuleOpenmrsServices(modulePackage);
+		return ContextServiceHelper.getModuleOpenmrsServices(modulePackage, getServiceContext());
 	}
 
 	/**
@@ -1357,7 +1199,7 @@ public class Context {
 	 * @see ServiceContext#getVisitService()
 	 */
 	public static VisitService getVisitService() {
-		return getServiceContext().getVisitService();
+		return ContextServiceHelper.getVisitService(getServiceContext());
 	}
 
 	/**
@@ -1365,7 +1207,7 @@ public class Context {
 	 * @see ServiceContext#getProviderService()
 	 */
 	public static ProviderService getProviderService() {
-		return getServiceContext().getProviderService();
+		return ContextServiceHelper.getProviderService(getServiceContext());
 	}
 
 	/**
@@ -1373,7 +1215,7 @@ public class Context {
 	 * @see ServiceContext#getDatatypeService()
 	 */
 	public static DatatypeService getDatatypeService() {
-		return getServiceContext().getDatatypeService();
+		return ContextServiceHelper.getDatatypeService(getServiceContext());
 	}
 
 	/**
@@ -1479,7 +1321,7 @@ public class Context {
 	 * @since 1.10
 	 */
 	public static void setUseSystemClassLoader(boolean useSystemClassLoader) {
-		getServiceContext().setUseSystemClassLoader(useSystemClassLoader);
+		ContextServiceHelper.setUseSystemClassLoader(useSystemClassLoader, getServiceContext());
 	}
 
 	/**
@@ -1487,7 +1329,7 @@ public class Context {
 	 * @since 1.10
 	 */
 	public static boolean isUseSystemClassLoader() {
-		return getServiceContext().isUseSystemClassLoader();
+		return ContextServiceHelper.isUseSystemClassLoader(getServiceContext());
 	}
 
 	/**

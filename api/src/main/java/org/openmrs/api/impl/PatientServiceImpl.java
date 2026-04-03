@@ -13,64 +13,35 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Allergen;
 import org.openmrs.Allergies;
 import org.openmrs.Allergy;
-import org.openmrs.BaseOpenmrsMetadata;
 import org.openmrs.Concept;
-import org.openmrs.Encounter;
 import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PatientProgram;
 import org.openmrs.Person;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonName;
-import org.openmrs.Relationship;
-import org.openmrs.User;
-import org.openmrs.Visit;
 import org.openmrs.api.APIException;
-import org.openmrs.api.BlankIdentifierException;
-import org.openmrs.api.EncounterService;
-import org.openmrs.api.InsufficientIdentifiersException;
-import org.openmrs.api.MissingRequiredIdentifierException;
-import org.openmrs.api.ObsService;
 import org.openmrs.api.PatientIdentifierException;
-import org.openmrs.api.PatientIdentifierTypeLockedException;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.PersonService;
-import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.RefByUuid;
-import org.openmrs.api.UserService;
-import org.openmrs.api.VisitService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.db.PatientDAO;
 import org.openmrs.api.db.hibernate.HibernateUtil;
-import org.openmrs.parameter.EncounterSearchCriteria;
-import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.parameter.PatientSearchCriteria;
 import org.openmrs.patient.IdentifierValidator;
 import org.openmrs.patient.impl.LuhnIdentifierValidator;
-import org.openmrs.person.PersonMergeLog;
-import org.openmrs.person.PersonMergeLogData;
 import org.openmrs.serialization.SerializationException;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.openmrs.util.PrivilegeConstants;
-import org.openmrs.validator.PatientIdentifierValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +64,11 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 
 	private static final Logger log = LoggerFactory.getLogger(PatientServiceImpl.class);
 
-	@Autowired
 	private PatientDAO dao;
+
+	private PatientMergeDelegate mergeDelegate;
+
+	private PatientIdentifierDelegate identifierDelegate;
 
 	/**
 	 * PatientIdentifierValidators registered through spring's applicationContext-service.xml
@@ -106,9 +80,12 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	/**
 	 * @see org.openmrs.api.PatientService#setPatientDAO(org.openmrs.api.db.PatientDAO)
 	 */
+	@Autowired
 	@Override
 	public void setPatientDAO(PatientDAO dao) {
 		this.dao = dao;
+		this.mergeDelegate = new PatientMergeDelegate();
+		this.identifierDelegate = new PatientIdentifierDelegate(dao);
 	}
 
 	/**
@@ -127,93 +104,21 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 */
 	@Override
 	public Patient savePatient(Patient patient) throws APIException {
-		requireAppropriatePatientModificationPrivilege(patient);
+		identifierDelegate.requireAppropriatePatientModificationPrivilege(patient);
 
 		if (!patient.getVoided() && patient.getIdentifiers().size() == 1) {
 			patient.getPatientIdentifier().setPreferred(true);
 		}
 
 		if (!patient.getVoided()) {
-			checkPatientIdentifiers(patient);
+			identifierDelegate.checkPatientIdentifiers(patient);
 		}
 
-		setPreferredPatientIdentifier(patient);
-		setPreferredPatientName(patient);
-		setPreferredPatientAddress(patient);
+		identifierDelegate.setPreferredPatientIdentifier(patient);
+		identifierDelegate.setPreferredPatientName(patient);
+		identifierDelegate.setPreferredPatientAddress(patient);
 
 		return dao.savePatient(patient);
-	}
-
-	private void requireAppropriatePatientModificationPrivilege(Patient patient) {
-		if (patient.getPatientId() == null) {
-			Context.requirePrivilege(PrivilegeConstants.ADD_PATIENTS);
-		} else {
-			Context.requirePrivilege(PrivilegeConstants.EDIT_PATIENTS);
-		}
-		if (patient.getVoided()) {
-			Context.requirePrivilege(PrivilegeConstants.DELETE_PATIENTS);
-		}
-	}
-
-	private void setPreferredPatientIdentifier(Patient patient) {
-		PatientIdentifier preferredIdentifier = null;
-		PatientIdentifier possiblePreferredId = patient.getPatientIdentifier();
-		if (possiblePreferredId != null && possiblePreferredId.getPreferred() && !possiblePreferredId.getVoided()) {
-			preferredIdentifier = possiblePreferredId;
-		}
-
-		for (PatientIdentifier id : patient.getIdentifiers()) {
-			if (preferredIdentifier == null && !id.getVoided()) {
-				id.setPreferred(true);
-				preferredIdentifier = id;
-				continue;
-			}
-
-			if (!id.equals(preferredIdentifier)) {
-				id.setPreferred(false);
-			}
-		}
-	}
-
-	private void setPreferredPatientName(Patient patient) {
-		PersonName preferredName = null;
-		PersonName possiblePreferredName = patient.getPersonName();
-		if (possiblePreferredName != null && possiblePreferredName.getPreferred() && !possiblePreferredName.getVoided()) {
-			preferredName = possiblePreferredName;
-		}
-
-		for (PersonName name : patient.getNames()) {
-			if (preferredName == null && !name.getVoided()) {
-				name.setPreferred(true);
-				preferredName = name;
-				continue;
-			}
-
-			if (!name.equals(preferredName)) {
-				name.setPreferred(false);
-			}
-		}
-	}
-
-	private void setPreferredPatientAddress(Patient patient) {
-		PersonAddress preferredAddress = null;
-		PersonAddress possiblePreferredAddress = patient.getPersonAddress();
-		if (possiblePreferredAddress != null && possiblePreferredAddress.getPreferred()
-		        && !possiblePreferredAddress.getVoided()) {
-			preferredAddress = possiblePreferredAddress;
-		}
-
-		for (PersonAddress address : patient.getAddresses()) {
-			if (preferredAddress == null && !address.getVoided()) {
-				address.setPreferred(true);
-				preferredAddress = address;
-				continue;
-			}
-
-			if (!address.equals(preferredAddress)) {
-				address.setPreferred(false);
-			}
-		}
 	}
 
 	/**
@@ -287,39 +192,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	@Override
 	@Transactional(readOnly = true)
 	public void checkPatientIdentifiers(Patient patient) throws PatientIdentifierException {
-		// check patient has at least one identifier
-		if (!patient.getVoided() && patient.getActiveIdentifiers().isEmpty()) {
-			throw new InsufficientIdentifiersException("At least one nonvoided Patient Identifier is required");
-		}
-
-		final List<PatientIdentifier> patientIdentifiers = new ArrayList<>(patient.getIdentifiers());
-
-		patientIdentifiers.stream().filter(pi -> !pi.getVoided()).forEach(pi -> {
-			try {
-				PatientIdentifierValidator.validateIdentifier(pi);
-			} catch (BlankIdentifierException bie) {
-				patient.removeIdentifier(pi);
-				throw bie;
-			}
-		});
-
-		checkForMissingRequiredIdentifiers(patientIdentifiers);
-
-	}
-
-	private void checkForMissingRequiredIdentifiers(List<PatientIdentifier> patientIdentifiers) {
-		final Set<PatientIdentifierType> patientIdentifierTypes = patientIdentifiers.stream()
-		        .map(PatientIdentifier::getIdentifierType).collect(Collectors.toSet());
-
-		final List<PatientIdentifierType> requiredTypes = this.getPatientIdentifierTypes(null, null, true, null);
-		final Set<String> missingRequiredTypeNames = requiredTypes.stream()
-		        .filter(requiredType -> !patientIdentifierTypes.contains(requiredType)).map(BaseOpenmrsMetadata::getName)
-		        .collect(Collectors.toSet());
-
-		if (!missingRequiredTypeNames.isEmpty()) {
-			throw new MissingRequiredIdentifierException("Patient is missing the following required identifier(s): "
-			        + String.join(", ", missingRequiredTypeNames));
-		}
+		identifierDelegate.checkPatientIdentifiers(patient);
 	}
 
 	/**
@@ -557,11 +430,6 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 * @param primary the focus of the hash
 	 * @return hash depicting relevant information to avoid duplicates
 	 */
-	private String relationshipHash(Relationship rel, Person primary) {
-		boolean isA = rel.getPersonA().equals(primary);
-		return rel.getRelationshipType().getRelationshipTypeId().toString() + (isA ? "A" : "B")
-		        + (isA ? rel.getPersonB().getPersonId().toString() : rel.getPersonA().getPersonId().toString());
-	}
 
 	/**
 	 * 1) Moves object (encounters/obs) pointing to <code>nonPreferred</code> to <code>preferred</code>
@@ -576,389 +444,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 */
 	@Override
 	public void mergePatients(Patient preferred, Patient notPreferred) throws APIException, SerializationException {
-		log.debug(
-		    "Merging patients: (preferred)" + preferred.getPatientId() + ", (notPreferred) " + notPreferred.getPatientId());
-		if (preferred.getPatientId().equals(notPreferred.getPatientId())) {
-			log.debug("Merge operation cancelled: Cannot merge user" + preferred.getPatientId() + " to self");
-			throw new APIException("Patient.merge.cancelled", new Object[] { preferred.getPatientId() });
-		}
-		requireNoActiveOrderOfSameType(preferred, notPreferred);
-		var mergedData = new PersonMergeLogData();
-		mergeVisits(preferred, notPreferred, mergedData);
-		mergeEncounters(preferred, notPreferred, mergedData);
-		mergeProgramEnrolments(preferred, notPreferred, mergedData);
-		mergeRelationships(preferred, notPreferred, mergedData);
-		mergeObservationsNotContainedInEncounters(preferred, notPreferred, mergedData);
-		mergeIdentifiers(preferred, notPreferred, mergedData);
-
-		mergeNames(preferred, notPreferred, mergedData);
-		mergeAddresses(preferred, notPreferred, mergedData);
-		mergePersonAttributes(preferred, notPreferred, mergedData);
-		mergeGenderInformation(preferred, notPreferred, mergedData);
-		mergeDateOfBirth(preferred, notPreferred, mergedData);
-		mergeDateOfDeath(preferred, notPreferred, mergedData);
-
-		// void the non preferred patient
-		Context.getPatientService().voidPatient(notPreferred, "Merged with patient #" + preferred.getPatientId());
-
-		// void the person associated with not preferred patient
-		Context.getPersonService().voidPerson(notPreferred,
-		    "The patient corresponding to this person has been voided and Merged with patient #" + preferred.getPatientId());
-
-		// associate the Users associated with the not preferred person, to the preferred person.
-		changeUserAssociations(preferred, notPreferred, mergedData);
-
-		// Save the newly update preferred patient
-		// This must be called _after_ voiding the nonPreferred patient so that
-		//  a "Duplicate Identifier" error doesn't pop up.
-		preferred = savePatient(preferred);
-
-		//save the person merge log
-		var personMergeLog = new PersonMergeLog();
-		personMergeLog.setWinner(preferred);
-		personMergeLog.setLoser(notPreferred);
-		personMergeLog.setPersonMergeLogData(mergedData);
-		Context.getPersonService().savePersonMergeLog(personMergeLog);
-	}
-
-	private void requireNoActiveOrderOfSameType(Patient patient1, Patient patient2) {
-		String messageKey = "Patient.merge.cannotHaveSameTypeActiveOrders";
-		List<Order> ordersByPatient1 = Context.getOrderService().getAllOrdersByPatient(patient1);
-		List<Order> ordersByPatient2 = Context.getOrderService().getAllOrdersByPatient(patient2);
-		ordersByPatient1.forEach((Order order1) -> ordersByPatient2.forEach((Order order2) -> {
-			if (order1.isActive() && order2.isActive() && order1.getOrderType().equals(order2.getOrderType())) {
-				Object[] parameters = { patient1.getPatientId(), patient2.getPatientId(), order1.getOrderType() };
-				String message = Context.getMessageSourceService().getMessage(messageKey, parameters, Context.getLocale());
-				log.debug(message);
-				throw new APIException(message);
-			}
-		}));
-	}
-
-	private void mergeProgramEnrolments(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// copy all program enrollments
-		ProgramWorkflowService programService = Context.getProgramWorkflowService();
-		for (PatientProgram pp : programService.getPatientPrograms(notPreferred, null, null, null, null, null, false)) {
-			if (!pp.getVoided()) {
-				pp.setPatient(preferred);
-				log.debug("Moving patientProgram {} to {}", pp.getPatientProgramId(), preferred.getPatientId());
-				PatientProgram persisted = programService.savePatientProgram(pp);
-				mergedData.addMovedProgram(persisted.getUuid());
-			}
-		}
-	}
-
-	private void mergeVisits(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// move all visits, including voided ones (encounters will be handled below)
-		//TODO: this should be a copy, not a move
-
-		VisitService visitService = Context.getVisitService();
-
-		for (Visit visit : visitService.getVisitsByPatient(notPreferred, true, true)) {
-			log.debug("Merging visit {} to {}", visit.getVisitId(), preferred.getPatientId());
-			visit.setPatient(preferred);
-			Visit persisted = visitService.saveVisit(visit);
-			mergedData.addMovedVisit(persisted.getUuid());
-		}
-	}
-
-	private void mergeEncounters(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// change all encounters. This will cascade to obs and orders contained in those encounters
-		// TODO: this should be a copy, not a move
-		EncounterService es = Context.getEncounterService();
-
-		EncounterSearchCriteria notPreferredPatientEncounterSearchCriteria = new EncounterSearchCriteriaBuilder()
-		        .setIncludeVoided(true).setPatient(notPreferred).createEncounterSearchCriteria();
-		for (Encounter e : es.getEncounters(notPreferredPatientEncounterSearchCriteria)) {
-			e.setPatient(preferred);
-			log.debug("Merging encounter " + e.getEncounterId() + " to " + preferred.getPatientId());
-			Encounter persisted = es.saveEncounter(e);
-			mergedData.addMovedEncounter(persisted.getUuid());
-		}
-	}
-
-	private void mergeRelationships(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// copy all relationships
-		PersonService personService = Context.getPersonService();
-		var existingRelationships = new HashSet<String>();
-		// fill in the existing relationships with hashes
-		for (Relationship rel : personService.getRelationshipsByPerson(preferred)) {
-			existingRelationships.add(relationshipHash(rel, preferred));
-		}
-		// iterate over notPreferred's relationships and only copy them if they are needed
-		for (Relationship rel : personService.getRelationshipsByPerson(notPreferred)) {
-			if (!rel.getVoided()) {
-				boolean personAisPreferred = rel.getPersonA().equals(preferred);
-				boolean personAisNotPreferred = rel.getPersonA().equals(notPreferred);
-				boolean personBisPreferred = rel.getPersonB().equals(preferred);
-				boolean personBisNotPreferred = rel.getPersonB().equals(notPreferred);
-				String relHash = relationshipHash(rel, notPreferred);
-
-				if ((personAisPreferred && personBisNotPreferred) || (personBisPreferred && personAisNotPreferred)) {
-					// void this relationship if it's between the preferred and notPreferred patients
-					personService.voidRelationship(rel, "person " + (personAisNotPreferred ? "A" : "B")
-					        + " was merged to person " + (personAisPreferred ? "A" : "B"));
-				} else if (existingRelationships.contains(relHash)) {
-					// void this relationship if it already exists between preferred and the other side
-					personService.voidRelationship(rel,
-					    "person " + (personAisNotPreferred ? "A" : "B") + " was merged and a relationship already exists");
-				} else {
-					// copy this relationship and replace notPreferred with preferred
-					Relationship tmpRel = rel.copy();
-					if (personAisNotPreferred) {
-						tmpRel.setPersonA(preferred);
-					}
-					if (personBisNotPreferred) {
-						tmpRel.setPersonB(preferred);
-					}
-					log.debug("Copying relationship " + rel.getRelationshipId() + " to " + preferred.getPatientId());
-					Relationship persisted = personService.saveRelationship(tmpRel);
-					mergedData.addCreatedRelationship(persisted.getUuid());
-					// void the existing relationship to the notPreferred
-					personService.voidRelationship(rel, "person " + (personAisNotPreferred ? "A" : "B")
-					        + " was merged, relationship copied to #" + tmpRel.getRelationshipId());
-					// add the relationship hash to existing relationships
-					existingRelationships.add(relHash);
-				}
-				mergedData.addVoidedRelationship(rel.getUuid());
-			}
-		}
-	}
-
-	private void mergeObservationsNotContainedInEncounters(Patient preferred, Patient notPreferred,
-	        PersonMergeLogData mergedData) {
-		// move all obs that weren't contained in encounters
-		// TODO: this should be a copy, not a move
-		ObsService obsService = Context.getObsService();
-		for (Obs obs : obsService.getObservationsByPerson(notPreferred)) {
-			if (obs.getEncounter() == null && !obs.getVoided()) {
-				obs.setPerson(preferred);
-				Obs persisted = obsService.saveObs(obs, "Merged from patient #" + notPreferred.getPatientId());
-				mergedData.addMovedIndependentObservation(persisted.getUuid());
-			}
-		}
-	}
-
-	private void mergeIdentifiers(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// move all identifiers
-		// (must be done after all calls to services above so hbm doesn't try to save things prematurely (hacky)
-		for (PatientIdentifier pi : notPreferred.getActiveIdentifiers()) {
-			var tmpIdentifier = new PatientIdentifier();
-			tmpIdentifier.setIdentifier(pi.getIdentifier());
-			tmpIdentifier.setIdentifierType(pi.getIdentifierType());
-			tmpIdentifier.setLocation(pi.getLocation());
-			tmpIdentifier.setPatient(preferred);
-			boolean found = false;
-			for (PatientIdentifier preferredIdentifier : preferred.getIdentifiers()) {
-				if (preferredIdentifier.getIdentifier() != null
-				        && preferredIdentifier.getIdentifier().equals(tmpIdentifier.getIdentifier())
-				        && preferredIdentifier.getIdentifierType() != null
-				        && preferredIdentifier.getIdentifierType().equals(tmpIdentifier.getIdentifierType())) {
-					found = true;
-				}
-			}
-			if (!found) {
-				tmpIdentifier.setIdentifierType(pi.getIdentifierType());
-				tmpIdentifier.setCreator(Context.getAuthenticatedUser());
-				tmpIdentifier.setDateCreated(new Date());
-				tmpIdentifier.setVoided(false);
-				tmpIdentifier.setVoidedBy(null);
-				tmpIdentifier.setVoidReason(null);
-				tmpIdentifier.setUuid(UUID.randomUUID().toString());
-				// we don't want to change the preferred identifier of the preferred patient
-				tmpIdentifier.setPreferred(false);
-				preferred.addIdentifier(tmpIdentifier);
-				mergedData.addCreatedIdentifier(tmpIdentifier.getUuid());
-				log.debug("Merging identifier " + tmpIdentifier.getIdentifier() + " to " + preferred.getPatientId());
-			}
-		}
-	}
-
-	private void mergeDateOfDeath(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		mergedData.setPriorDateOfDeath(preferred.getDeathDate());
-		if (preferred.getDeathDate() == null) {
-			preferred.setDeathDate(notPreferred.getDeathDate());
-		}
-
-		if (preferred.getCauseOfDeath() != null) {
-			mergedData.setPriorCauseOfDeath(preferred.getCauseOfDeath().getUuid());
-		}
-		if (preferred.getCauseOfDeath() == null) {
-			preferred.setCauseOfDeath(notPreferred.getCauseOfDeath());
-		}
-	}
-
-	private void mergeDateOfBirth(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		mergedData.setPriorDateOfBirth(preferred.getBirthdate());
-		mergedData.setPriorDateOfBirthEstimated(preferred.getBirthdateEstimated());
-		if (preferred.getBirthdate() == null
-		        || (preferred.getBirthdateEstimated() && !notPreferred.getBirthdateEstimated())) {
-			preferred.setBirthdate(notPreferred.getBirthdate());
-			preferred.setBirthdateEstimated(notPreferred.getBirthdateEstimated());
-		}
-	}
-
-	private void mergePersonAttributes(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// copy person attributes
-		for (PersonAttribute attr : notPreferred.getAttributes()) {
-			if (!attr.getVoided()) {
-				PersonAttribute tmpAttr = attr.copy();
-				tmpAttr.setPerson(null);
-				tmpAttr.setUuid(UUID.randomUUID().toString());
-				preferred.addAttribute(tmpAttr);
-				mergedData.addCreatedAttribute(tmpAttr.getUuid());
-			}
-		}
-	}
-
-	private void mergeGenderInformation(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// move all other patient info
-		mergedData.setPriorGender(preferred.getGender());
-		if (!"M".equals(preferred.getGender()) && !"F".equals(preferred.getGender())) {
-			preferred.setGender(notPreferred.getGender());
-		}
-	}
-
-	private void mergeNames(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData) {
-		// move all names
-		// (must be done after all calls to services above so hbm doesn't try to save things prematurely (hacky)
-		for (PersonName newName : notPreferred.getNames()) {
-			boolean containsName = false;
-			for (PersonName currentName : preferred.getNames()) {
-				containsName = currentName.equalsContent(newName);
-				if (containsName) {
-					break;
-				}
-			}
-			if (!containsName) {
-				PersonName tmpName = constructTemporaryName(newName);
-				preferred.addName(tmpName);
-				mergedData.addCreatedName(tmpName.getUuid());
-				log.debug("Merging name " + newName.getGivenName() + " to " + preferred.getPatientId());
-			}
-		}
-	}
-
-	private PersonName constructTemporaryName(PersonName newName) {
-		PersonName tmpName = PersonName.newInstance(newName);
-		tmpName.setPersonNameId(null);
-		tmpName.setVoided(false);
-		tmpName.setVoidedBy(null);
-		tmpName.setVoidReason(null);
-		// we don't want to change the preferred name of the preferred patient
-		tmpName.setPreferred(false);
-		tmpName.setUuid(UUID.randomUUID().toString());
-		return tmpName;
-	}
-
-	private void mergeAddresses(Patient preferred, Patient notPreferred, PersonMergeLogData mergedData)
-	        throws SerializationException {
-		// move all addresses
-		// (must be done after all calls to services above so hbm doesn't try to save things prematurely (hacky)
-		for (PersonAddress newAddress : notPreferred.getAddresses()) {
-			boolean containsAddress = false;
-			for (PersonAddress currentAddress : preferred.getAddresses()) {
-				containsAddress = currentAddress.equalsContent(newAddress);
-				if (containsAddress) {
-					break;
-				}
-			}
-			if (!containsAddress) {
-				PersonAddress tmpAddress = (PersonAddress) newAddress.clone();
-				tmpAddress.setPersonAddressId(null);
-				tmpAddress.setVoided(false);
-				tmpAddress.setVoidedBy(null);
-				tmpAddress.setVoidReason(null);
-				tmpAddress.setPreferred(false); // addresses from non-preferred patient shouldn't be marked as preferred
-				tmpAddress.setUuid(UUID.randomUUID().toString());
-				preferred.addAddress(tmpAddress);
-				mergedData.addCreatedAddress(tmpAddress.getUuid());
-				log.debug("Merging address " + newAddress.getPersonAddressId() + " to " + preferred.getPatientId());
-			}
-		}
-
-		// copy person attributes
-		for (PersonAttribute attr : notPreferred.getAttributes()) {
-			if (!attr.getVoided()) {
-				PersonAttribute tmpAttr = attr.copy();
-				tmpAttr.setPerson(null);
-				tmpAttr.setUuid(UUID.randomUUID().toString());
-				preferred.addAttribute(tmpAttr);
-				mergedData.addCreatedAttribute(tmpAttr.getUuid());
-			}
-		}
-
-		// move all other patient info
-		mergedData.setPriorGender(preferred.getGender());
-		if (!"M".equals(preferred.getGender()) && !"F".equals(preferred.getGender())) {
-			preferred.setGender(notPreferred.getGender());
-		}
-
-		mergedData.setPriorDateOfBirth(preferred.getBirthdate());
-		mergedData.setPriorDateOfBirthEstimated(preferred.getBirthdateEstimated());
-		if (preferred.getBirthdate() == null
-		        || (preferred.getBirthdateEstimated() && !notPreferred.getBirthdateEstimated())) {
-			preferred.setBirthdate(notPreferred.getBirthdate());
-			preferred.setBirthdateEstimated(notPreferred.getBirthdateEstimated());
-		}
-		mergedData.setPriorDateOfDeathEstimated(preferred.getDeathdateEstimated());
-		if (preferred.getDeathdateEstimated() == null) {
-			preferred.setDeathdateEstimated(notPreferred.getDeathdateEstimated());
-		}
-
-		mergedData.setPriorDateOfDeath(preferred.getDeathDate());
-		if (preferred.getDeathDate() == null) {
-			preferred.setDeathDate(notPreferred.getDeathDate());
-		}
-
-		if (preferred.getCauseOfDeath() != null) {
-			mergedData.setPriorCauseOfDeath(preferred.getCauseOfDeath().getUuid());
-		}
-		if (preferred.getCauseOfDeath() == null) {
-			preferred.setCauseOfDeath(notPreferred.getCauseOfDeath());
-		}
-
-		// void the non preferred patient
-		Context.getPatientService().voidPatient(notPreferred, "Merged with patient #" + preferred.getPatientId());
-
-		// void the person associated with not preferred patient
-		Context.getPersonService().voidPerson(notPreferred,
-		    "The patient corresponding to this person has been voided and Merged with patient #" + preferred.getPatientId());
-
-		// associate the Users associated with the not preferred person, to the preferred person.
-		changeUserAssociations(preferred, notPreferred, mergedData);
-
-		// Save the newly update preferred patient
-		// This must be called _after_ voiding the nonPreferred patient so that
-		//  a "Duplicate Identifier" error doesn't pop up.
-		preferred = savePatient(preferred);
-
-		//save the person merge log
-		var personMergeLog = new PersonMergeLog();
-		personMergeLog.setWinner(preferred);
-		personMergeLog.setLoser(notPreferred);
-		personMergeLog.setPersonMergeLogData(mergedData);
-		Context.getPersonService().savePersonMergeLog(personMergeLog);
-	}
-
-	/**
-	 * Change user associations for notPreferred to preferred person.
-	 *
-	 * @param preferred
-	 * @param notPreferred
-	 * @param mergedData a patient merge audit data object to update
-	 * @see PatientServiceImpl#mergePatients(Patient, Patient)
-	 */
-	private void changeUserAssociations(Patient preferred, Person notPreferred, PersonMergeLogData mergedData) {
-		UserService userService = Context.getUserService();
-		List<User> users = userService.getUsersByPerson(notPreferred, true);
-		for (User user : users) {
-			user.setPerson(preferred);
-			User persisted = userService.saveUser(user);
-			if (mergedData != null) {
-				mergedData.addMovedUser(persisted.getUuid());
-			}
-		}
+		mergeDelegate.mergePatients(preferred, notPreferred, this);
 	}
 
 	/**
@@ -979,142 +465,12 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 * @throws APIException
 	 */
 	public void exitFromCare(Patient patient, Date dateExited, Concept reasonForExit) throws APIException {
-
-		if (patient == null) {
-			throw new APIException("Patient.invalid.care", (Object[]) null);
-		}
-		if (dateExited == null) {
-			throw new APIException("Patient.no.valid.dateExited", (Object[]) null);
-		}
-		if (reasonForExit == null) {
-			throw new APIException("Patient.no.valid.reasonForExit", (Object[]) null);
-		}
-
-		// need to create an observation to represent this (otherwise how
-		// will we know?)
-		saveReasonForExitObs(patient, dateExited, reasonForExit);
+		identifierDelegate.exitFromCare(patient, dateExited, reasonForExit);
 	}
 
-	/**
-	 * TODO: Patients should actually be allowed to exit multiple times
-	 *
-	 * @param patient
-	 * @param exitDate
-	 * @param cause
-	 */
-	private void saveReasonForExitObs(Patient patient, Date exitDate, Concept cause) throws APIException {
-
-		if (patient == null) {
-			throw new APIException("Patient.null", (Object[]) null);
-		}
-		if (exitDate == null) {
-			throw new APIException("Patient.exit.date.null", (Object[]) null);
-		}
-		if (cause == null) {
-			throw new APIException("Patient.cause.null", (Object[]) null);
-		}
-
-		// need to make sure there is an Obs that represents the patient's
-		// exit
-		log.debug("Patient is exiting, so let's make sure there's an Obs for it");
-
-		String codProp = Context.getAdministrationService().getGlobalProperty("concept.reasonExitedCare");
-		Concept reasonForExit = Context.getConceptService().getConcept(codProp);
-
-		if (reasonForExit == null) {
-			log.debug("Reason for exit is null - should not have gotten here without throwing an error on the form.");
-			return;
-		}
-
-		List<Obs> obssExit = Context.getObsService().getObservationsByPersonAndConcept(patient, reasonForExit);
-		if (obssExit == null) {
-			return;
-		}
-
-		if (obssExit.size() > 1) {
-			log.error("Multiple reasons for exit (" + obssExit.size() + ")?  Shouldn't be...");
-			return;
-		}
-
-		Obs obsExit = getOrCreateReasonForExitObs(obssExit, patient, reasonForExit);
-
-		if (obsExit != null) {
-			// put the right concept and (maybe) text in this obs
-			obsExit.setValueCoded(cause);
-			obsExit.setValueCodedName(cause.getName()); // ABKTODO: presume current locale?
-			obsExit.setObsDatetime(exitDate);
-			Context.getObsService().saveObs(obsExit, "updated by PatientService.saveReasonForExit");
-		}
-	}
-
-	/**
-	 * Returns existing reason-for-exit obs or creates a new one.
-	 */
-	private Obs getOrCreateReasonForExitObs(List<Obs> obssExit, Patient patient, Concept reasonForExit) {
-		if (obssExit.size() == 1) {
-			// already has a reason for exit - let's edit it.
-			log.debug("Already has a reason for exit, so changing it");
-			return obssExit.getFirst();
-		}
-
-		// no reason for exit obs yet, so let's make one
-		log.debug("No reason for exit yet, let's create one.");
-		Obs obsExit = new Obs();
-		obsExit.setPerson(patient);
-		obsExit.setConcept(reasonForExit);
-
-		Location loc = Context.getLocationService().getDefaultLocation();
-		if (loc != null) {
-			obsExit.setLocation(loc);
-		} else {
-			log.error("Could not find a suitable location for which to create this new Obs");
-		}
-		return obsExit;
-	}
-
-	/**
-	 * This is the way to establish that a patient has died. In addition to exiting the patient from
-	 * care (see above), this method will also set the appropriate patient characteristics to indicate
-	 * that they have died, when they died, etc.
-	 *
-	 * @param patient - the patient who has died
-	 * @param dateDied - the declared date/time of the patient's death
-	 * @param causeOfDeath - the concept that corresponds with the reason the patient died
-	 * @param otherReason - in case the causeOfDeath is 'other', a place to store more info
-	 * @throws APIException
-	 */
 	@Override
 	public void processDeath(Patient patient, Date dateDied, Concept causeOfDeath, String otherReason) throws APIException {
-
-		if (patient != null && dateDied != null && causeOfDeath != null) {
-			// set appropriate patient characteristics
-			patient.setDead(true);
-			patient.setDeathDate(dateDied);
-			patient.setCauseOfDeath(causeOfDeath);
-			this.savePatient(patient);
-			saveCauseOfDeathObs(patient, dateDied, causeOfDeath, otherReason);
-
-			// exit from program
-			// first, need to get Concept for "Patient Died"
-			String strPatientDied = Context.getAdministrationService().getGlobalProperty("concept.patientDied");
-			Concept conceptPatientDied = Context.getConceptService().getConcept(strPatientDied);
-
-			if (conceptPatientDied == null) {
-				log.debug("ConceptPatientDied is null");
-			}
-			exitFromCare(patient, dateDied, conceptPatientDied);
-
-		} else {
-			if (patient == null) {
-				throw new APIException("Patient.invalid.dead", (Object[]) null);
-			}
-			if (dateDied == null) {
-				throw new APIException("Patient.no.valid.dateDied", (Object[]) null);
-			}
-			if (causeOfDeath == null) {
-				throw new APIException("Patient.no.valid.causeOfDeath", (Object[]) null);
-			}
-		}
+		identifierDelegate.processDeath(patient, dateDied, causeOfDeath, otherReason, this);
 	}
 
 	/**
@@ -1123,120 +479,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 */
 	@Override
 	public void saveCauseOfDeathObs(Patient patient, Date deathDate, Concept cause, String otherReason) throws APIException {
-
-		if (patient == null) {
-			throw new APIException("Patient.null", (Object[]) null);
-		}
-		if (deathDate == null) {
-			throw new APIException("Patient.death.date.null", (Object[]) null);
-		}
-		if (cause == null) {
-			throw new APIException("Patient.cause.null", (Object[]) null);
-		}
-
-		if (!patient.getDead()) {
-			patient.setDead(true);
-			patient.setDeathDate(deathDate);
-			patient.setCauseOfDeath(cause);
-		}
-
-		log.debug("Patient is dead, so let's make sure there's an Obs for it");
-		// need to make sure there is an Obs that represents the patient's
-		// cause of death, if applicable
-
-		String codProp = Context.getAdministrationService().getGlobalProperty("concept.causeOfDeath");
-
-		Concept causeOfDeath = Context.getConceptService().getConcept(codProp);
-
-		if (causeOfDeath == null) {
-			log.debug("Cause of death is null - should not have gotten here without throwing an error on the form.");
-			return;
-		}
-
-		List<Obs> obssDeath = Context.getObsService().getObservationsByPersonAndConcept(patient, causeOfDeath);
-		if (obssDeath == null) {
-			return;
-		}
-
-		if (obssDeath.size() > 1) {
-			log.error("Multiple causes of death (" + obssDeath.size() + ")?  Shouldn't be...");
-			return;
-		}
-
-		Obs obsDeath = getOrCreateCauseOfDeathObs(obssDeath, patient, causeOfDeath);
-		populateCauseOfDeathObs(obsDeath, patient, otherReason);
-	}
-
-	/**
-	 * Returns existing cause-of-death obs or creates a new one.
-	 */
-	private Obs getOrCreateCauseOfDeathObs(List<Obs> obssDeath, Patient patient, Concept causeOfDeath) {
-		if (obssDeath.size() == 1) {
-			// already has a cause of death - let's edit it.
-			log.debug("Already has a cause of death, so changing it");
-			return obssDeath.getFirst();
-		}
-
-		// no cause of death obs yet, so let's make one
-		log.debug("No cause of death yet, let's create one.");
-		Obs obsDeath = new Obs();
-		obsDeath.setPerson(patient);
-		obsDeath.setConcept(causeOfDeath);
-		Location location = Context.getLocationService().getDefaultLocation();
-		if (location != null) {
-			obsDeath.setLocation(location);
-		} else {
-			log.error("Could not find a suitable location for which to create this new Obs");
-		}
-		return obsDeath;
-	}
-
-	/**
-	 * Populates the cause-of-death obs with the patient's current cause and optional other reason text.
-	 */
-	private void populateCauseOfDeathObs(Obs obsDeath, Patient patient, String otherReason) {
-		// put the right concept and (maybe) text in this obs
-		Concept currCause = patient.getCauseOfDeath();
-		if (currCause == null) {
-			// set to NONE
-			log.debug("Current cause is null, attempting to set to NONE");
-			String noneConcept = Context.getAdministrationService().getGlobalProperty("concept.none");
-			currCause = Context.getConceptService().getConcept(noneConcept);
-		}
-
-		if (currCause == null) {
-			log.debug("Current cause is still null - aborting mission");
-			return;
-		}
-
-		log.debug("Current cause is not null, setting to value_coded");
-		obsDeath.setValueCoded(currCause);
-		obsDeath.setValueCodedName(currCause.getName()); // ABKTODO: presume current locale?
-
-		Date dateDeath = patient.getDeathDate();
-		if (dateDeath == null) {
-			dateDeath = new Date();
-		}
-		obsDeath.setObsDatetime(dateDeath);
-
-		// check if this is an "other" concept - if so, then
-		// we need to add value_text
-		String otherConcept = Context.getAdministrationService().getGlobalProperty("concept.otherNonCoded");
-		Concept conceptOther = Context.getConceptService().getConcept(otherConcept);
-		if (conceptOther != null && conceptOther.equals(currCause)) {
-			// seems like this is an other concept -
-			// let's try to get the "other" field info
-			log.debug("Setting value_text as " + otherReason);
-			obsDeath.setValueText(otherReason);
-		} else if (conceptOther != null) {
-			log.debug("New concept is NOT the OTHER concept, so setting to blank");
-			obsDeath.setValueText("");
-		} else {
-			log.debug("Don't seem to know about an OTHER concept, so deleting value_text");
-			obsDeath.setValueText("");
-		}
-
-		Context.getObsService().saveObs(obsDeath, "updated by PatientService.saveCauseOfDeathObs");
+		identifierDelegate.saveCauseOfDeathObs(patient, deathDate, cause, otherReason);
 	}
 
 	/**
@@ -1636,11 +879,7 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 */
 	@Override
 	public void checkIfPatientIdentifierTypesAreLocked() {
-		String locked = Context.getAdministrationService()
-		        .getGlobalProperty(OpenmrsConstants.GLOBAL_PROPERTY_PATIENT_IDENTIFIER_TYPES_LOCKED, "false");
-		if ("true".equalsIgnoreCase(locked)) {
-			throw new PatientIdentifierTypeLockedException();
-		}
+		identifierDelegate.checkIfPatientIdentifierTypesAreLocked();
 	}
 
 	/**

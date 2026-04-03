@@ -29,17 +29,10 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v6
-      - name: Setup JDK
-        uses: actions/setup-java@v5
+      - name: Setup Java & Maven
+        uses: ./.github/actions/setup-maven
         with:
-          distribution: 'adopt'
-          java-version: ${{ matrix.java-version }}
-      - name: Cache Maven packages
-        uses: actions/cache@v5
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+          java-version: '${{ matrix.java-version }}'
       - name: Install dependencies
         run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version --file pom.xml
       - name: Build with Maven

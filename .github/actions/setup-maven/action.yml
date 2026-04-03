@@ -1,0 +1,28 @@
+name: Setup Maven
+description: Set up a JDK and restore the Maven dependency cache
+
+inputs:
+  java-version:
+    description: Java version to install
+    required: true
+  distribution:
+    description: JDK distribution to install
+    required: false
+    default: temurin
+
+runs:
+  using: composite
+  steps:
+    - name: Set up JDK ${{ inputs.java-version }}
+      uses: actions/setup-java@v5
+      with:
+        distribution: ${{ inputs.distribution }}
+        java-version: ${{ inputs.java-version }}
+
+    - name: Cache Maven dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-

@@ -41,12 +41,10 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v6
-      - name: Setup JDK
-        uses: actions/setup-java@v5
+      - name: Setup Java & Maven
+        uses: ./.github/actions/setup-maven
         with:
-          distribution: 'temurin'
-          java-version: ${{ matrix.java-version }}
-          cache: 'maven'
+          java-version: '${{ matrix.java-version }}'
       - name: Install dependencies
         run: mvn clean install -DskipTests=true -D"maven.javadoc.skip"=true -D"spotbugs.skip"=${{ matrix.java-version != '21' || matrix.platform != 'ubuntu-latest' }} --batch-mode --show-version --file pom.xml
       - name: Test
