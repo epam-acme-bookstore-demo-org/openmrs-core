@@ -91,7 +91,6 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 
 	private static final Logger log = LoggerFactory.getLogger(ConceptServiceImpl.class);
 
-	@Autowired
 	private ConceptDAO dao;
 
 	private static Concept trueConcept;
@@ -126,6 +125,7 @@ public class ConceptServiceImpl extends BaseOpenmrsService implements ConceptSer
 	 * @see org.openmrs.api.ConceptService#setConceptDAO(org.openmrs.api.db.ConceptDAO)
 	 */
 	@Override
+	@Autowired
 	public void setConceptDAO(ConceptDAO dao) {
 		this.dao = dao;
 		// Eagerly initialize delegates with the new DAO for thread safety
