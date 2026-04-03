@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -418,7 +419,7 @@ public class ModuleFactory {
 			return getLoadedModulesMap().values();
 		}
 
-		return List.of();
+		return Collections.emptyList();
 	}
 
 	/**
@@ -455,7 +456,7 @@ public class ModuleFactory {
 			return getStartedModulesMap().values();
 		}
 
-		return List.of();
+		return Collections.emptyList();
 	}
 
 	public static List<Module> getStartedModulesInOrder() {
@@ -801,7 +802,7 @@ public class ModuleFactory {
 	public static Set<ModuleClassLoader> getModuleClassLoadersForPackage(String packageName) {
 		Set<ModuleClassLoader> set = providedPackages.get(packageName);
 		if (set == null) {
-			return Set.of();
+			return Collections.emptySet();
 		} else {
 			return new HashSet<>(set);
 		}
@@ -1354,7 +1355,7 @@ public class ModuleFactory {
 			return classLoaders.values();
 		}
 
-		return List.of();
+		return Collections.emptyList();
 	}
 
 	/**
@@ -1366,7 +1367,7 @@ public class ModuleFactory {
 		// because the OpenMRS classloader depends on this static function, it is weirdly possible for this to get called
 		// as this classfile is loaded, in which case, the static final field can be null.
 		if (moduleClassLoaders == null) {
-			return Map.of();
+			return Collections.emptyMap();
 		}
 
 		return moduleClassLoaders.asMap();
