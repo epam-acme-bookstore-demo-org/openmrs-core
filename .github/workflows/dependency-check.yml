@@ -12,7 +12,7 @@ jobs:
     name: dependencycheck_test
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Java & Maven
         uses: ./.github/actions/setup-maven
         with:
