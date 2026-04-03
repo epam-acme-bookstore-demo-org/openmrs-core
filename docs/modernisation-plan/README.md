@@ -98,6 +98,19 @@ The following documents make up the full modernisation plan:
 | [`06-github-issues.md`](./06-github-issues.md) | GitHub Issues structure, epics, labels, and issue templates for tracking all modernisation work |
 | [`07-code-quality-enhancement.md`](./07-code-quality-enhancement.md) | Structural code quality improvements: god class decomposition, error handling hardening, boolean flag elimination, and complexity reduction (Phase 1.5) |
 
+## Phase tracking
+
+| Phase | Focus | Status |
+| --- | --- | --- |
+| Phase 0 | Foundation | Delivered |
+| Phase 1 | Low-Risk Java Modernisation | In Review |
+| Phase 1.5 | Code Quality Enhancement | Planned |
+| Phase 2 | Container + dev environment | Planned |
+| Phase 3 | Medium-risk Java Modernisation | Planned |
+| Phase 4 | Production infrastructure | Planned |
+| Phase 5 | High-risk cleanup | Planned |
+| Phase 6 | Production migration and go-live | Planned |
+
 ### Supporting reference documents
 
 The following implementation-facing documents now back the Phase 0 foundation work and should be read alongside the planning documents above:

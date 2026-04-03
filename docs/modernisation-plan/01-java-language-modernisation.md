@@ -63,19 +63,20 @@ The exact counts will move over time, but the planning baseline is:
 | Area | Current state | Scope / implication |
 |---|---:|---|
 | Java release target | Java 21 | Build baseline is already correct |
-| `var` adoption | Minimal | Useful readability cleanup remains across most modules |
+| `var` adoption | Done | Delivered in Phase 1 across application modules where the inferred type remains obvious |
 | Records | 0 in production code | Candidate only for DTOs/value carriers, not entities |
 | Sealed classes | 0 | Requires hierarchy-by-hierarchy review |
-| Text blocks | 0 in main code | Good fit for SQL/XML/multi-line literals |
-| Switch expressions | 0 | Low-risk cleanup where `switch` assigns or returns a value |
-| Pattern matching `instanceof` | 0 | High-volume quick win in validators, `equals()`, converters |
+| Text blocks | Done | Delivered in Phase 1 for multiline SQL and other structured literals where it improved readability |
+| Switch expressions | Done | Delivered in Phase 1 for low-risk value-returning and assignment-style `switch` blocks |
+| Pattern matching `instanceof` | Done | Delivered in Phase 1 as a high-volume mechanical cleanup |
 | `java.util.Date` usage | ~268 files in planning inventory; local repo check found 262 direct imports | Multi-sprint migration requiring API boundary strategy |
 | SecurityManager | Present | Must be removed before Java 24-era compatibility becomes urgent |
 | Raw types | ~11 likely files | Targeted cleanup, usually low effort |
 | Stream API | Underused newer methods | Incremental opportunistic cleanup |
-| Collection factories | Underused | Replace verbose immutable collection setup where safe |
+| Collection factories | Done | Delivered in Phase 1 where immutable collection setup could be simplified safely |
 | Optional improvements | Underused | Apply only where it improves clarity |
-| String API improvements | Underused | Straightforward low-risk replacements |
+| String API improvements | Done | Delivered in Phase 1 through safe replacements such as `isBlank()`, `strip()`, and `formatted()` |
+| Try-with-resources improvements | Done | Delivered in Phase 1 through modern resource handling cleanup in application modules |
 | Helpful NPE messages | Available by default on Java 14+ | No migration needed; avoid obscuring them |
 | `HttpClient` | Legacy wrapper still present | Design decision needed before broad replacement |
 
@@ -89,11 +90,27 @@ The modernization gap is real but manageable because it naturally splits into th
 
 The largest single effort is the `java.util.Date` to `java.time` migration in `api`, which should be treated as a dedicated multi-sprint workstream rather than a “cleanup task”.
 
+### Phase 1 Delivery Summary
+
+Phase 1 low-risk Java modernisation has now been delivered on `phase/1-java21-modernisation` and is ready for pull request review.
+
+| Delivery area | Result |
+| --- | --- |
+| Approach | Combined **OpenRewrite `UpgradeToJava21`** automation with targeted manual cleanup to keep the refactor mechanical where possible and selective where readability judgement was needed |
+| Automated delivery | OpenRewrite updated **273 files** across application code, including pattern matching for `instanceof`, switch expressions, text blocks, and safe Java API improvements |
+| Manual delivery | Follow-up cleanup updated **108 `api` files** for `var`, String API improvements, collection factories, and try-with-resources usage; additional manual updates were completed in `web` and `liquibase` |
+| Module coverage | `api`, `web`, and `liquibase` received code changes; `tools`, `test`, `test-suite`, and `webapp` were reviewed and confirmed to have no Java source for Phase 1 scope |
+| Overall change volume | Phase 1 touched **~380 files overall** across the delivered branch |
+| Validation | Compilation was verified successfully |
+| Issue tracking | **12 active issues** moved to **In Review** and **8 module-scoped issues** were closed as **N/A**; Epic **#5** remains **In Progress** |
+
 ---
 
 ## 2. Modernisation Categories and Priorities
 
 ### Priority 1 — High-impact, low-risk
+
+**Status:** Completed on `phase/1-java21-modernisation`; 12 active delivery issues are now in review and 8 module-scoped issues were closed as not applicable because those modules contain no Java source.
 
 These changes are good candidates for incremental, module-by-module PRs. They improve readability and reduce boilerplate without changing architecture.
 
@@ -922,25 +939,26 @@ Goal:
 
 ### Phase 1 — Low-Risk Java Modernisation
 
-- [ ] #19 — Apply pattern matching instanceof — tools module
-- [ ] #16 — Apply pattern matching instanceof — test module
-- [ ] #21 — Apply pattern matching instanceof — liquibase module
-- [ ] #17 — Apply pattern matching instanceof — api module
-- [ ] #20 — Apply pattern matching instanceof — web module
-- [ ] #22 — Apply pattern matching instanceof — webapp module
-- [ ] #18 — Apply pattern matching instanceof — test-suite module
-- [ ] #39 — Adopt var for local variables — tools module
-- [ ] #35 — Adopt var for local variables — test module
-- [ ] #41 — Adopt var for local variables — liquibase module
-- [ ] #36 — Adopt var for local variables — api module
-- [ ] #37 — Adopt var for local variables — web module
-- [ ] #40 — Adopt var for local variables — webapp module
-- [ ] #38 — Adopt var for local variables — test-suite module
-- [ ] #56 — Convert switch statements to switch expressions — all modules
-- [ ] #58 — Adopt text blocks for multi-line strings — all modules
-- [ ] #55 — Adopt String API improvements (isBlank, strip, etc.) — all modules
-- [ ] #54 — Adopt Collections factory methods (List.of, Map.of) — all modules
-- [ ] #53 — Simplify try-with-resources patterns — all modules
+- [x] #19 — Apply pattern matching instanceof — tools module *(N/A: no Java source)*
+- [x] #16 — Apply pattern matching instanceof — test module *(N/A: no Java source)*
+- [x] #21 — Apply pattern matching instanceof — liquibase module
+- [x] #17 — Apply pattern matching instanceof — api module
+- [x] #20 — Apply pattern matching instanceof — web module
+- [x] #22 — Apply pattern matching instanceof — webapp module *(N/A: no Java source)*
+- [x] #18 — Apply pattern matching instanceof — test-suite module *(N/A: no Java source)*
+- [x] #39 — Adopt var for local variables — tools module *(N/A: no Java source)*
+- [x] #35 — Adopt var for local variables — test module *(N/A: no Java source)*
+- [x] #41 — Adopt var for local variables — liquibase module
+- [x] #36 — Adopt var for local variables — api module
+- [x] #37 — Adopt var for local variables — web module
+- [x] #40 — Adopt var for local variables — webapp module *(N/A: no Java source)*
+- [x] #38 — Adopt var for local variables — test-suite module *(N/A: no Java source)*
+- [x] #56 — Convert switch statements to switch expressions — all modules
+- [x] #58 — Adopt text blocks for multi-line strings — all modules
+- [x] #55 — Adopt String API improvements (isBlank, strip, etc.) — all modules
+- [x] #54 — Adopt Collections factory methods (List.of, Map.of) — all modules
+- [x] #53 — Simplify try-with-resources patterns — all modules
+- [x] #57 — Track Phase 1 rollout order and merge readiness
 
 ### Phase 3 — Medium-Risk Java Modernisation
 
