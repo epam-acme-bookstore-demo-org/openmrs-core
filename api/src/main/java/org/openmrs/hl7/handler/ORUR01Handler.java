@@ -658,39 +658,7 @@ public class ORUR01Handler implements Application {
 			} else if ("0".equals(value) || "1".equals(value)) {
 				concept = concept.hydrate(concept.getConceptId().toString());
 				obs.setConcept(concept);
-				if (concept.getDatatype().isBoolean()) {
-					obs.setValueBoolean("1".equals(value));
-				} else if (concept.getDatatype().isNumeric()) {
-					try {
-						obs.setValueNumeric(Double.valueOf(value));
-					} catch (NumberFormatException e) {
-						throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.notnumericConcept",
-						    new Object[] { value, concept.getConceptId(), conceptName.getName(), uid }, null), e);
-					}
-				} else if (concept.getDatatype().isCoded()) {
-					Concept answer = "1".equals(value) ? Context.getConceptService().getTrueConcept()
-					        : Context.getConceptService().getFalseConcept();
-					boolean isValidAnswer = false;
-					Collection<ConceptAnswer> conceptAnswers = concept.getAnswers();
-					if (conceptAnswers != null && !conceptAnswers.isEmpty()) {
-						for (ConceptAnswer conceptAnswer : conceptAnswers) {
-							if (conceptAnswer.getAnswerConcept().getId().equals(answer.getId())) {
-								obs.setValueCoded(answer);
-								isValidAnswer = true;
-								break;
-							}
-						}
-					}
-					//answer the boolean answer concept was't found
-					if (!isValidAnswer) {
-						throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.invalidAnswer",
-						    new Object[] { answer.toString(), uid }, null));
-					}
-				} else {
-					//throw this exception to make sure that the handler doesn't silently ignore bad hl7 message
-					throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.CannotSetBoolean",
-					    new Object[] { obs.getConcept().getConceptId() }, null));
-				}
+				parseNumericBooleanOrCodedValue(obs, concept, conceptName, value, uid);
 			} else {
 				try {
 					obs.setValueNumeric(Double.valueOf(value));
@@ -701,40 +669,7 @@ public class ORUR01Handler implements Application {
 			}
 		} else if ("CWE".equals(hl7Datatype)) {
 			log.debug("  CWE observation");
-			CWE value = (CWE) obx5;
-			String valueIdentifier = value.getIdentifier().getValue();
-			log.debug("    value id = " + valueIdentifier);
-			String valueName = value.getText().getValue();
-			log.debug("    value name = " + valueName);
-			if (isConceptProposal(valueIdentifier)) {
-				if (log.isDebugEnabled()) {
-					log.debug("Proposing concept");
-				}
-				throw new ProposingConceptException(concept, valueName);
-			} else {
-				log.debug("    not proposal");
-				try {
-					Concept valueConcept = getConcept(value, uid);
-					obs.setValueCoded(valueConcept);
-					if (HL7Constants.HL7_LOCAL_DRUG.equals(value.getNameOfAlternateCodingSystem().getValue())) {
-						var valueDrug = new Drug();
-						valueDrug.setDrugId(Integer.valueOf(value.getAlternateIdentifier().getValue()));
-						obs.setValueDrug(valueDrug);
-					} else {
-						ConceptName valueConceptName = getConceptName(value);
-						if (valueConceptName != null) {
-							if (log.isDebugEnabled()) {
-								log.debug("    value concept-name-id = " + valueConceptName.getConceptNameId());
-								log.debug("    value concept-name = " + valueConceptName.getName());
-							}
-							obs.setValueCodedName(valueConceptName);
-						}
-					}
-				} catch (NumberFormatException e) {
-					throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.InvalidConceptId",
-					    new Object[] { valueIdentifier, valueName }, null));
-				}
-			}
+			parseCweObsValue(obs, (CWE) obx5, concept, uid);
 			if (log.isDebugEnabled()) {
 				log.debug("  Done with CWE");
 			}
@@ -744,14 +679,13 @@ public class ORUR01Handler implements Application {
 			String valueName = value.getText().getValue();
 			if (isConceptProposal(valueIdentifier)) {
 				throw new ProposingConceptException(concept, valueName);
-			} else {
-				try {
-					obs.setValueCoded(getConcept(value, uid));
-					obs.setValueCodedName(getConceptName(value));
-				} catch (NumberFormatException e) {
-					throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.InvalidConceptId",
-					    new Object[] { valueIdentifier, valueName }, null));
-				}
+			}
+			try {
+				obs.setValueCoded(getConcept(value, uid));
+				obs.setValueCodedName(getConceptName(value));
+			} catch (NumberFormatException e) {
+				throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.InvalidConceptId",
+				    new Object[] { valueIdentifier, valueName }, null));
 			}
 		} else if ("DT".equals(hl7Datatype)) {
 			DT value = (DT) obx5;
@@ -816,6 +750,85 @@ public class ORUR01Handler implements Application {
 		}
 
 		return obs;
+	}
+
+	private void parseNumericBooleanOrCodedValue(Obs obs, Concept concept, ConceptName conceptName, String value, String uid)
+	        throws HL7Exception {
+		if (concept.getDatatype().isBoolean()) {
+			obs.setValueBoolean("1".equals(value));
+			return;
+		}
+		if (concept.getDatatype().isNumeric()) {
+			try {
+				obs.setValueNumeric(Double.valueOf(value));
+			} catch (NumberFormatException e) {
+				throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.notnumericConcept",
+				    new Object[] { value, concept.getConceptId(), conceptName.getName(), uid }, null), e);
+			}
+			return;
+		}
+		if (concept.getDatatype().isCoded()) {
+			parseCodedBooleanAnswer(obs, concept, value, uid);
+			return;
+		}
+		throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.CannotSetBoolean",
+		    new Object[] { obs.getConcept().getConceptId() }, null));
+	}
+
+	private void parseCodedBooleanAnswer(Obs obs, Concept concept, String value, String uid) throws HL7Exception {
+		Concept answer = "1".equals(value) ? Context.getConceptService().getTrueConcept()
+		        : Context.getConceptService().getFalseConcept();
+		boolean isValidAnswer = false;
+		Collection<ConceptAnswer> conceptAnswers = concept.getAnswers();
+		if (conceptAnswers != null && !conceptAnswers.isEmpty()) {
+			for (ConceptAnswer conceptAnswer : conceptAnswers) {
+				if (conceptAnswer.getAnswerConcept().getId().equals(answer.getId())) {
+					obs.setValueCoded(answer);
+					isValidAnswer = true;
+					break;
+				}
+			}
+		}
+		if (!isValidAnswer) {
+			throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.invalidAnswer",
+			    new Object[] { answer.toString(), uid }, null));
+		}
+	}
+
+	private void parseCweObsValue(Obs obs, CWE value, Concept concept, String uid)
+	        throws HL7Exception, ProposingConceptException {
+		String valueIdentifier = value.getIdentifier().getValue();
+		log.debug("    value id = " + valueIdentifier);
+		String valueName = value.getText().getValue();
+		log.debug("    value name = " + valueName);
+		if (isConceptProposal(valueIdentifier)) {
+			if (log.isDebugEnabled()) {
+				log.debug("Proposing concept");
+			}
+			throw new ProposingConceptException(concept, valueName);
+		}
+		log.debug("    not proposal");
+		try {
+			Concept valueConcept = getConcept(value, uid);
+			obs.setValueCoded(valueConcept);
+			if (HL7Constants.HL7_LOCAL_DRUG.equals(value.getNameOfAlternateCodingSystem().getValue())) {
+				var valueDrug = new Drug();
+				valueDrug.setDrugId(Integer.valueOf(value.getAlternateIdentifier().getValue()));
+				obs.setValueDrug(valueDrug);
+			} else {
+				ConceptName valueConceptName = getConceptName(value);
+				if (valueConceptName != null) {
+					if (log.isDebugEnabled()) {
+						log.debug("    value concept-name-id = " + valueConceptName.getConceptNameId());
+						log.debug("    value concept-name = " + valueConceptName.getName());
+					}
+					obs.setValueCodedName(valueConceptName);
+				}
+			}
+		} catch (NumberFormatException e) {
+			throw new HL7Exception(Context.getMessageSourceService().getMessage("ORUR01.error.InvalidConceptId",
+			    new Object[] { valueIdentifier, valueName }, null));
+		}
 	}
 
 	/**
