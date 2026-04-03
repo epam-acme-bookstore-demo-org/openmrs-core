@@ -20,6 +20,7 @@ import org.openmrs.ProviderAttributeType;
 import org.openmrs.ProviderRole;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.annotation.Handler;
+import org.openmrs.parameter.ProviderSearchCriteria;
 import org.openmrs.util.PrivilegeConstants;
 
 /**
@@ -47,9 +48,21 @@ public interface ProviderService extends OpenmrsService {
 	 * <strong>Should</strong> get all providers that are unretired
 	 *
 	 * @param includeRetired - if true, retired providers are also included
+	 * @deprecated As of 3.0.0, use {@link #getAllProviders()} to get all providers, or
+	 *             {@link #getAllProvidersIncludingRetired()} to include retired providers.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PROVIDERS })
 	public List<Provider> getAllProviders(boolean includeRetired);
+
+	/**
+	 * Gets all providers including retired ones.
+	 *
+	 * @return all providers including retired
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PROVIDERS })
+	public List<Provider> getAllProvidersIncludingRetired();
 
 	/**
 	 * Retires a given Provider
@@ -166,7 +179,9 @@ public interface ProviderService extends OpenmrsService {
 	 * @param attributes
 	 * @param includeRetired
 	 * @return the list of Providers given the query , current page and page length Provider
+	 * @deprecated As of 3.0.0, replaced by {@link #getProviders(ProviderSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PROVIDERS })
 	public List<Provider> getProviders(String query, Integer start, Integer length,
 	        Map<ProviderAttributeType, Object> attributes, boolean includeRetired);
@@ -193,10 +208,22 @@ public interface ProviderService extends OpenmrsService {
 	 * @param length
 	 * @param attributes
 	 * @return the list of Providers given the query , current page and page length Provider
+	 * @deprecated As of 3.0.0, replaced by {@link #getProviders(ProviderSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PROVIDERS })
 	public List<Provider> getProviders(String query, Integer start, Integer length,
 	        Map<ProviderAttributeType, Object> attributes);
+
+	/**
+	 * Get providers matching a variety of (nullable) criteria contained in the parameter object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return the list of matching providers
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PROVIDERS })
+	public List<Provider> getProviders(ProviderSearchCriteria criteria);
 
 	/**
 	 * <p>

@@ -327,9 +327,22 @@ public interface EncounterService extends OpenmrsService {
 	 * @param includeRetired
 	 * @return encounter types list
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, use {@link #getAllEncounterTypes()} to get all encounter types, or
+	 *             {@link #getAllEncounterTypesIncludingRetired()} to include retired types.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_ENCOUNTER_TYPES })
 	public List<EncounterType> getAllEncounterTypes(boolean includeRetired) throws APIException;
+
+	/**
+	 * Get all encounter types including retired ones.
+	 *
+	 * @return all encounter types including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_ENCOUNTER_TYPES })
+	public List<EncounterType> getAllEncounterTypesIncludingRetired() throws APIException;
 
 	/**
 	 * Find Encounter Types with name matching the beginning of the search string. Search strings are
@@ -575,9 +588,30 @@ public interface EncounterService extends OpenmrsService {
 	 * @param includeRetired
 	 * @return List of all encounter roles
 	 * @since 1.9
+	 * @deprecated As of 3.0.0, use {@link #getAllEncounterRoles()} to get non-retired roles, or
+	 *             {@link #getAllEncounterRolesIncludingRetired()} to include retired roles.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_ENCOUNTER_ROLES })
 	public List<EncounterRole> getAllEncounterRoles(boolean includeRetired);
+
+	/**
+	 * Get all non-retired encounter roles.
+	 *
+	 * @return List of non-retired encounter roles
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_ENCOUNTER_ROLES })
+	public List<EncounterRole> getAllEncounterRoles();
+
+	/**
+	 * Get all encounter roles including retired ones.
+	 *
+	 * @return List of all encounter roles including retired
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_ENCOUNTER_ROLES })
+	public List<EncounterRole> getAllEncounterRolesIncludingRetired();
 
 	/**
 	 * Get EncounterRole by its UUID

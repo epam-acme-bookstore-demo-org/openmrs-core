@@ -68,8 +68,18 @@ public class ProviderServiceImpl extends BaseOpenmrsService implements ProviderS
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<Provider> getAllProviders(boolean includeRetired) {
 		return dao.getAllProviders(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.ProviderService#getAllProvidersIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Provider> getAllProvidersIncludingRetired() {
+		return dao.getAllProviders(true);
 	}
 
 	/**

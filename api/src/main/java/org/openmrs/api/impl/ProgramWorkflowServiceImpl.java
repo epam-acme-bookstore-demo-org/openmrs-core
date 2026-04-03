@@ -166,8 +166,18 @@ public class ProgramWorkflowServiceImpl extends BaseOpenmrsService implements Pr
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<Program> getAllPrograms(boolean includeRetired) throws APIException {
 		return dao.getAllPrograms(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.ProgramWorkflowService#getAllProgramsIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Program> getAllProgramsIncludingRetired() throws APIException {
+		return dao.getAllPrograms(true);
 	}
 
 	/**

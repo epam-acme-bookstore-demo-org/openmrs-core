@@ -19,6 +19,7 @@ import org.openmrs.LocationAttributeType;
 import org.openmrs.LocationTag;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.db.LocationDAO;
+import org.openmrs.parameter.LocationSearchCriteria;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.PrivilegeConstants;
 
@@ -140,9 +141,22 @@ public interface LocationService extends OpenmrsService {
 	 * <strong>Should</strong> return only unretired locations when includeRetires is false
 	 *
 	 * @param includeRetired whether or not to include retired locations
+	 * @deprecated As of 3.0.0, use {@link #getAllLocations()} to get all locations, or
+	 *             {@link #getAllLocationsIncludingRetired()} to include retired locations.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_LOCATIONS })
 	public List<Location> getAllLocations(boolean includeRetired) throws APIException;
+
+	/**
+	 * Returns all locations including retired ones.
+	 *
+	 * @return all locations including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_LOCATIONS })
+	public List<Location> getAllLocationsIncludingRetired() throws APIException;
 
 	/**
 	 * Returns locations that match the beginning of the given string. A null list will never be
@@ -172,11 +186,24 @@ public interface LocationService extends OpenmrsService {
 	 * @param length the number of matching locations to return
 	 * @return the list of locations
 	 * @since 1.10
+	 * @deprecated As of 3.0.0, replaced by {@link #getLocations(LocationSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_LOCATIONS })
 	public List<Location> getLocations(String nameFragment, Location parent,
 	        Map<LocationAttributeType, Object> attributeValues, boolean includeRetired, Integer start, Integer length)
 	        throws APIException;
+
+	/**
+	 * Get locations matching a variety of (nullable) criteria contained in the parameter object.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return the list of locations matching the criteria
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_LOCATIONS })
+	public List<Location> getLocations(LocationSearchCriteria criteria) throws APIException;
 
 	/**
 	 * Returns locations that contain the given tag.
@@ -313,9 +340,22 @@ public interface LocationService extends OpenmrsService {
 	 *
 	 * @param includeRetired whether or not to include retired location tags
 	 * @since 1.5
+	 * @deprecated As of 3.0.0, use {@link #getAllLocationTags()} to get all location tags, or
+	 *             {@link #getAllLocationTagsIncludingRetired()} to include retired tags.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_LOCATIONS })
 	public List<LocationTag> getAllLocationTags(boolean includeRetired) throws APIException;
+
+	/**
+	 * Returns all location tags including retired ones.
+	 *
+	 * @return all location tags including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_LOCATIONS })
+	public List<LocationTag> getAllLocationTagsIncludingRetired() throws APIException;
 
 	/**
 	 * Returns location tags that match the beginning of the given string. A null list will never be

@@ -61,6 +61,7 @@ import org.openmrs.api.db.PatientDAO;
 import org.openmrs.api.db.hibernate.HibernateUtil;
 import org.openmrs.parameter.EncounterSearchCriteria;
 import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
+import org.openmrs.parameter.PatientSearchCriteria;
 import org.openmrs.patient.IdentifierValidator;
 import org.openmrs.patient.impl.LuhnIdentifierValidator;
 import org.openmrs.person.PersonMergeLog;
@@ -253,8 +254,18 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<Patient> getAllPatients(boolean includeVoided) throws APIException {
 		return dao.getAllPatients(includeVoided);
+	}
+
+	/**
+	 * @see org.openmrs.api.PatientService#getAllPatientsIncludingVoided()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Patient> getAllPatientsIncludingVoided() throws APIException {
+		return dao.getAllPatients(true);
 	}
 
 	/**
@@ -400,8 +411,18 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<PatientIdentifierType> getAllPatientIdentifierTypes(boolean includeRetired) throws APIException {
 		return dao.getAllPatientIdentifierTypes(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.PatientService#getAllPatientIdentifierTypesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<PatientIdentifierType> getAllPatientIdentifierTypesIncludingRetired() throws APIException {
+		return dao.getAllPatientIdentifierTypes(true);
 	}
 
 	/**
@@ -1650,6 +1671,16 @@ public class PatientServiceImpl extends BaseOpenmrsService implements PatientSer
 	@Override
 	public List<Class<?>> getRefTypes() {
 		return Arrays.asList(PatientIdentifier.class, PatientIdentifierType.class, Patient.class, Allergy.class);
+	}
+
+	/**
+	 * @see org.openmrs.api.PatientService#getPatients(PatientSearchCriteria)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Patient> getPatients(PatientSearchCriteria criteria) throws APIException {
+		return this.getPatients(criteria.name(), criteria.identifier(), criteria.identifierTypes(),
+		    criteria.matchIdentifierExactly(), criteria.start(), criteria.length());
 	}
 
 }

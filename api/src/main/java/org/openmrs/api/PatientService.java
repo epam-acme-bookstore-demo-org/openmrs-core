@@ -24,6 +24,7 @@ import org.openmrs.PatientProgram;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.db.PatientDAO;
 import org.openmrs.comparator.PatientIdentifierTypeDefaultComparator;
+import org.openmrs.parameter.PatientSearchCriteria;
 import org.openmrs.patient.IdentifierValidator;
 import org.openmrs.person.PersonMergeLogData;
 import org.openmrs.serialization.SerializationException;
@@ -143,9 +144,22 @@ public interface PatientService extends OpenmrsService {
 	 * @param includeVoided if false, will limit the search to non-voided patients
 	 * @return patients in the system
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, use {@link #getAllPatients()} to get non-voided patients, or
+	 *             {@link #getAllPatientsIncludingVoided()} to include voided patients.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PATIENTS })
 	public List<Patient> getAllPatients(boolean includeVoided) throws APIException;
+
+	/**
+	 * Returns all patients in the system, including voided ones.
+	 *
+	 * @return all patients in the system including voided
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PATIENTS })
+	public List<Patient> getAllPatientsIncludingVoided() throws APIException;
 
 	/**
 	 * Get patients based on given criteria The identifier is matched with the regex
@@ -179,7 +193,9 @@ public interface PatientService extends OpenmrsService {
 	 * @return patients that matched the given criteria (and are not voided)
 	 * @throws APIException is null exactly equals false and if <code>name</code> argument is null
 	 *             equals true and if <code>name</code> argument is null
+	 * @deprecated As of 3.0.0, replaced by {@link #getPatients(PatientSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PATIENTS })
 	public List<Patient> getPatients(String name, String identifier, List<PatientIdentifierType> identifierTypes,
 	        boolean matchIdentifierExactly) throws APIException;
@@ -303,9 +319,24 @@ public interface PatientService extends OpenmrsService {
 	 * @param includeRetired true/false whether retired types should be included
 	 * @return patientIdentifier types list
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, use {@link #getAllPatientIdentifierTypes()} to get non-retired types, or
+	 *             {@link #getAllPatientIdentifierTypesIncludingRetired()} to include retired types.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_IDENTIFIER_TYPES })
 	public List<PatientIdentifierType> getAllPatientIdentifierTypes(boolean includeRetired) throws APIException;
+
+	/**
+	 * Get all patientIdentifier types, including retired ones.
+	 * <p>
+	 * Ordered same as {@link PatientIdentifierTypeDefaultComparator}.
+	 *
+	 * @return patientIdentifier types list including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_IDENTIFIER_TYPES })
+	public List<PatientIdentifierType> getAllPatientIdentifierTypesIncludingRetired() throws APIException;
 
 	/**
 	 * Get all patientIdentifier types that match the given criteria
@@ -917,10 +948,25 @@ public interface PatientService extends OpenmrsService {
 	 * @return patients that matched the given criteria (and are not voided)
 	 * @throws APIException
 	 * @since 1.8
+	 * @deprecated As of 3.0.0, replaced by {@link #getPatients(PatientSearchCriteria)}
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PATIENTS })
 	public List<Patient> getPatients(String name, String identifier, List<PatientIdentifierType> identifierTypes,
 	        boolean matchIdentifierExactly, Integer start, Integer length) throws APIException;
+
+	/**
+	 * Get patients matching a variety of (nullable) criteria contained in the parameter object. All
+	 * parameters are optional and nullable. If null, they are not included in the search. Will not
+	 * return voided patients.
+	 *
+	 * @param criteria the object containing search parameters
+	 * @return patients that matched the given criteria (and are not voided)
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PATIENTS })
+	public List<Patient> getPatients(PatientSearchCriteria criteria) throws APIException;
 
 	/**
 	 * Check if patient identifier types are locked, and if they are, throws an exception during

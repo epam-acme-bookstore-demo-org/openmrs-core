@@ -237,9 +237,22 @@ public interface PersonService extends OpenmrsService {
 	 * @param includeRetired boolean - include retired attribute types as well?
 	 * @return List&lt;PersonAttributeType&gt; object of all PersonAttributeTypes, possibly including
 	 *         retired ones
+	 * @deprecated As of 3.0.0, use {@link #getAllPersonAttributeTypes()} to get all attribute types, or
+	 *             {@link #getAllPersonAttributeTypesIncludingRetired()} to include retired types.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PERSON_ATTRIBUTE_TYPES })
 	public List<PersonAttributeType> getAllPersonAttributeTypes(boolean includeRetired) throws APIException;
+
+	/**
+	 * Get all PersonAttributeTypes including retired ones.
+	 *
+	 * @return List of all PersonAttributeType objects including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PERSON_ATTRIBUTE_TYPES })
+	public List<PersonAttributeType> getAllPersonAttributeTypesIncludingRetired() throws APIException;
 
 	/**
 	 * Find person attribute types matching the given parameters. Retired types are included in the
@@ -474,9 +487,22 @@ public interface PersonService extends OpenmrsService {
 	 * @param includeRetired boolean - include retired relationshipTypes as well?
 	 * @return relationshipType list
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, use {@link #getAllRelationshipTypes()} to get non-retired types, or
+	 *             {@link #getAllRelationshipTypesIncludingRetired()} to include retired types.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_RELATIONSHIP_TYPES })
 	public List<RelationshipType> getAllRelationshipTypes(boolean includeRetired) throws APIException;
+
+	/**
+	 * Get all relationshipTypes including retired ones.
+	 *
+	 * @return all relationshipTypes including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_RELATIONSHIP_TYPES })
+	public List<RelationshipType> getAllRelationshipTypesIncludingRetired() throws APIException;
 
 	/**
 	 * Get relationshipType by internal identifier

@@ -176,8 +176,18 @@ public class CohortServiceImpl extends BaseOpenmrsService implements CohortServi
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<Cohort> getAllCohorts(boolean includeVoided) throws APIException {
 		return dao.getAllCohorts(includeVoided);
+	}
+
+	/**
+	 * @see org.openmrs.api.CohortService#getAllCohortsIncludingVoided()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Cohort> getAllCohortsIncludingVoided() throws APIException {
+		return dao.getAllCohorts(true);
 	}
 
 	/**

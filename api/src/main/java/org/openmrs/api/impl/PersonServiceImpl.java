@@ -113,8 +113,18 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<PersonAttributeType> getAllPersonAttributeTypes(boolean includeRetired) throws APIException {
 		return dao.getAllPersonAttributeTypes(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.PersonService#getAllPersonAttributeTypesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<PersonAttributeType> getAllPersonAttributeTypesIncludingRetired() throws APIException {
+		return dao.getAllPersonAttributeTypes(true);
 	}
 
 	/**
@@ -941,8 +951,18 @@ public class PersonServiceImpl extends BaseOpenmrsService implements PersonServi
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<RelationshipType> getAllRelationshipTypes(boolean includeRetired) throws APIException {
 		return dao.getAllRelationshipTypes(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.PersonService#getAllRelationshipTypesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<RelationshipType> getAllRelationshipTypesIncludingRetired() throws APIException {
+		return dao.getAllRelationshipTypes(true);
 	}
 
 	/**

@@ -121,9 +121,22 @@ public interface ProgramWorkflowService extends OpenmrsService {
 	 * @param includeRetired whether or not to include retired programs
 	 * @return List&lt;Program&gt; all existing programs, including retired based on the input parameter
 	 * @throws APIException
+	 * @deprecated As of 3.0.0, use {@link #getAllPrograms()} to get all programs, or
+	 *             {@link #getAllProgramsIncludingRetired()} to include retired programs.
 	 */
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	@Authorized({ PrivilegeConstants.GET_PROGRAMS })
 	public List<Program> getAllPrograms(boolean includeRetired) throws APIException;
+
+	/**
+	 * Returns all programs including retired ones.
+	 *
+	 * @return all programs including retired
+	 * @throws APIException
+	 * @since 3.0.0
+	 */
+	@Authorized({ PrivilegeConstants.GET_PROGRAMS })
+	public List<Program> getAllProgramsIncludingRetired() throws APIException;
 
 	/**
 	 * Returns programs that match the given string. A null list will never be returned. An empty list

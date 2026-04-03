@@ -578,8 +578,18 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<EncounterType> getAllEncounterTypes(boolean includeRetired) throws APIException {
 		return dao.getAllEncounterTypes(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.EncounterService#getAllEncounterTypesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<EncounterType> getAllEncounterTypesIncludingRetired() throws APIException {
+		return dao.getAllEncounterTypes(true);
 	}
 
 	/**
@@ -781,8 +791,27 @@ public class EncounterServiceImpl extends BaseOpenmrsService implements Encounte
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<EncounterRole> getAllEncounterRoles(boolean includeRetired) {
 		return dao.getAllEncounterRoles(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.EncounterService#getAllEncounterRoles()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<EncounterRole> getAllEncounterRoles() {
+		return dao.getAllEncounterRoles(false);
+	}
+
+	/**
+	 * @see org.openmrs.api.EncounterService#getAllEncounterRolesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<EncounterRole> getAllEncounterRolesIncludingRetired() {
+		return dao.getAllEncounterRoles(true);
 	}
 
 	/**

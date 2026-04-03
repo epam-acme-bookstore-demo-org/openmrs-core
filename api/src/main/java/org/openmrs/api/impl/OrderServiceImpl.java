@@ -788,8 +788,25 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	 * @see org.openmrs.api.OrderService#getCareSettings(boolean)
 	 */
 	@Override
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<CareSetting> getCareSettings(boolean includeRetired) {
 		return dao.getCareSettings(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.OrderService#getCareSettings()
+	 */
+	@Override
+	public List<CareSetting> getCareSettings() {
+		return dao.getCareSettings(false);
+	}
+
+	/**
+	 * @see org.openmrs.api.OrderService#getCareSettingsIncludingRetired()
+	 */
+	@Override
+	public List<CareSetting> getCareSettingsIncludingRetired() {
+		return dao.getCareSettings(true);
 	}
 
 	/**
@@ -820,8 +837,25 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	 * @see OrderService#getOrderFrequencies(boolean)
 	 */
 	@Override
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<OrderFrequency> getOrderFrequencies(boolean includeRetired) {
 		return dao.getOrderFrequencies(includeRetired);
+	}
+
+	/**
+	 * @see OrderService#getOrderFrequencies()
+	 */
+	@Override
+	public List<OrderFrequency> getOrderFrequencies() {
+		return dao.getOrderFrequencies(false);
+	}
+
+	/**
+	 * @see OrderService#getOrderFrequenciesIncludingRetired()
+	 */
+	@Override
+	public List<OrderFrequency> getOrderFrequenciesIncludingRetired() {
+		return dao.getOrderFrequencies(true);
 	}
 
 	/**
@@ -1013,8 +1047,27 @@ public class OrderServiceImpl extends BaseOpenmrsService implements OrderService
 	 */
 	@Override
 	@Transactional(readOnly = true)
+	@Deprecated(since = "3.0.0", forRemoval = true)
 	public List<OrderType> getOrderTypes(boolean includeRetired) {
 		return dao.getOrderTypes(includeRetired);
+	}
+
+	/**
+	 * @see org.openmrs.api.OrderService#getOrderTypes()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<OrderType> getOrderTypes() {
+		return dao.getOrderTypes(false);
+	}
+
+	/**
+	 * @see org.openmrs.api.OrderService#getOrderTypesIncludingRetired()
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<OrderType> getOrderTypesIncludingRetired() {
+		return dao.getOrderTypes(true);
 	}
 
 	/**
