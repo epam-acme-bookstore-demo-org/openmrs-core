@@ -38,11 +38,11 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
     networkRuleBypassOptions: 'AzureServices'
     policies: {
       quarantinePolicy: {
-        status: 'disabled'
+        status: skuName == 'Premium' ? 'enabled' : 'disabled'
       }
       trustPolicy: {
         type: 'Notary'
-        status: 'disabled'
+        status: skuName == 'Premium' ? 'enabled' : 'disabled'
       }
       retentionPolicy: {
         days: 7

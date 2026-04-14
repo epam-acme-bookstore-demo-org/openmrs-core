@@ -13,7 +13,7 @@ param environmentName string = 'prod'
 param imageRepository string = 'openmrs-core'
 
 @description('Container image tag.')
-param imageTag string = 'latest'
+param imageTag string
 
 @description('Database admin username.')
 param dbAdminUsername string = 'openmrsadmin'
@@ -27,10 +27,9 @@ param dbName string = 'openmrs'
 
 @description('Database engine selection.')
 @allowed([
-  'MySQL'
-  'MariaDB'
+  'PostgreSQL'
 ])
-param databaseEngine string = 'MySQL'
+param databaseEngine string = 'PostgreSQL'
 
 @description('Virtual network CIDR.')
 param vnetAddressPrefix string = '10.0.0.0/16'
@@ -59,7 +58,7 @@ var logAnalyticsName = 'law-${workloadName}-${environmentName}'
 var containerRegistryName = toLower(replace('acr${workloadName}${environmentName}', '-', ''))
 var managedEnvironmentName = 'acae-${workloadName}-${environmentName}'
 var containerAppName = 'aca-${workloadName}-${environmentName}'
-var mysqlServerName = 'mysql-${workloadName}-${environmentName}'
+var postgresqlServerName = 'pgsql-${workloadName}-${environmentName}'
 var vnetName = 'vnet-${workloadName}-${environmentName}'
 var acaNsgName = 'nsg-${workloadName}-${environmentName}-aca'
 var appgwNsgName = 'nsg-${workloadName}-${environmentName}-appgw'
@@ -67,6 +66,8 @@ var dbNsgName = 'nsg-${workloadName}-${environmentName}-db'
 var mgmtNsgName = 'nsg-${workloadName}-${environmentName}-mgmt'
 var acrPrivateEndpointName = 'pep-${workloadName}-${environmentName}-acr'
 var dbPrivateEndpointName = 'pep-${workloadName}-${environmentName}-db'
+var keyVaultName = 'kv-${workloadName}-${environmentName}'
+var keyVaultPrivateEndpointName = 'pep-${workloadName}-${environmentName}-kv'
 var appGatewayName = 'agw-${workloadName}-${environmentName}'
 var appGatewayPipName = 'pip-${workloadName}-${environmentName}-agw'
 
@@ -117,12 +118,13 @@ module database '../../modules/database.bicep' = {
   name: 'databaseDeploy'
   params: {
     location: location
-    serverName: mysqlServerName
+    serverName: postgresqlServerName
     databaseEngine: databaseEngine
     databaseName: dbName
     administratorLogin: dbAdminUsername
     administratorPassword: dbAdminPassword
     skuName: 'Standard_D2ds_v4'
+    storageSizeGB: 64
     publicNetworkAccess: 'Disabled'
     enablePrivateEndpoint: true
     privateEndpointSubnetId: vnet.outputs.mgmtSubnetId
@@ -171,6 +173,22 @@ module appGateway '../../modules/app-gateway.bicep' = {
   }
 }
 
+module keyVault '../../modules/key-vault.bicep' = {
+  name: 'keyVaultDeploy'
+  params: {
+    location: location
+    keyVaultName: keyVaultName
+    skuName: 'standard'
+    enablePurgeProtection: true
+    publicNetworkAccess: 'Disabled'
+    enablePrivateEndpoint: true
+    privateEndpointSubnetId: vnet.outputs.mgmtSubnetId
+    privateEndpointName: keyVaultPrivateEndpointName
+    secretsOfficerPrincipalId: containerApp.outputs.containerAppPrincipalId
+  }
+}
+
 output applicationGatewayPublicIp string = appGateway.outputs.publicIpAddress
 output registryLoginServer string = acr.outputs.loginServer
 output dbServerFqdn string = database.outputs.fqdn
+output keyVaultUri string = keyVault.outputs.keyVaultUri
