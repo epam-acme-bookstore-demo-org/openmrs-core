@@ -35,6 +35,7 @@ param privateEndpointSubnetId string = ''
 param privateEndpointName string = ''
 
 @description('Object ID of the principal that should have secrets access.')
+@secure()
 param secretsOfficerPrincipalId string = ''
 
 resource kv 'Microsoft.KeyVault/vaults@2023-07-01' = {

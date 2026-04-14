@@ -125,7 +125,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2023-11-01' = {
           requestTimeout: 30
           pickHostNameFromBackendAddress: true
           probe: {
-            id: resourceId('Microsoft.Network/applicationGateways/probes', appGateway.name, 'probe-openmrs')
+            id: resourceId('Microsoft.Network/applicationGateways/probes', appGatewayName, 'probe-openmrs')
           }
         }
       }
@@ -135,10 +135,10 @@ resource appGateway 'Microsoft.Network/applicationGateways@2023-11-01' = {
         name: 'listener-http'
         properties: {
           frontendIPConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', appGateway.name, 'feip-openmrs')
+            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', appGatewayName, 'feip-openmrs')
           }
           frontendPort: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', appGateway.name, 'fp-http')
+            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', appGatewayName, 'fp-http')
           }
           protocol: 'Http'
         }
@@ -147,14 +147,14 @@ resource appGateway 'Microsoft.Network/applicationGateways@2023-11-01' = {
         name: 'listener-https'
         properties: {
           frontendIPConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', appGateway.name, 'feip-openmrs')
+            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', appGatewayName, 'feip-openmrs')
           }
           frontendPort: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', appGateway.name, 'fp-https')
+            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', appGatewayName, 'fp-https')
           }
           protocol: 'Https'
           sslCertificate: {
-            id: resourceId('Microsoft.Network/applicationGateways/sslCertificates', appGateway.name, 'ssl-openmrs')
+            id: resourceId('Microsoft.Network/applicationGateways/sslCertificates', appGatewayName, 'ssl-openmrs')
           }
         }
       }
@@ -166,10 +166,10 @@ resource appGateway 'Microsoft.Network/applicationGateways@2023-11-01' = {
           ruleType: 'Basic'
           priority: 100
           httpListener: {
-            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', appGateway.name, 'listener-http')
+            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', appGatewayName, 'listener-http')
           }
           redirectConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways/redirectConfigurations', appGateway.name, 'redirect-https')
+            id: resourceId('Microsoft.Network/applicationGateways/redirectConfigurations', appGatewayName, 'redirect-https')
           }
         }
       }
@@ -179,13 +179,13 @@ resource appGateway 'Microsoft.Network/applicationGateways@2023-11-01' = {
           ruleType: 'Basic'
           priority: 110
           httpListener: {
-            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', appGateway.name, 'listener-https')
+            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', appGatewayName, 'listener-https')
           }
           backendAddressPool: {
-            id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', appGateway.name, 'be-openmrs')
+            id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', appGatewayName, 'be-openmrs')
           }
           backendHttpSettings: {
-            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', appGateway.name, 'bhs-openmrs')
+            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', appGatewayName, 'bhs-openmrs')
           }
         }
       }
@@ -196,7 +196,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2023-11-01' = {
         properties: {
           redirectType: 'Permanent'
           targetListener: {
-            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', appGateway.name, 'listener-https')
+            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', appGatewayName, 'listener-https')
           }
           includePath: true
           includeQueryString: true
