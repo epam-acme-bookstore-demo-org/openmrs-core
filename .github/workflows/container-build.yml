@@ -1,0 +1,134 @@
+# Container build, scan, and push workflow for OpenMRS Core.
+# Builds a multi-platform Docker image, scans it with Trivy, and pushes
+# to GitHub Container Registry (GHCR).
+#
+# Triggers:
+#   - push to master (container-related paths)
+#   - semver tags (v*)
+#   - PRs to master (container-related paths) — build-only, no push
+#   - manual dispatch
+#
+# Addresses: #69 (container build), #65 (vulnerability scanning),
+#            #73 (multi-platform builds)
+
+name: Container Build
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+    paths:
+      - 'Dockerfile'
+      - 'docker-pom.xml'
+      - 'startup*.sh'
+      - 'wait-for-it.sh'
+      - '.github/workflows/container-build.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'Dockerfile'
+      - 'docker-pom.xml'
+      - 'startup*.sh'
+      - 'wait-for-it.sh'
+      - '.github/workflows/container-build.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # ──────────────────────────────────────────────
+  # 1. Build (and push on non-PR events)
+  # ──────────────────────────────────────────────
+  build:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      image-digest: ${{ steps.build-push.outputs.digest }}
+      image-tag: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up QEMU (multi-platform)
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,prefix=
+
+      - name: Build and push
+        id: build-push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ github.event_name != 'pull_request' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VCS_REF=${{ github.sha }}
+            VERSION=${{ steps.meta.outputs.version }}
+
+  # ──────────────────────────────────────────────
+  # 2. Vulnerability scan with Trivy
+  # ──────────────────────────────────────────────
+  scan:
+    name: Trivy Vulnerability Scan
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: '${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.image-digest }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
