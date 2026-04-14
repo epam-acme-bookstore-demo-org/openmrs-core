@@ -1,0 +1,52 @@
+# docker-compose.test.yml — CI integration testing
+# Usage: docker compose -f docker-compose.yml -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from test
+version: "3.7"
+
+services:
+  db:
+    # Inherits from docker-compose.yml
+    environment:
+      MARIADB_DATABASE: openmrs_test
+      MARIADB_USER: openmrs_test
+      MARIADB_PASSWORD: test_password
+      MARIADB_ROOT_PASSWORD: test_root_password
+
+  api:
+    # Inherits from docker-compose.yml
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      OMRS_DB_NAME: openmrs_test
+      OMRS_DB_USERNAME: openmrs_test
+      OMRS_DB_PASSWORD: test_password
+      OMRS_ADMIN_USER_PASSWORD: Test123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs/health/alive"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 3m
+
+  test:
+    image: curlimages/curl:latest
+    depends_on:
+      api:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "=== OpenMRS Smoke Tests ==="
+        echo "1. Health check..."
+        curl -sf http://api:8080/openmrs/health/alive || exit 1
+        echo " PASS"
+
+        echo "2. Login page..."
+        curl -sf -o /dev/null -w "%{http_code}" http://api:8080/openmrs/login.htm | grep -q "200" || exit 1
+        echo " PASS"
+
+        echo "3. REST API..."
+        curl -sf -u admin:Test123 http://api:8080/openmrs/ws/rest/v1/session | grep -q "authenticated" || exit 1
+        echo " PASS"
+
+        echo "=== All smoke tests passed ==="
