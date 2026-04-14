@@ -9,10 +9,11 @@ This directory contains Infrastructure-as-Code for deploying OpenMRS Core on Azu
 
 ### Dev
 - Azure Container Registry (Basic)
+- Azure Key Vault (Standard)
 - Log Analytics workspace
 - Azure Container Apps Environment (Consumption)
 - Azure Container App (public ingress)
-- Azure Database for MySQL Flexible Server (public access)
+- Azure Database for PostgreSQL Flexible Server (public access)
 
 ### Prod
 - Everything in dev, plus:
@@ -23,6 +24,7 @@ This directory contains Infrastructure-as-Code for deploying OpenMRS Core on Azu
   - `mgmt-subnet` `10.0.4.0/24`
 - NSGs applied per subnet
 - Private endpoints for ACR and database
+- Azure Key Vault with private endpoint
 - Application Gateway WAF_v2 as ingress
 - ACA internal ingress only
 
@@ -34,8 +36,11 @@ This directory contains Infrastructure-as-Code for deploying OpenMRS Core on Azu
   - **Contributor** on target resource group
   - **User Access Administrator** (or Owner) for role assignments (AcrPull)
   - Networking permissions for VNET, NSG, private endpoints, and Application Gateway
-- A database admin password provided at deploy time via environment variable:
+- Deployment-time inputs:
   - `OPENMRS_DB_ADMIN_PASSWORD`
+  - `imageTag` set in the environment `.bicepparam` file or provided as an explicit deployment override
+
+Both `OPENMRS_DB_ADMIN_PASSWORD` and `imageTag` are required. There is no default `latest` deployment tag.
 
 ## Layout
 
@@ -51,6 +56,8 @@ infrastructure/
 ## Deploy
 
 From repository root:
+
+Before deployment, set `imageTag` in `infrastructure/environments/<env>/main.bicepparam` or provide it as an explicit `az deployment group ... --parameters imageTag=<tag>` override. Do not rely on `latest`.
 
 ```bash
 chmod +x infrastructure/deploy.sh
@@ -69,4 +76,5 @@ The script performs:
 - Secrets are not hardcoded in templates.
 - Container App uses **system-assigned managed identity**.
 - ACR image pull uses `AcrPull` role assignment to the Container App identity.
+- Both dev and prod environments provision **Azure Key Vault**.
 - Templates use **Azure Database for PostgreSQL Flexible Server** as the managed database service.
