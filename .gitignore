@@ -94,5 +94,8 @@ api/PersonAttribute/
 api/PersonName/
 
 
+# Docker Compose local environment overrides
+.env
+
 # APM dependencies
 apm_modules/

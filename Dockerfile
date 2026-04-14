@@ -9,7 +9,7 @@
 #	graphic logo is a trademark of OpenMRS Inc.
 ARG BUILDPLATFORM
 ARG DEV_JDK=eclipse-temurin-21
-ARG RUNTIME_JDK=jdk21-temurin
+ARG RUNTIME_JRE=jre21-temurin
 
 ### Compile Stage (platform-agnostic)
 FROM --platform=$BUILDPLATFORM maven:3.9-$DEV_JDK AS compile
@@ -110,7 +110,21 @@ ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["/openmrs/startup-dev.sh"]
 
 ### Production Stage
-FROM tomcat:11-$RUNTIME_JDK
+FROM tomcat:11-$RUNTIME_JRE
+
+LABEL org.opencontainers.image.title="OpenMRS Core" \
+      org.opencontainers.image.description="OpenMRS Core healthcare platform" \
+      org.opencontainers.image.url="https://openmrs.org" \
+      org.opencontainers.image.source="https://github.com/openmrs/openmrs-core" \
+      org.opencontainers.image.vendor="OpenMRS Inc." \
+      org.opencontainers.image.licenses="MPL-2.0"
+
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.version="${VERSION}"
 
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* && rm -rf /usr/local/tomcat/webapps/*
 
@@ -125,22 +139,30 @@ RUN if [ "$TARGETARCH" = "arm64" ] ; then TINI_URL="${TINI_URL}-arm64" TINI_SHA=
     && echo "${TINI_SHA}  /usr/bin/tini" | sha256sum -c \
     && chmod g+rx /usr/bin/tini 
 
+# Configure Tomcat and create data directories (single layer)
 RUN sed -i '/Connector port="8080"/a URIEncoding="UTF-8" relaxedPathChars="[]|" relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"' \
     /usr/local/tomcat/conf/server.xml \
     && chmod -R g+rx /usr/local/tomcat \
     && touch /usr/local/tomcat/bin/setenv.sh && chmod g+rw /usr/local/tomcat/bin/setenv.sh \
     && chmod -R g+rw /usr/local/tomcat/webapps /usr/local/tomcat/logs /usr/local/tomcat/work /usr/local/tomcat/temp \
-    && chown -R 1001 /usr/local/tomcat/webapps
-
-RUN mkdir -p /openmrs/data/modules \
-    && mkdir -p /openmrs/data/owa  \
-    && mkdir -p /openmrs/data/configuration \
-    && mkdir -p /openmrs/data/configuration_checksums \
-    && mkdir -p /openmrs/data/complex_obs \
-    && mkdir -p /openmrs/data/activemq-data \
+    && chown -R 1001 /usr/local/tomcat/webapps \
+    && mkdir -p /openmrs/data/modules \
+        /openmrs/data/owa \
+        /openmrs/data/configuration \
+        /openmrs/data/configuration_checksums \
+        /openmrs/data/complex_obs \
+        /openmrs/data/activemq-data \
     && chmod -R g+rw /openmrs \
     && chown -R 1001 /openmrs
-    
+
+# JVM container-optimized flags
+ENV JAVA_OPTS="-XX:+UseContainerSupport \
+    -XX:MaxRAMPercentage=75.0 \
+    -XX:InitialRAMPercentage=50.0 \
+    -XX:+UseG1GC \
+    -XX:+ExitOnOutOfMemoryError \
+    -Djava.security.egd=file:/dev/./urandom"
+
 # Copy in the start-up scripts
 COPY --from=dev /openmrs/wait-for-it.sh /openmrs/startup-init.sh /openmrs/startup.sh /openmrs/
 RUN chmod g+x /openmrs/wait-for-it.sh && chmod g+x /openmrs/startup-init.sh && chmod g+x /openmrs/startup.sh

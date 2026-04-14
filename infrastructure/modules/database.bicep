@@ -3,28 +3,30 @@ targetScope = 'resourceGroup'
 @description('Azure region for the database server.')
 param location string
 
-@description('Name of the MySQL Flexible Server.')
+@description('Name of the PostgreSQL Flexible Server.')
 param serverName string
 
 @description('Database engine type.')
 @allowed([
-  'MySQL'
-  'MariaDB'
+  'PostgreSQL'
 ])
-param databaseEngine string = 'MySQL'
+param databaseEngine string = 'PostgreSQL'
 
 @description('Name of the application database.')
 param databaseName string = 'openmrs'
 
-@description('Admin username for MySQL Flexible Server.')
+@description('Admin username for PostgreSQL Flexible Server.')
 param administratorLogin string = 'openmrsadmin'
 
-@description('Admin password for MySQL Flexible Server.')
+@description('Admin password for PostgreSQL Flexible Server.')
 @secure()
 param administratorPassword string
 
-@description('SKU name for MySQL Flexible Server.')
+@description('SKU name for PostgreSQL Flexible Server.')
 param skuName string = 'Standard_B1ms'
+
+@description('Storage size in GB for the database server.')
+param storageSizeGB int = 32
 
 @description('Whether public network access is enabled.')
 param publicNetworkAccess string = 'Enabled'
@@ -41,12 +43,12 @@ param privateEndpointName string = ''
 @description('Whether to enable zone-redundant high availability.')
 param enableHighAvailability bool = false
 
-@description('Backup retention days for MySQL Flexible Server.')
+@description('Backup retention days for PostgreSQL Flexible Server.')
 param backupRetentionDays int = 7
 
-var mysqlVersion = '8.0.21'
+var postgresqlVersion = '16'
 
-resource mysqlServer 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
+resource postgresqlServer 'Microsoft.DBforPostgreSQL/flexibleServers@2024-08-01' = {
   name: serverName
   location: location
   sku: {
@@ -54,7 +56,7 @@ resource mysqlServer 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
     tier: startsWith(skuName, 'Standard_B') ? 'Burstable' : 'GeneralPurpose'
   }
   properties: {
-    version: mysqlVersion
+    version: postgresqlVersion
     administratorLogin: administratorLogin
     administratorLoginPassword: administratorPassword
     backup: {
@@ -72,23 +74,23 @@ resource mysqlServer 'Microsoft.DBforMySQL/flexibleServers@2023-12-30' = {
       publicNetworkAccess: publicNetworkAccess
     }
     storage: {
-      storageSizeGB: 32
+      storageSizeGB: storageSizeGB
       iops: 360
       autoGrow: 'Enabled'
     }
   }
 }
 
-resource mysqlDb 'Microsoft.DBforMySQL/flexibleServers/databases@2023-12-30' = {
-  parent: mysqlServer
+resource postgresqlDatabase 'Microsoft.DBforPostgreSQL/flexibleServers/databases@2024-08-01' = {
+  parent: postgresqlServer
   name: databaseName
   properties: {
-    charset: 'utf8mb4'
-    collation: 'utf8mb4_unicode_ci'
+    charset: 'UTF8'
+    collation: 'en_US.utf8'
   }
 }
 
-resource mysqlPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = if (enablePrivateEndpoint) {
+resource postgresqlPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = if (enablePrivateEndpoint) {
   name: privateEndpointName
   location: location
   properties: {
@@ -99,9 +101,9 @@ resource mysqlPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = 
       {
         name: '${privateEndpointName}-conn'
         properties: {
-          privateLinkServiceId: mysqlServer.id
+          privateLinkServiceId: postgresqlServer.id
           groupIds: [
-            'mysqlServer'
+            'postgresqlServer'
           ]
         }
       }
@@ -109,9 +111,9 @@ resource mysqlPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-11-01' = 
   }
 }
 
-output databaseEngineResolved string = databaseEngine == 'MariaDB' ? 'MySQL (Azure managed path)' : 'MySQL'
-output serverId string = mysqlServer.id
-output serverName string = mysqlServer.name
-output fqdn string = mysqlServer.properties.fullyQualifiedDomainName
-output databaseNameOut string = mysqlDb.name
-output privateEndpointId string = enablePrivateEndpoint ? mysqlPrivateEndpoint.id : ''
+output databaseEngineResolved string = databaseEngine
+output serverId string = postgresqlServer.id
+output serverName string = postgresqlServer.name
+output fqdn string = postgresqlServer.properties.fullyQualifiedDomainName
+output databaseNameOut string = postgresqlDatabase.name
+output privateEndpointId string = enablePrivateEndpoint ? postgresqlPrivateEndpoint.id : ''

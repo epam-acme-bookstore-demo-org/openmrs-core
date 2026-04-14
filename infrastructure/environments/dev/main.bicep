@@ -13,7 +13,7 @@ param environmentName string = 'dev'
 param imageRepository string = 'openmrs-core'
 
 @description('Container image tag.')
-param imageTag string = 'latest'
+param imageTag string
 
 @description('Database admin username.')
 param dbAdminUsername string = 'openmrsadmin'
@@ -27,16 +27,16 @@ param dbName string = 'openmrs'
 
 @description('Database engine selection.')
 @allowed([
-  'MySQL'
-  'MariaDB'
+  'PostgreSQL'
 ])
-param databaseEngine string = 'MySQL'
+param databaseEngine string = 'PostgreSQL'
 
 var logAnalyticsName = 'law-${workloadName}-${environmentName}'
 var containerRegistryName = toLower(replace('acr${workloadName}${environmentName}', '-', ''))
 var managedEnvironmentName = 'acae-${workloadName}-${environmentName}'
 var containerAppName = 'aca-${workloadName}-${environmentName}'
-var mysqlServerName = 'mysql-${workloadName}-${environmentName}'
+var postgresqlServerName = 'pgsql-${workloadName}-${environmentName}'
+var keyVaultName = 'kv-${workloadName}-${environmentName}'
 
 module logAnalytics '../../modules/log-analytics.bicep' = {
   name: 'logAnalyticsDeploy'
@@ -62,12 +62,13 @@ module database '../../modules/database.bicep' = {
   name: 'databaseDeploy'
   params: {
     location: location
-    serverName: mysqlServerName
+    serverName: postgresqlServerName
     databaseEngine: databaseEngine
     databaseName: dbName
     administratorLogin: dbAdminUsername
     administratorPassword: dbAdminPassword
     skuName: 'Standard_B1ms'
+    storageSizeGB: 32
     publicNetworkAccess: 'Enabled'
     enablePrivateEndpoint: false
     enableHighAvailability: false
@@ -96,6 +97,20 @@ module containerApp '../../modules/container-app.bicep' = {
   }
 }
 
+module keyVault '../../modules/key-vault.bicep' = {
+  name: 'keyVaultDeploy'
+  params: {
+    location: location
+    keyVaultName: keyVaultName
+    skuName: 'standard'
+    enablePurgeProtection: false
+    publicNetworkAccess: 'Enabled'
+    enablePrivateEndpoint: false
+    secretsOfficerPrincipalId: containerApp.outputs.containerAppPrincipalId
+  }
+}
+
 output containerAppUrl string = 'https://${containerApp.outputs.containerAppFqdn}'
 output registryLoginServer string = acr.outputs.loginServer
 output dbServerFqdn string = database.outputs.fqdn
+output keyVaultUri string = keyVault.outputs.keyVaultUri

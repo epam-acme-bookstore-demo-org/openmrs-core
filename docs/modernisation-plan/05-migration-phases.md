@@ -262,9 +262,11 @@ Apply changes in this order to contain risk and simplify review:
 
 ---
 
-### Phase 2: Container and Dev Environment
+### Phase 2: Container and Dev Environment — 🔄 In Progress
 
 **Purpose:** turn the current local-development container setup into a repeatable dev deployment path on Azure.
+
+**Status:** 🔄 In Progress — Waves 1-3 and 5 are complete; Wave 4 is pending deployment validation.
 
 **Depends on:** Phase 0  
 **Can run in parallel with:** Phase 1

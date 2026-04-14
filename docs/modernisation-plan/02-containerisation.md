@@ -27,7 +27,14 @@ The target state is:
 - **environment-specific configuration** supplied entirely at deploy time
 - **secrets managed outside the image**
 - **managed external dependencies** in Azure rather than bundled local containers
-- a **GitHub Actions pipeline** that builds, scans, signs/attests, and pushes multi-platform images to Azure Container Registry (ACR)
+- a **GitHub Actions pipeline** that builds, scans, and publishes multi-platform images to **GHCR**, then promotes approved images to **ACR** for Azure deployments
+
+## Implementation status
+
+- ✅ **Container hardening complete** — the production image now uses a JRE runtime path, container-aware JVM tuning, OCI metadata labels, and a repository-level `.dockerignore`.
+- ✅ **CI pipeline complete** — [`.github/workflows/container-build.yml`](../../.github/workflows/container-build.yml) builds multi-platform images, scans them with Trivy, and publishes non-PR builds to GHCR.
+- ✅ **Developer experience complete** — `.env.example`, `docker-compose.test.yml`, and the VS Code dev container are now part of the supported workflow.
+- ⬜ **Dev environment deployment pending** — image promotion, Azure deployment, smoke testing, and end-to-end validation are still Wave 4 work.
 
 ---
 
@@ -251,7 +258,10 @@ For Azure deployments, assume PostgreSQL-specific connection details unless a no
 
 ### Registry target
 
-Use **Azure Container Registry (ACR)** as the system of record for deployable images.
+Use **GHCR** for CI/CD build publication and **ACR** for Azure deployment consumption.
+
+- GHCR is the current build registry used by [`.github/workflows/container-build.yml`](../../.github/workflows/container-build.yml).
+- ACR remains the Azure-side registry that ACA should pull from after promotion.
 
 ### Pull model
 
@@ -259,17 +269,21 @@ Azure Container Apps should pull from ACR using **managed identity**, not static
 
 ### Tagging strategy
 
-Publish at least these tags for each successful build:
+The current GHCR workflow standardises on:
 
-- `X.Y.Z` for releases
-- `X.Y.Z-<gitsha>` for release traceability
-- `<branch>-<gitsha>` for non-release builds
+- `sha-<short>` for immutable commit traceability
+- `master` for the latest successful merge to `master`
+- `pr-<number>` for PR builds (**build only**, not pushed)
+- `v<major>.<minor>.<patch>` for release tags
+- `v<major>.<minor>` as the floating minor release tag
 
 Operational rules:
 
 - deployments should use the **image digest**
 - tags are for discovery and traceability, not rollout safety
-- never deploy production from `latest`
+- `latest` is explicitly forbidden
+
+See [09-image-tagging-strategy.md](./09-image-tagging-strategy.md) for the full GHCR→ACR promotion contract.
 
 ### Scanning and policy
 
@@ -481,15 +495,15 @@ Today, Bamboo already performs useful Docker work:
 
 That should be treated as the baseline capability to preserve during migration.
 
-## Target state: GitHub Actions + ACR
+## Target state: GitHub Actions + GHCR promotion to ACR
 
 The target pipeline should:
 
 1. build the application artifact
 2. build the production container image
 3. run image vulnerability scanning
-4. generate SBOM/attestation metadata
-5. push to ACR
+4. push to GHCR
+5. promote approved images to ACR
 6. deploy by digest to ACA
 
 ## Recommended GitHub Actions workflow stages
@@ -510,15 +524,17 @@ The target pipeline should:
 
 - scan the built image before promotion
 - surface critical/high vulnerabilities as policy gates
+- publish Trivy SARIF results to GitHub Security
 - rely on ACR + Defender as a second layer of scanning, not the only one
 
 ### 4. Push
 
-- authenticate to ACR using OIDC/federated identity where possible
+- publish CI images to GHCR
 - push immutable tags and capture the resulting digest
 
 ### 5. Promote and deploy
 
+- promote approved images from GHCR to ACR
 - deploy ACA revisions using the pushed digest
 - keep environment-specific configuration out of the image
 - allow rollback by redeploying a previous digest
@@ -527,14 +543,14 @@ The target pipeline should:
 
 For a release `3.0.0` at commit `abcdef1`:
 
-- push `3.0.0`
-- push `3.0.0-abcdef1`
+- build and push `sha-abcdef1`, `v3.0.0`, and `v3.0` to GHCR
+- promote the approved digest to ACR
 - deploy `acr.example.io/openmrs-core@sha256:...`
 
 For a non-release branch build:
 
-- push `main-abcdef1`
-- deploy only to non-production environments
+- build `pr-123` for validation only, with no registry push
+- deploy only from promoted ACR digests, never directly from GHCR branch tags
 
 ---
 
@@ -561,7 +577,7 @@ Each of the following should be tracked as a separate GitHub issue:
    - add `.env.example`, remove hardcoded secrets, add CI test compose file
 
 7. **Create GitHub Actions container pipeline**
-   - build, scan, push to ACR, deploy by digest
+   - build, scan, push to GHCR, promote to ACR, deploy by digest
 
 8. **Add readiness endpoint or equivalent rollout-safe probe strategy**
    - separate liveness from readiness for ACA
@@ -577,7 +593,7 @@ Each of the following should be tracked as a separate GitHub issue:
 2. define the **persistent data and secret strategy**
 3. simplify and harden the **runtime image**
 4. update Compose for **dev and CI**
-5. migrate build/publish to **GitHub Actions + ACR**
+5. migrate build/publish to **GitHub Actions + GHCR**, then promote to **ACR**
 6. connect container delivery into [03. Azure Infrastructure](03-azure-infrastructure.md)
 7. schedule rollout work in [05. Migration Phases](05-migration-phases.md)
 
@@ -589,7 +605,7 @@ Each of the following should be tracked as a separate GitHub issue:
 - The current Docker setup should be **evolved**, not discarded.
 - ACA deployment should use a **single immutable Tomcat-based runtime image**.
 - Configuration must be **environment-driven and secret-backed**, not baked into the image.
-- ACR is the target registry, and GitHub Actions is the target CI/CD system.
+- GHCR is the CI/CD build registry, and ACR is the Azure deployment registry.
 - Production deployment should be by **image digest**.
 - Runtime mutability under `/openmrs/data` must be explicitly designed for ACA before production rollout.
 
