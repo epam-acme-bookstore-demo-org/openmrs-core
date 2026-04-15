@@ -89,7 +89,7 @@
 		<velocityToolsVersion>3.1</velocityToolsVersion>
 
 		<!-- HL7 -->
-		<hapiVersion>2.1</hapiVersion>
+		<hapiVersion>2.6.0</hapiVersion>
 
 		<!-- XML/Serialization -->
 		<dom4jVersion>2.1.4</dom4jVersion>
